@@ -708,6 +708,59 @@ var _ = Describe(`SchematicsV1 Integration Tests`, func() {
 		})
 	})
 
+	Describe(`RunWorkspaceCommands - Run terraform Commands`, func() {
+
+		var ws *schematicsv1.WorkspaceResponse
+
+		BeforeEach(func() {
+			shouldSkipTest()
+			ws = createSampleWorkspaceWithoutRepoURL()
+			uploadTarFile(ws)
+		})
+
+		It(`RunWorkspaceCommands(runWorkspaceCommandsOptions *RunWorkspaceCommandsOptions)`, func() {
+
+			applyWorkspaceCommandOptions := &schematicsv1.ApplyWorkspaceCommandOptions{
+				WID:          ws.ID,
+				RefreshToken: core.StringPtr("refresh_token"),
+			}
+
+			workspaceActivityApplyResult, response, err := schematicsService.ApplyWorkspaceCommand(applyWorkspaceCommandOptions)
+
+			Expect(err).To(BeNil())
+			Expect(response.StatusCode).To(Equal(202))
+			Expect(workspaceActivityApplyResult).ToNot(BeNil())
+
+			waitForWorkspaceActivityStatus(ws.ID, workspaceActivityApplyResult.Activityid, "COMPLETED")
+
+			terraformCommandModel := &schematicsv1.TerraformCommand{
+				Command:       core.StringPtr("state show"),
+				CommandParams: core.StringPtr("data.template_file.test"),
+				CommandName:   core.StringPtr("State Show"),
+			}
+
+			runWorkspaceCommandsOptions := &schematicsv1.RunWorkspaceCommandsOptions{
+				WID:           ws.ID,
+				RefreshToken:  core.StringPtr("refresh_token"),
+				Commands:      []schematicsv1.TerraformCommand{*terraformCommandModel},
+				OperationName: core.StringPtr("State_Show"),
+			}
+
+			workspaceActivityCommandResult, response, err := schematicsService.RunWorkspaceCommands(runWorkspaceCommandsOptions)
+
+			Expect(err).To(BeNil())
+			Expect(response.StatusCode).To(Equal(202))
+			Expect(workspaceActivityCommandResult).ToNot(BeNil())
+
+			waitForWorkspaceActivityStatus(ws.ID, workspaceActivityCommandResult.Activityid, "COMPLETED")
+
+		})
+
+		AfterEach(func() {
+			deleteWorkspaceByID(ws.ID)
+		})
+	})
+
 	Describe(`ApplyWorkspaceCommand - Run schematics workspace 'apply' activity`, func() {
 
 		var ws *schematicsv1.WorkspaceResponse

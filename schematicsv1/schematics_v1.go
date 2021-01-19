@@ -1,5 +1,5 @@
 /**
- * (C) Copyright IBM Corp. 2020.
+ * (C) Copyright IBM Corp. 2021.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1073,6 +1073,83 @@ func (schematics *SchematicsV1) DeleteWorkspaceActivityWithContext(ctx context.C
 		return
 	}
 	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalWorkspaceActivityApplyResult)
+	if err != nil {
+		return
+	}
+	response.Result = result
+
+	return
+}
+
+// RunWorkspaceCommands : Run terraform Commands
+// Run terraform Commands on workspaces.
+func (schematics *SchematicsV1) RunWorkspaceCommands(runWorkspaceCommandsOptions *RunWorkspaceCommandsOptions) (result *WorkspaceActivityCommandResult, response *core.DetailedResponse, err error) {
+	return schematics.RunWorkspaceCommandsWithContext(context.Background(), runWorkspaceCommandsOptions)
+}
+
+// RunWorkspaceCommandsWithContext is an alternate form of the RunWorkspaceCommands method which supports a Context parameter
+func (schematics *SchematicsV1) RunWorkspaceCommandsWithContext(ctx context.Context, runWorkspaceCommandsOptions *RunWorkspaceCommandsOptions) (result *WorkspaceActivityCommandResult, response *core.DetailedResponse, err error) {
+	err = core.ValidateNotNil(runWorkspaceCommandsOptions, "runWorkspaceCommandsOptions cannot be nil")
+	if err != nil {
+		return
+	}
+	err = core.ValidateStruct(runWorkspaceCommandsOptions, "runWorkspaceCommandsOptions")
+	if err != nil {
+		return
+	}
+
+	pathParamsMap := map[string]string{
+		"w_id": *runWorkspaceCommandsOptions.WID,
+	}
+
+	builder := core.NewRequestBuilder(core.PUT)
+	builder = builder.WithContext(ctx)
+	builder.EnableGzipCompression = schematics.GetEnableGzipCompression()
+	_, err = builder.ResolveRequestURL(schematics.Service.Options.URL, `/v1/workspaces/{w_id}/commands`, pathParamsMap)
+	if err != nil {
+		return
+	}
+
+	for headerName, headerValue := range runWorkspaceCommandsOptions.Headers {
+		builder.AddHeader(headerName, headerValue)
+	}
+
+	sdkHeaders := common.GetSdkHeaders("schematics", "V1", "RunWorkspaceCommands")
+	for headerName, headerValue := range sdkHeaders {
+		builder.AddHeader(headerName, headerValue)
+	}
+	builder.AddHeader("Accept", "application/json")
+	builder.AddHeader("Content-Type", "application/json")
+	if runWorkspaceCommandsOptions.RefreshToken != nil {
+		builder.AddHeader("refresh_token", fmt.Sprint(*runWorkspaceCommandsOptions.RefreshToken))
+	}
+
+	body := make(map[string]interface{})
+	if runWorkspaceCommandsOptions.Commands != nil {
+		body["commands"] = runWorkspaceCommandsOptions.Commands
+	}
+	if runWorkspaceCommandsOptions.OperationName != nil {
+		body["operation_name"] = runWorkspaceCommandsOptions.OperationName
+	}
+	if runWorkspaceCommandsOptions.Description != nil {
+		body["description"] = runWorkspaceCommandsOptions.Description
+	}
+	_, err = builder.SetBodyContentJSON(body)
+	if err != nil {
+		return
+	}
+
+	request, err := builder.Build()
+	if err != nil {
+		return
+	}
+
+	var rawResponse map[string]json.RawMessage
+	response, err = schematics.Service.Request(request, &rawResponse)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalWorkspaceActivityCommandResult)
 	if err != nil {
 		return
 	}
@@ -2285,6 +2362,9 @@ func (schematics *SchematicsV1) CreateActionWithContext(ctx context.Context, cre
 	if createActionOptions.Targets != nil {
 		body["targets"] = createActionOptions.Targets
 	}
+	if createActionOptions.Credentials != nil {
+		body["credentials"] = createActionOptions.Credentials
+	}
 	if createActionOptions.Inputs != nil {
 		body["inputs"] = createActionOptions.Inputs
 	}
@@ -2586,6 +2666,9 @@ func (schematics *SchematicsV1) UpdateActionWithContext(ctx context.Context, upd
 	if updateActionOptions.Targets != nil {
 		body["targets"] = updateActionOptions.Targets
 	}
+	if updateActionOptions.Credentials != nil {
+		body["credentials"] = updateActionOptions.Credentials
+	}
 	if updateActionOptions.Inputs != nil {
 		body["inputs"] = updateActionOptions.Inputs
 	}
@@ -2779,6 +2862,9 @@ func (schematics *SchematicsV1) ListJobsWithContext(ctx context.Context, listJob
 	}
 	if listJobsOptions.ActionID != nil {
 		builder.AddQuery("action_id", fmt.Sprint(*listJobsOptions.ActionID))
+	}
+	if listJobsOptions.List != nil {
+		builder.AddQuery("list", fmt.Sprint(*listJobsOptions.List))
 	}
 
 	request, err := builder.Build()
@@ -3729,7 +3815,10 @@ type Action struct {
 	Bastion *TargetResourceset `json:"bastion,omitempty"`
 
 	// Action targets.
-	Targets []TargetResourceset `json:"targets,omitempty"`
+	Targets []TargetResourceGroup `json:"targets,omitempty"`
+
+	// credentials of the Action.
+	Credentials []VariableData `json:"credentials,omitempty"`
 
 	// Input variables for the Action.
 	Inputs []VariableData `json:"inputs,omitempty"`
@@ -3775,6 +3864,9 @@ type Action struct {
 
 	// Email address of user who updated the action.
 	UpdatedBy *string `json:"updated_by,omitempty"`
+
+	// name of the namespace.
+	Namespace *string `json:"namespace,omitempty"`
 
 	// Computed state of the Action.
 	State *ActionState `json:"state,omitempty"`
@@ -3856,7 +3948,11 @@ func UnmarshalAction(m map[string]json.RawMessage, result interface{}) (err erro
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(m, "targets", &obj.Targets, UnmarshalTargetResourceset)
+	err = core.UnmarshalModel(m, "targets", &obj.Targets, UnmarshalTargetResourceGroup)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "credentials", &obj.Credentials, UnmarshalVariableData)
 	if err != nil {
 		return
 	}
@@ -3917,6 +4013,10 @@ func UnmarshalAction(m map[string]json.RawMessage, result interface{}) (err erro
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "updated_by", &obj.UpdatedBy)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "namespace", &obj.Namespace)
 	if err != nil {
 		return
 	}
@@ -3996,6 +4096,9 @@ type ActionLite struct {
 	// Resource-group name for the Action.  By default, Action will be created in Default Resource Group.
 	ResourceGroup *string `json:"resource_group,omitempty"`
 
+	// name of the namespace.
+	Namespace *string `json:"namespace,omitempty"`
+
 	// Action tags.
 	Tags []string `json:"tags,omitempty"`
 
@@ -4059,6 +4162,10 @@ func UnmarshalActionLite(m map[string]json.RawMessage, result interface{}) (err 
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "resource_group", &obj.ResourceGroup)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "namespace", &obj.Namespace)
 	if err != nil {
 		return
 	}
@@ -4141,6 +4248,9 @@ type ActionState struct {
 	// Status of automation (workspace or action).
 	StatusCode *string `json:"status_code,omitempty"`
 
+	// Job id reference for this status.
+	StatusJobID *string `json:"status_job_id,omitempty"`
+
 	// Automation status message - to be displayed along with the status_code.
 	StatusMessage *string `json:"status_message,omitempty"`
 }
@@ -4159,6 +4269,10 @@ const (
 func UnmarshalActionState(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(ActionState)
 	err = core.UnmarshalPrimitive(m, "status_code", &obj.StatusCode)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "status_job_id", &obj.StatusJobID)
 	if err != nil {
 		return
 	}
@@ -4322,7 +4436,10 @@ type CreateActionOptions struct {
 	Bastion *TargetResourceset `json:"bastion,omitempty"`
 
 	// Action targets.
-	Targets []TargetResourceset `json:"targets,omitempty"`
+	Targets []TargetResourceGroup `json:"targets,omitempty"`
+
+	// credentials of the Action.
+	Credentials []VariableData `json:"credentials,omitempty"`
 
 	// Input variables for the Action.
 	Inputs []VariableData `json:"inputs,omitempty"`
@@ -4443,8 +4560,14 @@ func (options *CreateActionOptions) SetBastion(bastion *TargetResourceset) *Crea
 }
 
 // SetTargets : Allow user to set Targets
-func (options *CreateActionOptions) SetTargets(targets []TargetResourceset) *CreateActionOptions {
+func (options *CreateActionOptions) SetTargets(targets []TargetResourceGroup) *CreateActionOptions {
 	options.Targets = targets
+	return options
+}
+
+// SetCredentials : Allow user to set Credentials
+func (options *CreateActionOptions) SetCredentials(credentials []VariableData) *CreateActionOptions {
+	options.Credentials = credentials
 	return options
 }
 
@@ -4555,7 +4678,7 @@ const (
 // Constants associated with the CreateJobOptions.CommandName property.
 // Schematics job command name.
 const (
-	CreateJobOptions_CommandName_Ansible = "ansible"
+	CreateJobOptions_CommandName_AnsiblePlaybookCheck = "ansible_playbook_check"
 	CreateJobOptions_CommandName_AnsiblePlaybookRun = "ansible_playbook_run"
 	CreateJobOptions_CommandName_HelmInstall = "helm_install"
 	CreateJobOptions_CommandName_HelmList = "helm_list"
@@ -6352,7 +6475,7 @@ const (
 // Constants associated with the Job.CommandName property.
 // Schematics job command name.
 const (
-	Job_CommandName_Ansible = "ansible"
+	Job_CommandName_AnsiblePlaybookCheck = "ansible_playbook_check"
 	Job_CommandName_AnsiblePlaybookRun = "ansible_playbook_run"
 	Job_CommandName_HelmInstall = "helm_install"
 	Job_CommandName_HelmList = "helm_list"
@@ -6694,7 +6817,7 @@ const (
 // Constants associated with the JobLite.CommandName property.
 // Schematics job command name.
 const (
-	JobLite_CommandName_Ansible = "ansible"
+	JobLite_CommandName_AnsiblePlaybookCheck = "ansible_playbook_check"
 	JobLite_CommandName_AnsiblePlaybookRun = "ansible_playbook_run"
 	JobLite_CommandName_HelmInstall = "helm_install"
 	JobLite_CommandName_HelmList = "helm_list"
@@ -7747,6 +7870,9 @@ type ListJobsOptions struct {
 	// Action Id.
 	ActionID *string `json:"action_id,omitempty"`
 
+	// list jobs.
+	List *string `json:"list,omitempty"`
+
 	// Allows users to set headers on API requests
 	Headers map[string]string
 }
@@ -7764,6 +7890,12 @@ const (
 	ListJobsOptions_Resource_Actions = "actions"
 	ListJobsOptions_Resource_Controls = "controls"
 	ListJobsOptions_Resource_Workspaces = "workspaces"
+)
+
+// Constants associated with the ListJobsOptions.List property.
+// list jobs.
+const (
+	ListJobsOptions_List_All = "all"
 )
 
 // NewListJobsOptions : Instantiate ListJobsOptions
@@ -7804,6 +7936,12 @@ func (options *ListJobsOptions) SetResource(resource string) *ListJobsOptions {
 // SetActionID : Allow user to set ActionID
 func (options *ListJobsOptions) SetActionID(actionID string) *ListJobsOptions {
 	options.ActionID = core.StringPtr(actionID)
+	return options
+}
+
+// SetList : Allow user to set List
+func (options *ListJobsOptions) SetList(list string) *ListJobsOptions {
+	options.List = core.StringPtr(list)
 	return options
 }
 
@@ -8266,7 +8404,7 @@ const (
 // Constants associated with the ReplaceJobOptions.CommandName property.
 // Schematics job command name.
 const (
-	ReplaceJobOptions_CommandName_Ansible = "ansible"
+	ReplaceJobOptions_CommandName_AnsiblePlaybookCheck = "ansible_playbook_check"
 	ReplaceJobOptions_CommandName_AnsiblePlaybookRun = "ansible_playbook_run"
 	ReplaceJobOptions_CommandName_HelmInstall = "helm_install"
 	ReplaceJobOptions_CommandName_HelmList = "helm_list"
@@ -8821,6 +8959,72 @@ func UnmarshalResourceGroupResponse(m map[string]json.RawMessage, result interfa
 	return
 }
 
+// RunWorkspaceCommandsOptions : The RunWorkspaceCommands options.
+type RunWorkspaceCommandsOptions struct {
+	// The workspace ID for the workspace that you want to query.  You can run the GET /workspaces call if you need to look
+	// up the  workspace IDs in your IBM Cloud account.
+	WID *string `json:"w_id" validate:"required,ne="`
+
+	// The IAM refresh token associated with the IBM Cloud account.
+	RefreshToken *string `json:"refresh_token" validate:"required"`
+
+	// List of commands.
+	Commands []TerraformCommand `json:"commands,omitempty"`
+
+	// Command name.
+	OperationName *string `json:"operation_name,omitempty"`
+
+	// Command description.
+	Description *string `json:"description,omitempty"`
+
+	// Allows users to set headers on API requests
+	Headers map[string]string
+}
+
+// NewRunWorkspaceCommandsOptions : Instantiate RunWorkspaceCommandsOptions
+func (*SchematicsV1) NewRunWorkspaceCommandsOptions(wID string, refreshToken string) *RunWorkspaceCommandsOptions {
+	return &RunWorkspaceCommandsOptions{
+		WID: core.StringPtr(wID),
+		RefreshToken: core.StringPtr(refreshToken),
+	}
+}
+
+// SetWID : Allow user to set WID
+func (options *RunWorkspaceCommandsOptions) SetWID(wID string) *RunWorkspaceCommandsOptions {
+	options.WID = core.StringPtr(wID)
+	return options
+}
+
+// SetRefreshToken : Allow user to set RefreshToken
+func (options *RunWorkspaceCommandsOptions) SetRefreshToken(refreshToken string) *RunWorkspaceCommandsOptions {
+	options.RefreshToken = core.StringPtr(refreshToken)
+	return options
+}
+
+// SetCommands : Allow user to set Commands
+func (options *RunWorkspaceCommandsOptions) SetCommands(commands []TerraformCommand) *RunWorkspaceCommandsOptions {
+	options.Commands = commands
+	return options
+}
+
+// SetOperationName : Allow user to set OperationName
+func (options *RunWorkspaceCommandsOptions) SetOperationName(operationName string) *RunWorkspaceCommandsOptions {
+	options.OperationName = core.StringPtr(operationName)
+	return options
+}
+
+// SetDescription : Allow user to set Description
+func (options *RunWorkspaceCommandsOptions) SetDescription(description string) *RunWorkspaceCommandsOptions {
+	options.Description = core.StringPtr(description)
+	return options
+}
+
+// SetHeaders : Allow user to set Headers
+func (options *RunWorkspaceCommandsOptions) SetHeaders(param map[string]string) *RunWorkspaceCommandsOptions {
+	options.Headers = param
+	return options
+}
+
 // SchematicsLocations : Schematics locations.
 type SchematicsLocations struct {
 	// Country.
@@ -9368,6 +9572,109 @@ func UnmarshalSystemLock(m map[string]json.RawMessage, result interface{}) (err 
 	return
 }
 
+// TargetResource : describes a target resource.
+type TargetResource struct {
+	// ipaddress or resource_id of the resource.
+	ResourceID *string `json:"resource_id,omitempty"`
+
+	// Config for target resource.
+	ResourceConfigs []TargetResourceConfig `json:"resource_configs,omitempty"`
+}
+
+
+// UnmarshalTargetResource unmarshals an instance of TargetResource from the specified map of raw messages.
+func UnmarshalTargetResource(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(TargetResource)
+	err = core.UnmarshalPrimitive(m, "resource_id", &obj.ResourceID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "resource_configs", &obj.ResourceConfigs, UnmarshalTargetResourceConfig)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
+// TargetResourceConfig : Describe target resource config.
+type TargetResourceConfig struct {
+	// Name of the resource config.
+	Name *string `json:"name,omitempty"`
+
+	// Value of the resource config.
+	Value *string `json:"value,omitempty"`
+
+	// Description of config variable.
+	Description *string `json:"description,omitempty"`
+}
+
+
+// UnmarshalTargetResourceConfig unmarshals an instance of TargetResourceConfig from the specified map of raw messages.
+func UnmarshalTargetResourceConfig(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(TargetResourceConfig)
+	err = core.UnmarshalPrimitive(m, "name", &obj.Name)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "value", &obj.Value)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "description", &obj.Description)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
+// TargetResourceGroup : target resource group.
+type TargetResourceGroup struct {
+	// Name of the group.
+	Name *string `json:"name,omitempty"`
+
+	// Description of the target resource group.
+	Description *string `json:"description,omitempty"`
+
+	// Reference to credential value, used by target resources in group.
+	CredentialRef *string `json:"credential_ref,omitempty"`
+
+	// Reference to bastion, to access the target resources in group.
+	BastionRef *string `json:"bastion_ref,omitempty"`
+
+	// List of target resource.
+	TargetResources []TargetResource `json:"target_resources,omitempty"`
+}
+
+
+// UnmarshalTargetResourceGroup unmarshals an instance of TargetResourceGroup from the specified map of raw messages.
+func UnmarshalTargetResourceGroup(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(TargetResourceGroup)
+	err = core.UnmarshalPrimitive(m, "name", &obj.Name)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "description", &obj.Description)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "credential_ref", &obj.CredentialRef)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "bastion_ref", &obj.BastionRef)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalModel(m, "target_resources", &obj.TargetResources, UnmarshalTargetResource)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // TargetResourceset : Complete Target details with user inputs and system generated data.
 type TargetResourceset struct {
 	// Target name.
@@ -9383,7 +9690,7 @@ type TargetResourceset struct {
 	ResourceQuery *string `json:"resource_query,omitempty"`
 
 	// Override credential for each resource.  Reference to credentials values, used by all resources.
-	Credential *string `json:"credential,omitempty"`
+	CredentialRef *string `json:"credential_ref,omitempty"`
 
 	// Target id.
 	ID *string `json:"id,omitempty"`
@@ -9427,7 +9734,7 @@ func UnmarshalTargetResourceset(m map[string]json.RawMessage, result interface{}
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalPrimitive(m, "credential", &obj.Credential)
+	err = core.UnmarshalPrimitive(m, "credential_ref", &obj.CredentialRef)
 	if err != nil {
 		return
 	}
@@ -9998,6 +10305,66 @@ func UnmarshalTemplateValues(m map[string]json.RawMessage, result interface{}) (
 	return
 }
 
+// TerraformCommand : TerraformCommand -.
+type TerraformCommand struct {
+	// Command to execute.
+	Command *string `json:"command,omitempty"`
+
+	// Command Parameters.
+	CommandParams *string `json:"command_params,omitempty"`
+
+	// Command name.
+	CommandName *string `json:"command_name,omitempty"`
+
+	// Command description.
+	CommandDesc *string `json:"command_desc,omitempty"`
+
+	// Instruction to continue or break in case of error.
+	CommandOnError *string `json:"command_onError,omitempty"`
+
+	// Dependency on previous commands.
+	CommandDependsOn *string `json:"command_dependsOn,omitempty"`
+
+	// Command status.
+	CommandStatus *string `json:"command_status,omitempty"`
+}
+
+
+// UnmarshalTerraformCommand unmarshals an instance of TerraformCommand from the specified map of raw messages.
+func UnmarshalTerraformCommand(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(TerraformCommand)
+	err = core.UnmarshalPrimitive(m, "command", &obj.Command)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "command_params", &obj.CommandParams)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "command_name", &obj.CommandName)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "command_desc", &obj.CommandDesc)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "command_onError", &obj.CommandOnError)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "command_dependsOn", &obj.CommandDependsOn)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "command_status", &obj.CommandStatus)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
 // UpdateActionOptions : The UpdateAction options.
 type UpdateActionOptions struct {
 	// Action Id.  Use GET /actions API to look up the Action Ids in your IBM Cloud account.
@@ -10038,7 +10405,10 @@ type UpdateActionOptions struct {
 	Bastion *TargetResourceset `json:"bastion,omitempty"`
 
 	// Action targets.
-	Targets []TargetResourceset `json:"targets,omitempty"`
+	Targets []TargetResourceGroup `json:"targets,omitempty"`
+
+	// credentials of the Action.
+	Credentials []VariableData `json:"credentials,omitempty"`
 
 	// Input variables for the Action.
 	Inputs []VariableData `json:"inputs,omitempty"`
@@ -10167,8 +10537,14 @@ func (options *UpdateActionOptions) SetBastion(bastion *TargetResourceset) *Upda
 }
 
 // SetTargets : Allow user to set Targets
-func (options *UpdateActionOptions) SetTargets(targets []TargetResourceset) *UpdateActionOptions {
+func (options *UpdateActionOptions) SetTargets(targets []TargetResourceGroup) *UpdateActionOptions {
 	options.Targets = targets
+	return options
+}
+
+// SetCredentials : Allow user to set Credentials
+func (options *UpdateActionOptions) SetCredentials(credentials []VariableData) *UpdateActionOptions {
+	options.Credentials = credentials
 	return options
 }
 
@@ -10823,6 +11199,24 @@ type WorkspaceActivityApplyResult struct {
 // UnmarshalWorkspaceActivityApplyResult unmarshals an instance of WorkspaceActivityApplyResult from the specified map of raw messages.
 func UnmarshalWorkspaceActivityApplyResult(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(WorkspaceActivityApplyResult)
+	err = core.UnmarshalPrimitive(m, "activityid", &obj.Activityid)
+	if err != nil {
+		return
+	}
+	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
+	return
+}
+
+// WorkspaceActivityCommandResult : WorkspaceActivityCommandResult -.
+type WorkspaceActivityCommandResult struct {
+	// Activity id.
+	Activityid *string `json:"activityid,omitempty"`
+}
+
+
+// UnmarshalWorkspaceActivityCommandResult unmarshals an instance of WorkspaceActivityCommandResult from the specified map of raw messages.
+func UnmarshalWorkspaceActivityCommandResult(m map[string]json.RawMessage, result interface{}) (err error) {
+	obj := new(WorkspaceActivityCommandResult)
 	err = core.UnmarshalPrimitive(m, "activityid", &obj.Activityid)
 	if err != nil {
 		return
