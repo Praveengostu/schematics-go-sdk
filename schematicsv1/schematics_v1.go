@@ -17,7 +17,6 @@
 /*
  * IBM OpenAPI SDK Code Generator Version: 3.17.0-8d569e8f-20201030-142059
  */
- 
 
 // Package schematicsv1 : Operations and models for the SchematicsV1 service
 package schematicsv1
@@ -26,13 +25,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/IBM/go-sdk-core/v4/core"
-	common "github.com/IBM/schematics-go-sdk/common"
-	"github.com/go-openapi/strfmt"
 	"io"
 	"net/http"
 	"reflect"
 	"time"
+
+	"github.com/IBM/go-sdk-core/v4/core"
+	common "github.com/IBM/schematics-go-sdk/common"
+	"github.com/go-openapi/strfmt"
 )
 
 // SchematicsV1 : Schematics Service is to provide the capability to manage resources  of (cloud) provider
@@ -781,7 +781,7 @@ func (schematics *SchematicsV1) UploadTemplateTarWithContext(ctx context.Context
 	if err != nil {
 		return
 	}
-	if (uploadTemplateTarOptions.File == nil) {
+	if uploadTemplateTarOptions.File == nil {
 		err = fmt.Errorf("at least one of  or file must be supplied")
 		return
 	}
@@ -981,7 +981,7 @@ func (schematics *SchematicsV1) GetWorkspaceActivityWithContext(ctx context.Cont
 	}
 
 	pathParamsMap := map[string]string{
-		"w_id": *getWorkspaceActivityOptions.WID,
+		"w_id":        *getWorkspaceActivityOptions.WID,
 		"activity_id": *getWorkspaceActivityOptions.ActivityID,
 	}
 
@@ -1040,7 +1040,7 @@ func (schematics *SchematicsV1) DeleteWorkspaceActivityWithContext(ctx context.C
 	}
 
 	pathParamsMap := map[string]string{
-		"w_id": *deleteWorkspaceActivityOptions.WID,
+		"w_id":        *deleteWorkspaceActivityOptions.WID,
 		"activity_id": *deleteWorkspaceActivityOptions.ActivityID,
 	}
 
@@ -1884,16 +1884,19 @@ func (schematics *SchematicsV1) GetWorkspaceTemplateStateWithContext(ctx context
 		return
 	}
 
-	var rawResponse map[string]json.RawMessage
+	// The response is the terraform statefile and the structure
+	// can change between versions. So unmarshalling using a fixed
+	// schema is impossible. Hence the result is sent as json.RawMessage
+	var rawResponse json.RawMessage
 	response, err = schematics.Service.Request(request, &rawResponse)
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTemplateStateStore)
+	/*err = core.UnmarshalModel(rawResponse, "", &result, UnmarshalTemplateStateStore)
 	if err != nil {
 		return
-	}
-	response.Result = result
+	}*/
+	response.Result = rawResponse
 
 	return
 }
@@ -1917,7 +1920,7 @@ func (schematics *SchematicsV1) GetWorkspaceActivityLogsWithContext(ctx context.
 	}
 
 	pathParamsMap := map[string]string{
-		"w_id": *getWorkspaceActivityLogsOptions.WID,
+		"w_id":        *getWorkspaceActivityLogsOptions.WID,
 		"activity_id": *getWorkspaceActivityLogsOptions.ActivityID,
 	}
 
@@ -2098,8 +2101,8 @@ func (schematics *SchematicsV1) GetTemplateActivityLogWithContext(ctx context.Co
 	}
 
 	pathParamsMap := map[string]string{
-		"w_id": *getTemplateActivityLogOptions.WID,
-		"t_id": *getTemplateActivityLogOptions.TID,
+		"w_id":        *getTemplateActivityLogOptions.WID,
+		"t_id":        *getTemplateActivityLogOptions.TID,
 		"activity_id": *getTemplateActivityLogOptions.ActivityID,
 	}
 
@@ -2359,8 +2362,8 @@ func (schematics *SchematicsV1) CreateActionWithContext(ctx context.Context, cre
 	if createActionOptions.Bastion != nil {
 		body["bastion"] = createActionOptions.Bastion
 	}
-	if createActionOptions.Targets != nil {
-		body["targets"] = createActionOptions.Targets
+	if createActionOptions.TargetsIni != nil {
+		body["targets_ini"] = createActionOptions.TargetsIni
 	}
 	if createActionOptions.Credentials != nil {
 		body["credentials"] = createActionOptions.Credentials
@@ -2663,8 +2666,8 @@ func (schematics *SchematicsV1) UpdateActionWithContext(ctx context.Context, upd
 	if updateActionOptions.Bastion != nil {
 		body["bastion"] = updateActionOptions.Bastion
 	}
-	if updateActionOptions.Targets != nil {
-		body["targets"] = updateActionOptions.Targets
+	if updateActionOptions.TargetsIni != nil {
+		body["targets_ini"] = updateActionOptions.TargetsIni
 	}
 	if updateActionOptions.Credentials != nil {
 		body["credentials"] = updateActionOptions.Credentials
@@ -3814,8 +3817,8 @@ type Action struct {
 	// Complete Target details with user inputs and system generated data.
 	Bastion *TargetResourceset `json:"bastion,omitempty"`
 
-	// Action targets.
-	Targets []TargetResourceGroup `json:"targets,omitempty"`
+	// Inventory of host and host group for the playbook, in .ini file format.
+	TargetsIni *string `json:"targets_ini,omitempty"`
 
 	// credentials of the Action.
 	Credentials []VariableData `json:"credentials,omitempty"`
@@ -3882,24 +3885,23 @@ type Action struct {
 // List of workspace locations supported by IBM Cloud Schematics service.  Note, this does not limit the location of the
 // resources provisioned using Schematics.
 const (
-	Action_Location_EuDe = "eu_de"
-	Action_Location_EuGb = "eu_gb"
-	Action_Location_UsEast = "us_east"
+	Action_Location_EuDe    = "eu_de"
+	Action_Location_EuGb    = "eu_gb"
+	Action_Location_UsEast  = "us_east"
 	Action_Location_UsSouth = "us_south"
 )
 
 // Constants associated with the Action.SourceType property.
 // Type of source for the Template.
 const (
-	Action_SourceType_ExternalScm = "external_scm"
-	Action_SourceType_GitHub = "git_hub"
+	Action_SourceType_ExternalScm      = "external_scm"
+	Action_SourceType_GitHub           = "git_hub"
 	Action_SourceType_GitHubEnterprise = "git_hub_enterprise"
-	Action_SourceType_GitLab = "git_lab"
-	Action_SourceType_IbmCloudCatalog = "ibm_cloud_catalog"
-	Action_SourceType_IbmGitLab = "ibm_git_lab"
-	Action_SourceType_Local = "local"
+	Action_SourceType_GitLab           = "git_lab"
+	Action_SourceType_IbmCloudCatalog  = "ibm_cloud_catalog"
+	Action_SourceType_IbmGitLab        = "ibm_git_lab"
+	Action_SourceType_Local            = "local"
 )
-
 
 // UnmarshalAction unmarshals an instance of Action from the specified map of raw messages.
 func UnmarshalAction(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -3948,7 +3950,7 @@ func UnmarshalAction(m map[string]json.RawMessage, result interface{}) (err erro
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(m, "targets", &obj.Targets, UnmarshalTargetResourceGroup)
+	err = core.UnmarshalPrimitive(m, "targets_ini", &obj.TargetsIni)
 	if err != nil {
 		return
 	}
@@ -4051,7 +4053,6 @@ type ActionList struct {
 	Actions []ActionLite `json:"actions,omitempty"`
 }
 
-
 // UnmarshalActionList unmarshals an instance of ActionList from the specified map of raw messages.
 func UnmarshalActionList(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(ActionList)
@@ -4131,12 +4132,11 @@ type ActionLite struct {
 // List of workspace locations supported by IBM Cloud Schematics service.  Note, this does not limit the location of the
 // resources provisioned using Schematics.
 const (
-	ActionLite_Location_EuDe = "eu_de"
-	ActionLite_Location_EuGb = "eu_gb"
-	ActionLite_Location_UsEast = "us_east"
+	ActionLite_Location_EuDe    = "eu_de"
+	ActionLite_Location_EuGb    = "eu_gb"
+	ActionLite_Location_UsEast  = "us_east"
 	ActionLite_Location_UsSouth = "us_south"
 )
-
 
 // UnmarshalActionLite unmarshals an instance of ActionLite from the specified map of raw messages.
 func UnmarshalActionLite(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -4223,10 +4223,9 @@ type ActionLiteState struct {
 const (
 	ActionLiteState_StatusCode_Critical = "critical"
 	ActionLiteState_StatusCode_Disabled = "disabled"
-	ActionLiteState_StatusCode_Normal = "normal"
-	ActionLiteState_StatusCode_Pending = "pending"
+	ActionLiteState_StatusCode_Normal   = "normal"
+	ActionLiteState_StatusCode_Pending  = "pending"
 )
-
 
 // UnmarshalActionLiteState unmarshals an instance of ActionLiteState from the specified map of raw messages.
 func UnmarshalActionLiteState(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -4260,10 +4259,9 @@ type ActionState struct {
 const (
 	ActionState_StatusCode_Critical = "critical"
 	ActionState_StatusCode_Disabled = "disabled"
-	ActionState_StatusCode_Normal = "normal"
-	ActionState_StatusCode_Pending = "pending"
+	ActionState_StatusCode_Normal   = "normal"
+	ActionState_StatusCode_Pending  = "pending"
 )
-
 
 // UnmarshalActionState unmarshals an instance of ActionState from the specified map of raw messages.
 func UnmarshalActionState(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -4303,7 +4301,7 @@ type ApplyWorkspaceCommandOptions struct {
 // NewApplyWorkspaceCommandOptions : Instantiate ApplyWorkspaceCommandOptions
 func (*SchematicsV1) NewApplyWorkspaceCommandOptions(wID string, refreshToken string) *ApplyWorkspaceCommandOptions {
 	return &ApplyWorkspaceCommandOptions{
-		WID: core.StringPtr(wID),
+		WID:          core.StringPtr(wID),
 		RefreshToken: core.StringPtr(refreshToken),
 	}
 }
@@ -4358,7 +4356,6 @@ type CatalogRef struct {
 	// Catalog item offering version.
 	OfferingVersion *string `json:"offering_version,omitempty"`
 }
-
 
 // UnmarshalCatalogRef unmarshals an instance of CatalogRef from the specified map of raw messages.
 func UnmarshalCatalogRef(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -4435,8 +4432,8 @@ type CreateActionOptions struct {
 	// Complete Target details with user inputs and system generated data.
 	Bastion *TargetResourceset `json:"bastion,omitempty"`
 
-	// Action targets.
-	Targets []TargetResourceGroup `json:"targets,omitempty"`
+	// Inventory of host and host group for the playbook, in .ini file format.
+	TargetsIni *string `json:"targets_ini,omitempty"`
 
 	// credentials of the Action.
 	Credentials []VariableData `json:"credentials,omitempty"`
@@ -4470,22 +4467,22 @@ type CreateActionOptions struct {
 // List of workspace locations supported by IBM Cloud Schematics service.  Note, this does not limit the location of the
 // resources provisioned using Schematics.
 const (
-	CreateActionOptions_Location_EuDe = "eu_de"
-	CreateActionOptions_Location_EuGb = "eu_gb"
-	CreateActionOptions_Location_UsEast = "us_east"
+	CreateActionOptions_Location_EuDe    = "eu_de"
+	CreateActionOptions_Location_EuGb    = "eu_gb"
+	CreateActionOptions_Location_UsEast  = "us_east"
 	CreateActionOptions_Location_UsSouth = "us_south"
 )
 
 // Constants associated with the CreateActionOptions.SourceType property.
 // Type of source for the Template.
 const (
-	CreateActionOptions_SourceType_ExternalScm = "external_scm"
-	CreateActionOptions_SourceType_GitHub = "git_hub"
+	CreateActionOptions_SourceType_ExternalScm      = "external_scm"
+	CreateActionOptions_SourceType_GitHub           = "git_hub"
 	CreateActionOptions_SourceType_GitHubEnterprise = "git_hub_enterprise"
-	CreateActionOptions_SourceType_GitLab = "git_lab"
-	CreateActionOptions_SourceType_IbmCloudCatalog = "ibm_cloud_catalog"
-	CreateActionOptions_SourceType_IbmGitLab = "ibm_git_lab"
-	CreateActionOptions_SourceType_Local = "local"
+	CreateActionOptions_SourceType_GitLab           = "git_lab"
+	CreateActionOptions_SourceType_IbmCloudCatalog  = "ibm_cloud_catalog"
+	CreateActionOptions_SourceType_IbmGitLab        = "ibm_git_lab"
+	CreateActionOptions_SourceType_Local            = "local"
 )
 
 // NewCreateActionOptions : Instantiate CreateActionOptions
@@ -4559,9 +4556,9 @@ func (options *CreateActionOptions) SetBastion(bastion *TargetResourceset) *Crea
 	return options
 }
 
-// SetTargets : Allow user to set Targets
-func (options *CreateActionOptions) SetTargets(targets []TargetResourceGroup) *CreateActionOptions {
-	options.Targets = targets
+// SetTargetsIni : Allow user to set TargetsIni
+func (options *CreateActionOptions) SetTargetsIni(targetsIni string) *CreateActionOptions {
+	options.TargetsIni = core.StringPtr(targetsIni)
 	return options
 }
 
@@ -4671,7 +4668,7 @@ type CreateJobOptions struct {
 // Constants associated with the CreateJobOptions.CommandObject property.
 // Name of the Schematics automation resource.
 const (
-	CreateJobOptions_CommandObject_Action = "action"
+	CreateJobOptions_CommandObject_Action    = "action"
 	CreateJobOptions_CommandObject_Workspace = "workspace"
 )
 
@@ -4679,34 +4676,34 @@ const (
 // Schematics job command name.
 const (
 	CreateJobOptions_CommandName_AnsiblePlaybookCheck = "ansible_playbook_check"
-	CreateJobOptions_CommandName_AnsiblePlaybookRun = "ansible_playbook_run"
-	CreateJobOptions_CommandName_HelmInstall = "helm_install"
-	CreateJobOptions_CommandName_HelmList = "helm_list"
-	CreateJobOptions_CommandName_HelmShow = "helm_show"
-	CreateJobOptions_CommandName_OpaEvaluate = "opa_evaluate"
-	CreateJobOptions_CommandName_TerraformInit = "terraform_init"
-	CreateJobOptions_CommandName_TerrformApply = "terrform_apply"
-	CreateJobOptions_CommandName_TerrformDestroy = "terrform_destroy"
-	CreateJobOptions_CommandName_TerrformPlan = "terrform_plan"
-	CreateJobOptions_CommandName_TerrformRefresh = "terrform_refresh"
-	CreateJobOptions_CommandName_TerrformShow = "terrform_show"
-	CreateJobOptions_CommandName_TerrformTaint = "terrform_taint"
-	CreateJobOptions_CommandName_WorkspaceApplyFlow = "workspace_apply_flow"
-	CreateJobOptions_CommandName_WorkspaceCustomFlow = "workspace_custom_flow"
+	CreateJobOptions_CommandName_AnsiblePlaybookRun   = "ansible_playbook_run"
+	CreateJobOptions_CommandName_HelmInstall          = "helm_install"
+	CreateJobOptions_CommandName_HelmList             = "helm_list"
+	CreateJobOptions_CommandName_HelmShow             = "helm_show"
+	CreateJobOptions_CommandName_OpaEvaluate          = "opa_evaluate"
+	CreateJobOptions_CommandName_TerraformInit        = "terraform_init"
+	CreateJobOptions_CommandName_TerrformApply        = "terrform_apply"
+	CreateJobOptions_CommandName_TerrformDestroy      = "terrform_destroy"
+	CreateJobOptions_CommandName_TerrformPlan         = "terrform_plan"
+	CreateJobOptions_CommandName_TerrformRefresh      = "terrform_refresh"
+	CreateJobOptions_CommandName_TerrformShow         = "terrform_show"
+	CreateJobOptions_CommandName_TerrformTaint        = "terrform_taint"
+	CreateJobOptions_CommandName_WorkspaceApplyFlow   = "workspace_apply_flow"
+	CreateJobOptions_CommandName_WorkspaceCustomFlow  = "workspace_custom_flow"
 	CreateJobOptions_CommandName_WorkspaceDestroyFlow = "workspace_destroy_flow"
-	CreateJobOptions_CommandName_WorkspaceInitFlow = "workspace_init_flow"
-	CreateJobOptions_CommandName_WorkspacePlanFlow = "workspace_plan_flow"
+	CreateJobOptions_CommandName_WorkspaceInitFlow    = "workspace_init_flow"
+	CreateJobOptions_CommandName_WorkspacePlanFlow    = "workspace_plan_flow"
 	CreateJobOptions_CommandName_WorkspaceRefreshFlow = "workspace_refresh_flow"
-	CreateJobOptions_CommandName_WorkspaceShowFlow = "workspace_show_flow"
+	CreateJobOptions_CommandName_WorkspaceShowFlow    = "workspace_show_flow"
 )
 
 // Constants associated with the CreateJobOptions.Location property.
 // List of workspace locations supported by IBM Cloud Schematics service.  Note, this does not limit the location of the
 // resources provisioned using Schematics.
 const (
-	CreateJobOptions_Location_EuDe = "eu_de"
-	CreateJobOptions_Location_EuGb = "eu_gb"
-	CreateJobOptions_Location_UsEast = "us_east"
+	CreateJobOptions_Location_EuDe    = "eu_de"
+	CreateJobOptions_Location_EuGb    = "eu_gb"
+	CreateJobOptions_Location_UsEast  = "us_east"
 	CreateJobOptions_Location_UsSouth = "us_south"
 )
 
@@ -5206,7 +5203,7 @@ type DeleteJobOptions struct {
 // NewDeleteJobOptions : Instantiate DeleteJobOptions
 func (*SchematicsV1) NewDeleteJobOptions(jobID string, refreshToken string) *DeleteJobOptions {
 	return &DeleteJobOptions{
-		JobID: core.StringPtr(jobID),
+		JobID:        core.StringPtr(jobID),
 		RefreshToken: core.StringPtr(refreshToken),
 	}
 }
@@ -5285,7 +5282,7 @@ type DeleteWorkspaceActivityOptions struct {
 // NewDeleteWorkspaceActivityOptions : Instantiate DeleteWorkspaceActivityOptions
 func (*SchematicsV1) NewDeleteWorkspaceActivityOptions(wID string, activityID string) *DeleteWorkspaceActivityOptions {
 	return &DeleteWorkspaceActivityOptions{
-		WID: core.StringPtr(wID),
+		WID:        core.StringPtr(wID),
 		ActivityID: core.StringPtr(activityID),
 	}
 }
@@ -5327,7 +5324,7 @@ type DeleteWorkspaceOptions struct {
 // NewDeleteWorkspaceOptions : Instantiate DeleteWorkspaceOptions
 func (*SchematicsV1) NewDeleteWorkspaceOptions(wID string, refreshToken string) *DeleteWorkspaceOptions {
 	return &DeleteWorkspaceOptions{
-		WID: core.StringPtr(wID),
+		WID:          core.StringPtr(wID),
 		RefreshToken: core.StringPtr(refreshToken),
 	}
 }
@@ -5375,7 +5372,7 @@ type DestroyWorkspaceCommandOptions struct {
 // NewDestroyWorkspaceCommandOptions : Instantiate DestroyWorkspaceCommandOptions
 func (*SchematicsV1) NewDestroyWorkspaceCommandOptions(wID string, refreshToken string) *DestroyWorkspaceCommandOptions {
 	return &DestroyWorkspaceCommandOptions{
-		WID: core.StringPtr(wID),
+		WID:          core.StringPtr(wID),
 		RefreshToken: core.StringPtr(refreshToken),
 	}
 }
@@ -5419,7 +5416,6 @@ type EnvVariableResponse struct {
 	Value *string `json:"value,omitempty"`
 }
 
-
 // UnmarshalEnvVariableResponse unmarshals an instance of EnvVariableResponse from the specified map of raw messages.
 func UnmarshalEnvVariableResponse(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(EnvVariableResponse)
@@ -5455,15 +5451,14 @@ type ExternalSource struct {
 // Constants associated with the ExternalSource.SourceType property.
 // Type of source for the Template.
 const (
-	ExternalSource_SourceType_ExternalScm = "external_scm"
-	ExternalSource_SourceType_GitHub = "git_hub"
+	ExternalSource_SourceType_ExternalScm      = "external_scm"
+	ExternalSource_SourceType_GitHub           = "git_hub"
 	ExternalSource_SourceType_GitHubEnterprise = "git_hub_enterprise"
-	ExternalSource_SourceType_GitLab = "git_lab"
-	ExternalSource_SourceType_IbmCloudCatalog = "ibm_cloud_catalog"
-	ExternalSource_SourceType_IbmGitLab = "ibm_git_lab"
-	ExternalSource_SourceType_Local = "local"
+	ExternalSource_SourceType_GitLab           = "git_lab"
+	ExternalSource_SourceType_IbmCloudCatalog  = "ibm_cloud_catalog"
+	ExternalSource_SourceType_IbmGitLab        = "ibm_git_lab"
+	ExternalSource_SourceType_Local            = "local"
 )
-
 
 // NewExternalSource : Instantiate ExternalSource (Generic Model Constructor)
 func (*SchematicsV1) NewExternalSource(sourceType string) (model *ExternalSource, err error) {
@@ -5506,7 +5501,6 @@ type ExternalSourceGit struct {
 	// Name of the branch, used to fetch the Git Repo.
 	GitBranch *string `json:"git_branch,omitempty"`
 }
-
 
 // UnmarshalExternalSourceGit unmarshals an instance of ExternalSourceGit from the specified map of raw messages.
 func UnmarshalExternalSourceGit(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -5551,7 +5545,7 @@ type GetActionOptions struct {
 // Level of details returned by the get method.
 const (
 	GetActionOptions_Profile_Detailed = "detailed"
-	GetActionOptions_Profile_Summary = "summary"
+	GetActionOptions_Profile_Summary  = "summary"
 )
 
 // NewGetActionOptions : Instantiate GetActionOptions
@@ -5635,7 +5629,7 @@ type GetDiscoveredKmsInstancesOptions struct {
 func (*SchematicsV1) NewGetDiscoveredKmsInstancesOptions(encryptionScheme string, location string) *GetDiscoveredKmsInstancesOptions {
 	return &GetDiscoveredKmsInstancesOptions{
 		EncryptionScheme: core.StringPtr(encryptionScheme),
-		Location: core.StringPtr(location),
+		Location:         core.StringPtr(location),
 	}
 }
 
@@ -5691,7 +5685,7 @@ type GetJobOptions struct {
 // Level of details returned by the get method.
 const (
 	GetJobOptions_Profile_Detailed = "detailed"
-	GetJobOptions_Profile_Summary = "summary"
+	GetJobOptions_Profile_Summary  = "summary"
 )
 
 // NewGetJobOptions : Instantiate GetJobOptions
@@ -5825,8 +5819,8 @@ type GetTemplateActivityLogOptions struct {
 // NewGetTemplateActivityLogOptions : Instantiate GetTemplateActivityLogOptions
 func (*SchematicsV1) NewGetTemplateActivityLogOptions(wID string, tID string, activityID string) *GetTemplateActivityLogOptions {
 	return &GetTemplateActivityLogOptions{
-		WID: core.StringPtr(wID),
-		TID: core.StringPtr(tID),
+		WID:        core.StringPtr(wID),
+		TID:        core.StringPtr(tID),
 		ActivityID: core.StringPtr(activityID),
 	}
 }
@@ -5971,7 +5965,7 @@ type GetWorkspaceActivityLogsOptions struct {
 // NewGetWorkspaceActivityLogsOptions : Instantiate GetWorkspaceActivityLogsOptions
 func (*SchematicsV1) NewGetWorkspaceActivityLogsOptions(wID string, activityID string) *GetWorkspaceActivityLogsOptions {
 	return &GetWorkspaceActivityLogsOptions{
-		WID: core.StringPtr(wID),
+		WID:        core.StringPtr(wID),
 		ActivityID: core.StringPtr(activityID),
 	}
 }
@@ -6010,7 +6004,7 @@ type GetWorkspaceActivityOptions struct {
 // NewGetWorkspaceActivityOptions : Instantiate GetWorkspaceActivityOptions
 func (*SchematicsV1) NewGetWorkspaceActivityOptions(wID string, activityID string) *GetWorkspaceActivityOptions {
 	return &GetWorkspaceActivityOptions{
-		WID: core.StringPtr(wID),
+		WID:        core.StringPtr(wID),
 		ActivityID: core.StringPtr(activityID),
 	}
 }
@@ -6247,7 +6241,7 @@ type GetWorkspaceReadmeOptions struct {
 // Constants associated with the GetWorkspaceReadmeOptions.Formatted property.
 // The format of the readme file.  Value ''markdown'' will give markdown, otherwise html.
 const (
-	GetWorkspaceReadmeOptions_Formatted_HTML = "html"
+	GetWorkspaceReadmeOptions_Formatted_HTML     = "html"
 	GetWorkspaceReadmeOptions_Formatted_Markdown = "markdown"
 )
 
@@ -6443,8 +6437,8 @@ type Job struct {
 	// Job data.
 	Data *JobData `json:"data,omitempty"`
 
-	// Job targets.
-	Targets []TargetResourceset `json:"targets,omitempty"`
+	// Inventory of host and host group for the playbook, in .ini file format.
+	TargetsIni *string `json:"targets_ini,omitempty"`
 
 	// Complete Target details with user inputs and system generated data.
 	Bastion *TargetResourceset `json:"bastion,omitempty"`
@@ -6468,7 +6462,7 @@ type Job struct {
 // Constants associated with the Job.CommandObject property.
 // Name of the Schematics automation resource.
 const (
-	Job_CommandObject_Action = "action"
+	Job_CommandObject_Action    = "action"
 	Job_CommandObject_Workspace = "workspace"
 )
 
@@ -6476,37 +6470,36 @@ const (
 // Schematics job command name.
 const (
 	Job_CommandName_AnsiblePlaybookCheck = "ansible_playbook_check"
-	Job_CommandName_AnsiblePlaybookRun = "ansible_playbook_run"
-	Job_CommandName_HelmInstall = "helm_install"
-	Job_CommandName_HelmList = "helm_list"
-	Job_CommandName_HelmShow = "helm_show"
-	Job_CommandName_OpaEvaluate = "opa_evaluate"
-	Job_CommandName_TerraformInit = "terraform_init"
-	Job_CommandName_TerrformApply = "terrform_apply"
-	Job_CommandName_TerrformDestroy = "terrform_destroy"
-	Job_CommandName_TerrformPlan = "terrform_plan"
-	Job_CommandName_TerrformRefresh = "terrform_refresh"
-	Job_CommandName_TerrformShow = "terrform_show"
-	Job_CommandName_TerrformTaint = "terrform_taint"
-	Job_CommandName_WorkspaceApplyFlow = "workspace_apply_flow"
-	Job_CommandName_WorkspaceCustomFlow = "workspace_custom_flow"
+	Job_CommandName_AnsiblePlaybookRun   = "ansible_playbook_run"
+	Job_CommandName_HelmInstall          = "helm_install"
+	Job_CommandName_HelmList             = "helm_list"
+	Job_CommandName_HelmShow             = "helm_show"
+	Job_CommandName_OpaEvaluate          = "opa_evaluate"
+	Job_CommandName_TerraformInit        = "terraform_init"
+	Job_CommandName_TerrformApply        = "terrform_apply"
+	Job_CommandName_TerrformDestroy      = "terrform_destroy"
+	Job_CommandName_TerrformPlan         = "terrform_plan"
+	Job_CommandName_TerrformRefresh      = "terrform_refresh"
+	Job_CommandName_TerrformShow         = "terrform_show"
+	Job_CommandName_TerrformTaint        = "terrform_taint"
+	Job_CommandName_WorkspaceApplyFlow   = "workspace_apply_flow"
+	Job_CommandName_WorkspaceCustomFlow  = "workspace_custom_flow"
 	Job_CommandName_WorkspaceDestroyFlow = "workspace_destroy_flow"
-	Job_CommandName_WorkspaceInitFlow = "workspace_init_flow"
-	Job_CommandName_WorkspacePlanFlow = "workspace_plan_flow"
+	Job_CommandName_WorkspaceInitFlow    = "workspace_init_flow"
+	Job_CommandName_WorkspacePlanFlow    = "workspace_plan_flow"
 	Job_CommandName_WorkspaceRefreshFlow = "workspace_refresh_flow"
-	Job_CommandName_WorkspaceShowFlow = "workspace_show_flow"
+	Job_CommandName_WorkspaceShowFlow    = "workspace_show_flow"
 )
 
 // Constants associated with the Job.Location property.
 // List of workspace locations supported by IBM Cloud Schematics service.  Note, this does not limit the location of the
 // resources provisioned using Schematics.
 const (
-	Job_Location_EuDe = "eu_de"
-	Job_Location_EuGb = "eu_gb"
-	Job_Location_UsEast = "us_east"
+	Job_Location_EuDe    = "eu_de"
+	Job_Location_EuGb    = "eu_gb"
+	Job_Location_UsEast  = "us_east"
 	Job_Location_UsSouth = "us_south"
 )
-
 
 // UnmarshalJob unmarshals an instance of Job from the specified map of raw messages.
 func UnmarshalJob(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -6591,7 +6584,7 @@ func UnmarshalJob(m map[string]json.RawMessage, result interface{}) (err error) 
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(m, "targets", &obj.Targets, UnmarshalTargetResourceset)
+	err = core.UnmarshalPrimitive(m, "targets_ini", &obj.TargetsIni)
 	if err != nil {
 		return
 	}
@@ -6635,10 +6628,9 @@ type JobData struct {
 // Constants associated with the JobData.JobType property.
 // Type of Job.
 const (
-	JobData_JobType_ActionJob = "action_job"
+	JobData_JobType_ActionJob       = "action_job"
 	JobData_JobType_RepoDownloadJob = "repo_download_job"
 )
-
 
 // NewJobData : Instantiate JobData (Generic Model Constructor)
 func (*SchematicsV1) NewJobData(jobType string) (model *JobData, err error) {
@@ -6682,7 +6674,6 @@ type JobDataAction struct {
 	UpdatedAt *strfmt.DateTime `json:"updated_at,omitempty"`
 }
 
-
 // UnmarshalJobDataAction unmarshals an instance of JobDataAction from the specified map of raw messages.
 func UnmarshalJobDataAction(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(JobDataAction)
@@ -6724,7 +6715,6 @@ type JobList struct {
 	// List of job records.
 	Jobs []JobLite `json:"jobs,omitempty"`
 }
-
 
 // UnmarshalJobList unmarshals an instance of JobList from the specified map of raw messages.
 func UnmarshalJobList(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -6779,8 +6769,8 @@ type JobLite struct {
 	// Resource-group name derived from the related Action,.
 	ResourceGroup *string `json:"resource_group,omitempty"`
 
-	// Job targets.
-	Targets []TargetResourceset `json:"targets,omitempty"`
+	// Inventory of host and host group for the playbook, in .ini file format.
+	TargetsIni *string `json:"targets_ini,omitempty"`
 
 	// Job submission time.
 	SubmittedAt *strfmt.DateTime `json:"submitted_at,omitempty"`
@@ -6810,7 +6800,7 @@ type JobLite struct {
 // Constants associated with the JobLite.CommandObject property.
 // Name of the Schematics automation resource.
 const (
-	JobLite_CommandObject_Action = "action"
+	JobLite_CommandObject_Action    = "action"
 	JobLite_CommandObject_Workspace = "workspace"
 )
 
@@ -6818,37 +6808,36 @@ const (
 // Schematics job command name.
 const (
 	JobLite_CommandName_AnsiblePlaybookCheck = "ansible_playbook_check"
-	JobLite_CommandName_AnsiblePlaybookRun = "ansible_playbook_run"
-	JobLite_CommandName_HelmInstall = "helm_install"
-	JobLite_CommandName_HelmList = "helm_list"
-	JobLite_CommandName_HelmShow = "helm_show"
-	JobLite_CommandName_OpaEvaluate = "opa_evaluate"
-	JobLite_CommandName_TerraformInit = "terraform_init"
-	JobLite_CommandName_TerrformApply = "terrform_apply"
-	JobLite_CommandName_TerrformDestroy = "terrform_destroy"
-	JobLite_CommandName_TerrformPlan = "terrform_plan"
-	JobLite_CommandName_TerrformRefresh = "terrform_refresh"
-	JobLite_CommandName_TerrformShow = "terrform_show"
-	JobLite_CommandName_TerrformTaint = "terrform_taint"
-	JobLite_CommandName_WorkspaceApplyFlow = "workspace_apply_flow"
-	JobLite_CommandName_WorkspaceCustomFlow = "workspace_custom_flow"
+	JobLite_CommandName_AnsiblePlaybookRun   = "ansible_playbook_run"
+	JobLite_CommandName_HelmInstall          = "helm_install"
+	JobLite_CommandName_HelmList             = "helm_list"
+	JobLite_CommandName_HelmShow             = "helm_show"
+	JobLite_CommandName_OpaEvaluate          = "opa_evaluate"
+	JobLite_CommandName_TerraformInit        = "terraform_init"
+	JobLite_CommandName_TerrformApply        = "terrform_apply"
+	JobLite_CommandName_TerrformDestroy      = "terrform_destroy"
+	JobLite_CommandName_TerrformPlan         = "terrform_plan"
+	JobLite_CommandName_TerrformRefresh      = "terrform_refresh"
+	JobLite_CommandName_TerrformShow         = "terrform_show"
+	JobLite_CommandName_TerrformTaint        = "terrform_taint"
+	JobLite_CommandName_WorkspaceApplyFlow   = "workspace_apply_flow"
+	JobLite_CommandName_WorkspaceCustomFlow  = "workspace_custom_flow"
 	JobLite_CommandName_WorkspaceDestroyFlow = "workspace_destroy_flow"
-	JobLite_CommandName_WorkspaceInitFlow = "workspace_init_flow"
-	JobLite_CommandName_WorkspacePlanFlow = "workspace_plan_flow"
+	JobLite_CommandName_WorkspaceInitFlow    = "workspace_init_flow"
+	JobLite_CommandName_WorkspacePlanFlow    = "workspace_plan_flow"
 	JobLite_CommandName_WorkspaceRefreshFlow = "workspace_refresh_flow"
-	JobLite_CommandName_WorkspaceShowFlow = "workspace_show_flow"
+	JobLite_CommandName_WorkspaceShowFlow    = "workspace_show_flow"
 )
 
 // Constants associated with the JobLite.Location property.
 // List of workspace locations supported by IBM Cloud Schematics service.  Note, this does not limit the location of the
 // resources provisioned using Schematics.
 const (
-	JobLite_Location_EuDe = "eu_de"
-	JobLite_Location_EuGb = "eu_gb"
-	JobLite_Location_UsEast = "us_east"
+	JobLite_Location_EuDe    = "eu_de"
+	JobLite_Location_EuGb    = "eu_gb"
+	JobLite_Location_UsEast  = "us_east"
 	JobLite_Location_UsSouth = "us_south"
 )
-
 
 // UnmarshalJobLite unmarshals an instance of JobLite from the specified map of raw messages.
 func UnmarshalJobLite(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -6889,7 +6878,7 @@ func UnmarshalJobLite(m map[string]json.RawMessage, result interface{}) (err err
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalModel(m, "targets", &obj.Targets, UnmarshalTargetResourceset)
+	err = core.UnmarshalPrimitive(m, "targets_ini", &obj.TargetsIni)
 	if err != nil {
 		return
 	}
@@ -6953,12 +6942,11 @@ type JobLog struct {
 // Constants associated with the JobLog.Format property.
 // Format of the Log text.
 const (
-	JobLog_Format_HTML = "html"
-	JobLog_Format_JSON = "json"
+	JobLog_Format_HTML     = "html"
+	JobLog_Format_JSON     = "json"
 	JobLog_Format_Markdown = "markdown"
-	JobLog_Format_Rtf = "rtf"
+	JobLog_Format_Rtf      = "rtf"
 )
-
 
 // UnmarshalJobLog unmarshals an instance of JobLog from the specified map of raw messages.
 func UnmarshalJobLog(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -7021,13 +7009,12 @@ type JobLogSummary struct {
 // Constants associated with the JobLogSummary.JobType property.
 // Type of Job.
 const (
-	JobLogSummary_JobType_ActionJob = "action_job"
-	JobLogSummary_JobType_CapsuleJob = "capsule_job"
-	JobLogSummary_JobType_ControlsJob = "controls_job"
+	JobLogSummary_JobType_ActionJob       = "action_job"
+	JobLogSummary_JobType_CapsuleJob      = "capsule_job"
+	JobLogSummary_JobType_ControlsJob     = "controls_job"
 	JobLogSummary_JobType_RepoDownloadJob = "repo_download_job"
-	JobLogSummary_JobType_WorkspaceJob = "workspace_job"
+	JobLogSummary_JobType_WorkspaceJob    = "workspace_job"
 )
-
 
 // UnmarshalJobLogSummary unmarshals an instance of JobLogSummary from the specified map of raw messages.
 func UnmarshalJobLogSummary(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -7083,7 +7070,6 @@ type JobLogSummaryActionJob struct {
 	Recap *JobLogSummaryActionJobRecap `json:"recap,omitempty"`
 }
 
-
 // UnmarshalJobLogSummaryActionJob unmarshals an instance of JobLogSummaryActionJob from the specified map of raw messages.
 func UnmarshalJobLogSummaryActionJob(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(JobLogSummaryActionJob)
@@ -7128,7 +7114,6 @@ type JobLogSummaryActionJobRecap struct {
 	Unreachable *float64 `json:"unreachable,omitempty"`
 }
 
-
 // UnmarshalJobLogSummaryActionJobRecap unmarshals an instance of JobLogSummaryActionJobRecap from the specified map of raw messages.
 func UnmarshalJobLogSummaryActionJobRecap(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(JobLogSummaryActionJobRecap)
@@ -7172,7 +7157,6 @@ type JobLogSummaryLogErrorsItem struct {
 	ErrorCount *float64 `json:"error_count,omitempty"`
 }
 
-
 // UnmarshalJobLogSummaryLogErrorsItem unmarshals an instance of JobLogSummaryLogErrorsItem from the specified map of raw messages.
 func UnmarshalJobLogSummaryLogErrorsItem(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(JobLogSummaryLogErrorsItem)
@@ -7209,7 +7193,6 @@ type JobLogSummaryRepoDownloadJob struct {
 	// Number of outputs detected.
 	OutputsCount *string `json:"outputs_count,omitempty"`
 }
-
 
 // UnmarshalJobLogSummaryRepoDownloadJob unmarshals an instance of JobLogSummaryRepoDownloadJob from the specified map of raw messages.
 func UnmarshalJobLogSummaryRepoDownloadJob(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -7258,7 +7241,6 @@ type JobStateData struct {
 	// Job status updation timestamp.
 	UpdatedAt *strfmt.DateTime `json:"updated_at,omitempty"`
 }
-
 
 // UnmarshalJobStateData unmarshals an instance of JobStateData from the specified map of raw messages.
 func UnmarshalJobStateData(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -7310,7 +7292,6 @@ const (
 	JobStateDataSummaryItem_Type_String = "string"
 )
 
-
 // UnmarshalJobStateDataSummaryItem unmarshals an instance of JobStateDataSummaryItem from the specified map of raw messages.
 func UnmarshalJobStateDataSummaryItem(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(JobStateDataSummaryItem)
@@ -7335,7 +7316,6 @@ type JobStatus struct {
 	// Action Job Status.
 	ActionJobStatus *JobStatusAction `json:"action_job_status,omitempty"`
 }
-
 
 // UnmarshalJobStatus unmarshals an instance of JobStatus from the specified map of raw messages.
 func UnmarshalJobStatus(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -7378,31 +7358,30 @@ type JobStatusAction struct {
 // Constants associated with the JobStatusAction.StatusCode property.
 // Status of Jobs.
 const (
-	JobStatusAction_StatusCode_IobFinished = "iob_finished"
-	JobStatusAction_StatusCode_JobCancelled = "job_cancelled"
-	JobStatusAction_StatusCode_JobFailed = "job_failed"
+	JobStatusAction_StatusCode_IobFinished   = "iob_finished"
+	JobStatusAction_StatusCode_JobCancelled  = "job_cancelled"
+	JobStatusAction_StatusCode_JobFailed     = "job_failed"
 	JobStatusAction_StatusCode_JobInProgress = "job_in_progress"
-	JobStatusAction_StatusCode_JobPending = "job_pending"
+	JobStatusAction_StatusCode_JobPending    = "job_pending"
 )
 
 // Constants associated with the JobStatusAction.BastionStatusCode property.
 // Status of Resources.
 const (
-	JobStatusAction_BastionStatusCode_Error = "error"
-	JobStatusAction_BastionStatusCode_None = "none"
+	JobStatusAction_BastionStatusCode_Error      = "error"
+	JobStatusAction_BastionStatusCode_None       = "none"
 	JobStatusAction_BastionStatusCode_Processing = "processing"
-	JobStatusAction_BastionStatusCode_Ready = "ready"
+	JobStatusAction_BastionStatusCode_Ready      = "ready"
 )
 
 // Constants associated with the JobStatusAction.TargetsStatusCode property.
 // Status of Resources.
 const (
-	JobStatusAction_TargetsStatusCode_Error = "error"
-	JobStatusAction_TargetsStatusCode_None = "none"
+	JobStatusAction_TargetsStatusCode_Error      = "error"
+	JobStatusAction_TargetsStatusCode_None       = "none"
 	JobStatusAction_TargetsStatusCode_Processing = "processing"
-	JobStatusAction_TargetsStatusCode_Ready = "ready"
+	JobStatusAction_TargetsStatusCode_Ready      = "ready"
 )
-
 
 // UnmarshalJobStatusAction unmarshals an instance of JobStatusAction from the specified map of raw messages.
 func UnmarshalJobStatusAction(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -7458,7 +7437,6 @@ type JobStatusType struct {
 	LastUpdatedOn *strfmt.DateTime `json:"last_updated_on,omitempty"`
 }
 
-
 // UnmarshalJobStatusType unmarshals an instance of JobStatusType from the specified map of raw messages.
 func UnmarshalJobStatusType(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(JobStatusType)
@@ -7496,7 +7474,6 @@ type KMSDiscovery struct {
 	// List of KMS instances.
 	KmsInstances []KMSInstances `json:"kms_instances,omitempty"`
 }
-
 
 // UnmarshalKMSDiscovery unmarshals an instance of KMSDiscovery from the specified map of raw messages.
 func UnmarshalKMSDiscovery(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -7547,7 +7524,6 @@ type KMSInstances struct {
 	// List of keys.
 	Keys []KMSInstancesKeysItem `json:"keys,omitempty"`
 }
-
 
 // UnmarshalKMSInstances unmarshals an instance of KMSInstances from the specified map of raw messages.
 func UnmarshalKMSInstances(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -7600,7 +7576,6 @@ type KMSInstancesKeysItem struct {
 	Error *string `json:"error,omitempty"`
 }
 
-
 // UnmarshalKMSInstancesKeysItem unmarshals an instance of KMSInstancesKeysItem from the specified map of raw messages.
 func UnmarshalKMSInstancesKeysItem(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(KMSInstancesKeysItem)
@@ -7637,7 +7612,6 @@ type KMSSettings struct {
 	// Secondary CRK details.
 	SecondaryCrk *KMSSettingsSecondaryCrk `json:"secondary_crk,omitempty"`
 }
-
 
 // UnmarshalKMSSettings unmarshals an instance of KMSSettings from the specified map of raw messages.
 func UnmarshalKMSSettings(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -7678,7 +7652,6 @@ type KMSSettingsPrimaryCrk struct {
 	KeyCrn *string `json:"key_crn,omitempty"`
 }
 
-
 // UnmarshalKMSSettingsPrimaryCrk unmarshals an instance of KMSSettingsPrimaryCrk from the specified map of raw messages.
 func UnmarshalKMSSettingsPrimaryCrk(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(KMSSettingsPrimaryCrk)
@@ -7709,7 +7682,6 @@ type KMSSettingsSecondaryCrk struct {
 	// CRN of the Secondary Key.
 	KeyCrn *string `json:"key_crn,omitempty"`
 }
-
 
 // UnmarshalKMSSettingsSecondaryCrk unmarshals an instance of KMSSettingsSecondaryCrk from the specified map of raw messages.
 func UnmarshalKMSSettingsSecondaryCrk(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -7753,7 +7725,7 @@ type ListActionsOptions struct {
 // Constants associated with the ListActionsOptions.Profile property.
 // Level of details returned by the get method.
 const (
-	ListActionsOptions_Profile_Ids = "ids"
+	ListActionsOptions_Profile_Ids     = "ids"
 	ListActionsOptions_Profile_Summary = "summary"
 )
 
@@ -7880,15 +7852,15 @@ type ListJobsOptions struct {
 // Constants associated with the ListJobsOptions.Profile property.
 // Level of details returned by the get method.
 const (
-	ListJobsOptions_Profile_Ids = "ids"
+	ListJobsOptions_Profile_Ids     = "ids"
 	ListJobsOptions_Profile_Summary = "summary"
 )
 
 // Constants associated with the ListJobsOptions.Resource property.
 // Name of the resource (workspace, actions or controls).
 const (
-	ListJobsOptions_Resource_Actions = "actions"
-	ListJobsOptions_Resource_Controls = "controls"
+	ListJobsOptions_Resource_Actions    = "actions"
+	ListJobsOptions_Resource_Controls   = "controls"
 	ListJobsOptions_Resource_Workspaces = "workspaces"
 )
 
@@ -8102,7 +8074,6 @@ type LogStoreResponse struct {
 	LogStoreURL *string `json:"log_store_url,omitempty"`
 }
 
-
 // UnmarshalLogStoreResponse unmarshals an instance of LogStoreResponse from the specified map of raw messages.
 func UnmarshalLogStoreResponse(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(LogStoreResponse)
@@ -8131,7 +8102,6 @@ type LogStoreResponseList struct {
 	// Runtime data.
 	RuntimeData []LogStoreResponse `json:"runtime_data,omitempty"`
 }
-
 
 // UnmarshalLogStoreResponseList unmarshals an instance of LogStoreResponseList from the specified map of raw messages.
 func UnmarshalLogStoreResponseList(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -8176,7 +8146,6 @@ type LogSummary struct {
 	// Time takemn to perform activity.
 	TimeTaken *float64 `json:"time_taken,omitempty"`
 }
-
 
 // UnmarshalLogSummary unmarshals an instance of LogSummary from the specified map of raw messages.
 func UnmarshalLogSummary(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -8240,7 +8209,6 @@ type OutputValuesItem struct {
 	ValueType *string `json:"value_type,omitempty"`
 }
 
-
 // UnmarshalOutputValuesItem unmarshals an instance of OutputValuesItem from the specified map of raw messages.
 func UnmarshalOutputValuesItem(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(OutputValuesItem)
@@ -8280,7 +8248,7 @@ type PlanWorkspaceCommandOptions struct {
 // NewPlanWorkspaceCommandOptions : Instantiate PlanWorkspaceCommandOptions
 func (*SchematicsV1) NewPlanWorkspaceCommandOptions(wID string, refreshToken string) *PlanWorkspaceCommandOptions {
 	return &PlanWorkspaceCommandOptions{
-		WID: core.StringPtr(wID),
+		WID:          core.StringPtr(wID),
 		RefreshToken: core.StringPtr(refreshToken),
 	}
 }
@@ -8319,7 +8287,7 @@ type RefreshWorkspaceCommandOptions struct {
 // NewRefreshWorkspaceCommandOptions : Instantiate RefreshWorkspaceCommandOptions
 func (*SchematicsV1) NewRefreshWorkspaceCommandOptions(wID string, refreshToken string) *RefreshWorkspaceCommandOptions {
 	return &RefreshWorkspaceCommandOptions{
-		WID: core.StringPtr(wID),
+		WID:          core.StringPtr(wID),
 		RefreshToken: core.StringPtr(refreshToken),
 	}
 }
@@ -8397,7 +8365,7 @@ type ReplaceJobOptions struct {
 // Constants associated with the ReplaceJobOptions.CommandObject property.
 // Name of the Schematics automation resource.
 const (
-	ReplaceJobOptions_CommandObject_Action = "action"
+	ReplaceJobOptions_CommandObject_Action    = "action"
 	ReplaceJobOptions_CommandObject_Workspace = "workspace"
 )
 
@@ -8405,41 +8373,41 @@ const (
 // Schematics job command name.
 const (
 	ReplaceJobOptions_CommandName_AnsiblePlaybookCheck = "ansible_playbook_check"
-	ReplaceJobOptions_CommandName_AnsiblePlaybookRun = "ansible_playbook_run"
-	ReplaceJobOptions_CommandName_HelmInstall = "helm_install"
-	ReplaceJobOptions_CommandName_HelmList = "helm_list"
-	ReplaceJobOptions_CommandName_HelmShow = "helm_show"
-	ReplaceJobOptions_CommandName_OpaEvaluate = "opa_evaluate"
-	ReplaceJobOptions_CommandName_TerraformInit = "terraform_init"
-	ReplaceJobOptions_CommandName_TerrformApply = "terrform_apply"
-	ReplaceJobOptions_CommandName_TerrformDestroy = "terrform_destroy"
-	ReplaceJobOptions_CommandName_TerrformPlan = "terrform_plan"
-	ReplaceJobOptions_CommandName_TerrformRefresh = "terrform_refresh"
-	ReplaceJobOptions_CommandName_TerrformShow = "terrform_show"
-	ReplaceJobOptions_CommandName_TerrformTaint = "terrform_taint"
-	ReplaceJobOptions_CommandName_WorkspaceApplyFlow = "workspace_apply_flow"
-	ReplaceJobOptions_CommandName_WorkspaceCustomFlow = "workspace_custom_flow"
+	ReplaceJobOptions_CommandName_AnsiblePlaybookRun   = "ansible_playbook_run"
+	ReplaceJobOptions_CommandName_HelmInstall          = "helm_install"
+	ReplaceJobOptions_CommandName_HelmList             = "helm_list"
+	ReplaceJobOptions_CommandName_HelmShow             = "helm_show"
+	ReplaceJobOptions_CommandName_OpaEvaluate          = "opa_evaluate"
+	ReplaceJobOptions_CommandName_TerraformInit        = "terraform_init"
+	ReplaceJobOptions_CommandName_TerrformApply        = "terrform_apply"
+	ReplaceJobOptions_CommandName_TerrformDestroy      = "terrform_destroy"
+	ReplaceJobOptions_CommandName_TerrformPlan         = "terrform_plan"
+	ReplaceJobOptions_CommandName_TerrformRefresh      = "terrform_refresh"
+	ReplaceJobOptions_CommandName_TerrformShow         = "terrform_show"
+	ReplaceJobOptions_CommandName_TerrformTaint        = "terrform_taint"
+	ReplaceJobOptions_CommandName_WorkspaceApplyFlow   = "workspace_apply_flow"
+	ReplaceJobOptions_CommandName_WorkspaceCustomFlow  = "workspace_custom_flow"
 	ReplaceJobOptions_CommandName_WorkspaceDestroyFlow = "workspace_destroy_flow"
-	ReplaceJobOptions_CommandName_WorkspaceInitFlow = "workspace_init_flow"
-	ReplaceJobOptions_CommandName_WorkspacePlanFlow = "workspace_plan_flow"
+	ReplaceJobOptions_CommandName_WorkspaceInitFlow    = "workspace_init_flow"
+	ReplaceJobOptions_CommandName_WorkspacePlanFlow    = "workspace_plan_flow"
 	ReplaceJobOptions_CommandName_WorkspaceRefreshFlow = "workspace_refresh_flow"
-	ReplaceJobOptions_CommandName_WorkspaceShowFlow = "workspace_show_flow"
+	ReplaceJobOptions_CommandName_WorkspaceShowFlow    = "workspace_show_flow"
 )
 
 // Constants associated with the ReplaceJobOptions.Location property.
 // List of workspace locations supported by IBM Cloud Schematics service.  Note, this does not limit the location of the
 // resources provisioned using Schematics.
 const (
-	ReplaceJobOptions_Location_EuDe = "eu_de"
-	ReplaceJobOptions_Location_EuGb = "eu_gb"
-	ReplaceJobOptions_Location_UsEast = "us_east"
+	ReplaceJobOptions_Location_EuDe    = "eu_de"
+	ReplaceJobOptions_Location_EuGb    = "eu_gb"
+	ReplaceJobOptions_Location_UsEast  = "us_east"
 	ReplaceJobOptions_Location_UsSouth = "us_south"
 )
 
 // NewReplaceJobOptions : Instantiate ReplaceJobOptions
 func (*SchematicsV1) NewReplaceJobOptions(jobID string, refreshToken string) *ReplaceJobOptions {
 	return &ReplaceJobOptions{
-		JobID: core.StringPtr(jobID),
+		JobID:        core.StringPtr(jobID),
 		RefreshToken: core.StringPtr(refreshToken),
 	}
 }
@@ -8927,7 +8895,6 @@ type ResourceGroupResponse struct {
 	State *string `json:"state,omitempty"`
 }
 
-
 // UnmarshalResourceGroupResponse unmarshals an instance of ResourceGroupResponse from the specified map of raw messages.
 func UnmarshalResourceGroupResponse(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(ResourceGroupResponse)
@@ -8984,7 +8951,7 @@ type RunWorkspaceCommandsOptions struct {
 // NewRunWorkspaceCommandsOptions : Instantiate RunWorkspaceCommandsOptions
 func (*SchematicsV1) NewRunWorkspaceCommandsOptions(wID string, refreshToken string) *RunWorkspaceCommandsOptions {
 	return &RunWorkspaceCommandsOptions{
-		WID: core.StringPtr(wID),
+		WID:          core.StringPtr(wID),
 		RefreshToken: core.StringPtr(refreshToken),
 	}
 }
@@ -9048,7 +9015,6 @@ type SchematicsLocations struct {
 	// Location name.
 	Name *string `json:"name,omitempty"`
 }
-
 
 // UnmarshalSchematicsLocations unmarshals an instance of SchematicsLocations from the specified map of raw messages.
 func UnmarshalSchematicsLocations(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -9135,7 +9101,6 @@ type SharedDatasetData struct {
 	// Variable type.
 	VarType *string `json:"var_type,omitempty"`
 }
-
 
 // UnmarshalSharedDatasetData unmarshals an instance of SharedDatasetData from the specified map of raw messages.
 func UnmarshalSharedDatasetData(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -9256,7 +9221,6 @@ type SharedDatasetResponse struct {
 	Version *string `json:"version,omitempty"`
 }
 
-
 // UnmarshalSharedDatasetResponse unmarshals an instance of SharedDatasetResponse from the specified map of raw messages.
 func UnmarshalSharedDatasetResponse(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(SharedDatasetResponse)
@@ -9333,7 +9297,6 @@ type SharedDatasetResponseList struct {
 	SharedDatasets []SharedDatasetResponse `json:"shared_datasets,omitempty"`
 }
 
-
 // UnmarshalSharedDatasetResponseList unmarshals an instance of SharedDatasetResponseList from the specified map of raw messages.
 func UnmarshalSharedDatasetResponseList(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(SharedDatasetResponseList)
@@ -9381,7 +9344,6 @@ type SharedTargetData struct {
 	// Cluster worker type.
 	WorkerMachineType *string `json:"worker_machine_type,omitempty"`
 }
-
 
 // UnmarshalSharedTargetData unmarshals an instance of SharedTargetData from the specified map of raw messages.
 func UnmarshalSharedTargetData(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -9451,7 +9413,6 @@ type SharedTargetDataResponse struct {
 	ResourceGroupID *string `json:"resource_group_id,omitempty"`
 }
 
-
 // UnmarshalSharedTargetDataResponse unmarshals an instance of SharedTargetDataResponse from the specified map of raw messages.
 func UnmarshalSharedTargetDataResponse(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(SharedTargetDataResponse)
@@ -9498,7 +9459,6 @@ type StateStoreResponse struct {
 	StateStoreURL *string `json:"state_store_url,omitempty"`
 }
 
-
 // UnmarshalStateStoreResponse unmarshals an instance of StateStoreResponse from the specified map of raw messages.
 func UnmarshalStateStoreResponse(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(StateStoreResponse)
@@ -9528,7 +9488,6 @@ type StateStoreResponseList struct {
 	RuntimeData []StateStoreResponse `json:"runtime_data,omitempty"`
 }
 
-
 // UnmarshalStateStoreResponseList unmarshals an instance of StateStoreResponseList from the specified map of raw messages.
 func UnmarshalStateStoreResponseList(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(StateStoreResponseList)
@@ -9552,7 +9511,6 @@ type SystemLock struct {
 	SysLockedAt *strfmt.DateTime `json:"sys_locked_at,omitempty"`
 }
 
-
 // UnmarshalSystemLock unmarshals an instance of SystemLock from the specified map of raw messages.
 func UnmarshalSystemLock(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(SystemLock)
@@ -9565,109 +9523,6 @@ func UnmarshalSystemLock(m map[string]json.RawMessage, result interface{}) (err 
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "sys_locked_at", &obj.SysLockedAt)
-	if err != nil {
-		return
-	}
-	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
-	return
-}
-
-// TargetResource : describes a target resource.
-type TargetResource struct {
-	// ipaddress or resource_id of the resource.
-	ResourceID *string `json:"resource_id,omitempty"`
-
-	// Config for target resource.
-	ResourceConfigs []TargetResourceConfig `json:"resource_configs,omitempty"`
-}
-
-
-// UnmarshalTargetResource unmarshals an instance of TargetResource from the specified map of raw messages.
-func UnmarshalTargetResource(m map[string]json.RawMessage, result interface{}) (err error) {
-	obj := new(TargetResource)
-	err = core.UnmarshalPrimitive(m, "resource_id", &obj.ResourceID)
-	if err != nil {
-		return
-	}
-	err = core.UnmarshalModel(m, "resource_configs", &obj.ResourceConfigs, UnmarshalTargetResourceConfig)
-	if err != nil {
-		return
-	}
-	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
-	return
-}
-
-// TargetResourceConfig : Describe target resource config.
-type TargetResourceConfig struct {
-	// Name of the resource config.
-	Name *string `json:"name,omitempty"`
-
-	// Value of the resource config.
-	Value *string `json:"value,omitempty"`
-
-	// Description of config variable.
-	Description *string `json:"description,omitempty"`
-}
-
-
-// UnmarshalTargetResourceConfig unmarshals an instance of TargetResourceConfig from the specified map of raw messages.
-func UnmarshalTargetResourceConfig(m map[string]json.RawMessage, result interface{}) (err error) {
-	obj := new(TargetResourceConfig)
-	err = core.UnmarshalPrimitive(m, "name", &obj.Name)
-	if err != nil {
-		return
-	}
-	err = core.UnmarshalPrimitive(m, "value", &obj.Value)
-	if err != nil {
-		return
-	}
-	err = core.UnmarshalPrimitive(m, "description", &obj.Description)
-	if err != nil {
-		return
-	}
-	reflect.ValueOf(result).Elem().Set(reflect.ValueOf(obj))
-	return
-}
-
-// TargetResourceGroup : target resource group.
-type TargetResourceGroup struct {
-	// Name of the group.
-	Name *string `json:"name,omitempty"`
-
-	// Description of the target resource group.
-	Description *string `json:"description,omitempty"`
-
-	// Reference to credential value, used by target resources in group.
-	CredentialRef *string `json:"credential_ref,omitempty"`
-
-	// Reference to bastion, to access the target resources in group.
-	BastionRef *string `json:"bastion_ref,omitempty"`
-
-	// List of target resource.
-	TargetResources []TargetResource `json:"target_resources,omitempty"`
-}
-
-
-// UnmarshalTargetResourceGroup unmarshals an instance of TargetResourceGroup from the specified map of raw messages.
-func UnmarshalTargetResourceGroup(m map[string]json.RawMessage, result interface{}) (err error) {
-	obj := new(TargetResourceGroup)
-	err = core.UnmarshalPrimitive(m, "name", &obj.Name)
-	if err != nil {
-		return
-	}
-	err = core.UnmarshalPrimitive(m, "description", &obj.Description)
-	if err != nil {
-		return
-	}
-	err = core.UnmarshalPrimitive(m, "credential_ref", &obj.CredentialRef)
-	if err != nil {
-		return
-	}
-	err = core.UnmarshalPrimitive(m, "bastion_ref", &obj.BastionRef)
-	if err != nil {
-		return
-	}
-	err = core.UnmarshalModel(m, "target_resources", &obj.TargetResources, UnmarshalTargetResource)
 	if err != nil {
 		return
 	}
@@ -9713,7 +9568,6 @@ type TargetResourceset struct {
 	// Array of resource ids.
 	ResourceIds []string `json:"resource_ids,omitempty"`
 }
-
 
 // UnmarshalTargetResourceset unmarshals an instance of TargetResourceset from the specified map of raw messages.
 func UnmarshalTargetResourceset(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -9776,7 +9630,6 @@ type TemplateReadme struct {
 	Readme *string `json:"readme,omitempty"`
 }
 
-
 // UnmarshalTemplateReadme unmarshals an instance of TemplateReadme from the specified map of raw messages.
 func UnmarshalTemplateReadme(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(TemplateReadme)
@@ -9805,7 +9658,6 @@ type TemplateRepoRequest struct {
 	// Source URL.
 	URL *string `json:"url,omitempty"`
 }
-
 
 // UnmarshalTemplateRepoRequest unmarshals an instance of TemplateRepoRequest from the specified map of raw messages.
 func UnmarshalTemplateRepoRequest(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -9858,7 +9710,6 @@ type TemplateRepoResponse struct {
 	URL *string `json:"url,omitempty"`
 }
 
-
 // UnmarshalTemplateRepoResponse unmarshals an instance of TemplateRepoResponse from the specified map of raw messages.
 func UnmarshalTemplateRepoResponse(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(TemplateRepoResponse)
@@ -9906,7 +9757,6 @@ type TemplateRepoTarUploadResponse struct {
 	ID *string `json:"id,omitempty"`
 }
 
-
 // UnmarshalTemplateRepoTarUploadResponse unmarshals an instance of TemplateRepoTarUploadResponse from the specified map of raw messages.
 func UnmarshalTemplateRepoTarUploadResponse(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(TemplateRepoTarUploadResponse)
@@ -9943,7 +9793,6 @@ type TemplateRepoUpdateRequest struct {
 	// Source URL.
 	URL *string `json:"url,omitempty"`
 }
-
 
 // UnmarshalTemplateRepoUpdateRequest unmarshals an instance of TemplateRepoUpdateRequest from the specified map of raw messages.
 func UnmarshalTemplateRepoUpdateRequest(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -9995,7 +9844,6 @@ type TemplateResources struct {
 	// Type of templaes.
 	TemplateType *string `json:"template_type,omitempty"`
 }
-
 
 // UnmarshalTemplateResources unmarshals an instance of TemplateResources from the specified map of raw messages.
 func UnmarshalTemplateResources(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -10058,7 +9906,6 @@ type TemplateRunTimeDataResponse struct {
 	// State store URL.
 	StateStoreURL *string `json:"state_store_url,omitempty"`
 }
-
 
 // UnmarshalTemplateRunTimeDataResponse unmarshals an instance of TemplateRunTimeDataResponse from the specified map of raw messages.
 func UnmarshalTemplateRunTimeDataResponse(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -10126,7 +9973,6 @@ type TemplateSourceDataRequest struct {
 	Variablestore []WorkspaceVariableRequest `json:"variablestore,omitempty"`
 }
 
-
 // UnmarshalTemplateSourceDataRequest unmarshals an instance of TemplateSourceDataRequest from the specified map of raw messages.
 func UnmarshalTemplateSourceDataRequest(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(TemplateSourceDataRequest)
@@ -10181,7 +10027,7 @@ type TemplateSourceDataResponse struct {
 	ID *string `json:"id,omitempty"`
 
 	// Template tyoe.
-	TemplateType *string `json:"template_type,omitempty"`
+	Type *string `json:"type,omitempty"`
 
 	// Uninstall script name.
 	UninstallScriptName *string `json:"uninstall_script_name,omitempty"`
@@ -10198,7 +10044,6 @@ type TemplateSourceDataResponse struct {
 	// VariablesResponse -.
 	Variablestore []WorkspaceVariableResponse `json:"variablestore,omitempty"`
 }
-
 
 // UnmarshalTemplateSourceDataResponse unmarshals an instance of TemplateSourceDataResponse from the specified map of raw messages.
 func UnmarshalTemplateSourceDataResponse(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -10219,7 +10064,7 @@ func UnmarshalTemplateSourceDataResponse(m map[string]json.RawMessage, result in
 	if err != nil {
 		return
 	}
-	err = core.UnmarshalPrimitive(m, "template_type", &obj.TemplateType)
+	err = core.UnmarshalPrimitive(m, "type", &obj.Type)
 	if err != nil {
 		return
 	}
@@ -10260,7 +10105,6 @@ type TemplateStateStore struct {
 	Modules []interface{} `json:"modules,omitempty"`
 }
 
-
 // UnmarshalTemplateStateStore unmarshals an instance of TemplateStateStore from the specified map of raw messages.
 func UnmarshalTemplateStateStore(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(TemplateStateStore)
@@ -10292,7 +10136,6 @@ func UnmarshalTemplateStateStore(m map[string]json.RawMessage, result interface{
 type TemplateValues struct {
 	ValuesMetadata []interface{} `json:"values_metadata,omitempty"`
 }
-
 
 // UnmarshalTemplateValues unmarshals an instance of TemplateValues from the specified map of raw messages.
 func UnmarshalTemplateValues(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -10328,7 +10171,6 @@ type TerraformCommand struct {
 	// Command status.
 	CommandStatus *string `json:"command_status,omitempty"`
 }
-
 
 // UnmarshalTerraformCommand unmarshals an instance of TerraformCommand from the specified map of raw messages.
 func UnmarshalTerraformCommand(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -10404,8 +10246,8 @@ type UpdateActionOptions struct {
 	// Complete Target details with user inputs and system generated data.
 	Bastion *TargetResourceset `json:"bastion,omitempty"`
 
-	// Action targets.
-	Targets []TargetResourceGroup `json:"targets,omitempty"`
+	// Inventory of host and host group for the playbook, in .ini file format.
+	TargetsIni *string `json:"targets_ini,omitempty"`
 
 	// credentials of the Action.
 	Credentials []VariableData `json:"credentials,omitempty"`
@@ -10439,22 +10281,22 @@ type UpdateActionOptions struct {
 // List of workspace locations supported by IBM Cloud Schematics service.  Note, this does not limit the location of the
 // resources provisioned using Schematics.
 const (
-	UpdateActionOptions_Location_EuDe = "eu_de"
-	UpdateActionOptions_Location_EuGb = "eu_gb"
-	UpdateActionOptions_Location_UsEast = "us_east"
+	UpdateActionOptions_Location_EuDe    = "eu_de"
+	UpdateActionOptions_Location_EuGb    = "eu_gb"
+	UpdateActionOptions_Location_UsEast  = "us_east"
 	UpdateActionOptions_Location_UsSouth = "us_south"
 )
 
 // Constants associated with the UpdateActionOptions.SourceType property.
 // Type of source for the Template.
 const (
-	UpdateActionOptions_SourceType_ExternalScm = "external_scm"
-	UpdateActionOptions_SourceType_GitHub = "git_hub"
+	UpdateActionOptions_SourceType_ExternalScm      = "external_scm"
+	UpdateActionOptions_SourceType_GitHub           = "git_hub"
 	UpdateActionOptions_SourceType_GitHubEnterprise = "git_hub_enterprise"
-	UpdateActionOptions_SourceType_GitLab = "git_lab"
-	UpdateActionOptions_SourceType_IbmCloudCatalog = "ibm_cloud_catalog"
-	UpdateActionOptions_SourceType_IbmGitLab = "ibm_git_lab"
-	UpdateActionOptions_SourceType_Local = "local"
+	UpdateActionOptions_SourceType_GitLab           = "git_lab"
+	UpdateActionOptions_SourceType_IbmCloudCatalog  = "ibm_cloud_catalog"
+	UpdateActionOptions_SourceType_IbmGitLab        = "ibm_git_lab"
+	UpdateActionOptions_SourceType_Local            = "local"
 )
 
 // NewUpdateActionOptions : Instantiate UpdateActionOptions
@@ -10536,9 +10378,9 @@ func (options *UpdateActionOptions) SetBastion(bastion *TargetResourceset) *Upda
 	return options
 }
 
-// SetTargets : Allow user to set Targets
-func (options *UpdateActionOptions) SetTargets(targets []TargetResourceGroup) *UpdateActionOptions {
-	options.Targets = targets
+// SetTargetsIni : Allow user to set TargetsIni
+func (options *UpdateActionOptions) SetTargetsIni(targetsIni string) *UpdateActionOptions {
+	options.TargetsIni = core.StringPtr(targetsIni)
 	return options
 }
 
@@ -10797,11 +10639,10 @@ type UserState struct {
 //   * `disable` Object can be modified. cannot be used by Jobs during execution.
 const (
 	UserState_State_Disable = "disable"
-	UserState_State_Draft = "draft"
-	UserState_State_Live = "live"
-	UserState_State_Locked = "locked"
+	UserState_State_Draft   = "draft"
+	UserState_State_Live    = "live"
+	UserState_State_Locked  = "locked"
 )
-
 
 // UnmarshalUserState unmarshals an instance of UserState from the specified map of raw messages.
 func UnmarshalUserState(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -10833,7 +10674,6 @@ type UserValues struct {
 	// VariablesResponse -.
 	Variablestore []WorkspaceVariableResponse `json:"variablestore,omitempty"`
 }
-
 
 // UnmarshalUserValues unmarshals an instance of UserValues from the specified map of raw messages.
 func UnmarshalUserValues(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -10868,7 +10708,6 @@ type VariableData struct {
 	// Reference link to the variable value By default the expression will point to self.value.
 	Link *string `json:"link,omitempty"`
 }
-
 
 // UnmarshalVariableData unmarshals an instance of VariableData from the specified map of raw messages.
 func UnmarshalVariableData(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -10948,16 +10787,15 @@ type VariableMetadata struct {
 // Constants associated with the VariableMetadata.Type property.
 // Type of the variable.
 const (
-	VariableMetadata_Type_Array = "array"
+	VariableMetadata_Type_Array   = "array"
 	VariableMetadata_Type_Boolean = "boolean"
 	VariableMetadata_Type_Complex = "complex"
-	VariableMetadata_Type_Date = "date"
+	VariableMetadata_Type_Date    = "date"
 	VariableMetadata_Type_Integer = "integer"
-	VariableMetadata_Type_List = "list"
-	VariableMetadata_Type_Map = "map"
-	VariableMetadata_Type_String = "string"
+	VariableMetadata_Type_List    = "list"
+	VariableMetadata_Type_Map     = "map"
+	VariableMetadata_Type_String  = "string"
 )
-
 
 // UnmarshalVariableMetadata unmarshals an instance of VariableMetadata from the specified map of raw messages.
 func UnmarshalVariableMetadata(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -11057,7 +10895,6 @@ type VersionResponse struct {
 	TerraformVersion *string `json:"terraform_version,omitempty"`
 }
 
-
 // UnmarshalVersionResponse unmarshals an instance of VersionResponse from the specified map of raw messages.
 func UnmarshalVersionResponse(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(VersionResponse)
@@ -11109,7 +10946,6 @@ type WorkspaceActivities struct {
 	WorkspaceName *string `json:"workspace_name,omitempty"`
 }
 
-
 // UnmarshalWorkspaceActivities unmarshals an instance of WorkspaceActivities from the specified map of raw messages.
 func UnmarshalWorkspaceActivities(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(WorkspaceActivities)
@@ -11153,7 +10989,6 @@ type WorkspaceActivity struct {
 	Templates []WorkspaceActivityTemplate `json:"templates,omitempty"`
 }
 
-
 // UnmarshalWorkspaceActivity unmarshals an instance of WorkspaceActivity from the specified map of raw messages.
 func UnmarshalWorkspaceActivity(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(WorkspaceActivity)
@@ -11195,7 +11030,6 @@ type WorkspaceActivityApplyResult struct {
 	Activityid *string `json:"activityid,omitempty"`
 }
 
-
 // UnmarshalWorkspaceActivityApplyResult unmarshals an instance of WorkspaceActivityApplyResult from the specified map of raw messages.
 func UnmarshalWorkspaceActivityApplyResult(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(WorkspaceActivityApplyResult)
@@ -11213,7 +11047,6 @@ type WorkspaceActivityCommandResult struct {
 	Activityid *string `json:"activityid,omitempty"`
 }
 
-
 // UnmarshalWorkspaceActivityCommandResult unmarshals an instance of WorkspaceActivityCommandResult from the specified map of raw messages.
 func UnmarshalWorkspaceActivityCommandResult(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(WorkspaceActivityCommandResult)
@@ -11230,7 +11063,6 @@ type WorkspaceActivityDestroyResult struct {
 	// Activity id.
 	Activityid *string `json:"activityid,omitempty"`
 }
-
 
 // UnmarshalWorkspaceActivityDestroyResult unmarshals an instance of WorkspaceActivityDestroyResult from the specified map of raw messages.
 func UnmarshalWorkspaceActivityDestroyResult(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -11254,7 +11086,6 @@ type WorkspaceActivityLogs struct {
 	// List of activity logs.
 	Templates []WorkspaceActivityTemplateLogs `json:"templates,omitempty"`
 }
-
 
 // UnmarshalWorkspaceActivityLogs unmarshals an instance of WorkspaceActivityLogs from the specified map of raw messages.
 func UnmarshalWorkspaceActivityLogs(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -11284,7 +11115,6 @@ type WorkspaceActivityOptionsTemplate struct {
 	TfVars []string `json:"tf_vars,omitempty"`
 }
 
-
 // UnmarshalWorkspaceActivityOptionsTemplate unmarshals an instance of WorkspaceActivityOptionsTemplate from the specified map of raw messages.
 func UnmarshalWorkspaceActivityOptionsTemplate(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(WorkspaceActivityOptionsTemplate)
@@ -11306,7 +11136,6 @@ type WorkspaceActivityPlanResult struct {
 	Activityid *string `json:"activityid,omitempty"`
 }
 
-
 // UnmarshalWorkspaceActivityPlanResult unmarshals an instance of WorkspaceActivityPlanResult from the specified map of raw messages.
 func UnmarshalWorkspaceActivityPlanResult(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(WorkspaceActivityPlanResult)
@@ -11323,7 +11152,6 @@ type WorkspaceActivityRefreshResult struct {
 	// Activity id.
 	Activityid *string `json:"activityid,omitempty"`
 }
-
 
 // UnmarshalWorkspaceActivityRefreshResult unmarshals an instance of WorkspaceActivityRefreshResult from the specified map of raw messages.
 func UnmarshalWorkspaceActivityRefreshResult(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -11362,7 +11190,6 @@ type WorkspaceActivityTemplate struct {
 	// Template type.
 	TemplateType *string `json:"template_type,omitempty"`
 }
-
 
 // UnmarshalWorkspaceActivityTemplate unmarshals an instance of WorkspaceActivityTemplate from the specified map of raw messages.
 func UnmarshalWorkspaceActivityTemplate(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -11415,7 +11242,6 @@ type WorkspaceActivityTemplateLogs struct {
 	TemplateType *string `json:"template_type,omitempty"`
 }
 
-
 // UnmarshalWorkspaceActivityTemplateLogs unmarshals an instance of WorkspaceActivityTemplateLogs from the specified map of raw messages.
 func UnmarshalWorkspaceActivityTemplateLogs(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(WorkspaceActivityTemplateLogs)
@@ -11444,7 +11270,6 @@ type WorkspaceBulkDeleteResponse struct {
 	JobID *string `json:"job_id,omitempty"`
 }
 
-
 // UnmarshalWorkspaceBulkDeleteResponse unmarshals an instance of WorkspaceBulkDeleteResponse from the specified map of raw messages.
 func UnmarshalWorkspaceBulkDeleteResponse(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(WorkspaceBulkDeleteResponse)
@@ -11465,7 +11290,6 @@ type WorkspaceJobResponse struct {
 	// JobStatusType -.
 	JobStatus *JobStatusType `json:"job_status,omitempty"`
 }
-
 
 // UnmarshalWorkspaceJobResponse unmarshals an instance of WorkspaceJobResponse from the specified map of raw messages.
 func UnmarshalWorkspaceJobResponse(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -11549,7 +11373,6 @@ type WorkspaceResponse struct {
 	// WorkspaceStatusMessage -.
 	WorkspaceStatusMsg *WorkspaceStatusMessage `json:"workspace_status_msg,omitempty"`
 }
-
 
 // UnmarshalWorkspaceResponse unmarshals an instance of WorkspaceResponse from the specified map of raw messages.
 func UnmarshalWorkspaceResponse(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -11665,7 +11488,6 @@ type WorkspaceResponseList struct {
 	Workspaces []WorkspaceResponse `json:"workspaces,omitempty"`
 }
 
-
 // UnmarshalWorkspaceResponseList unmarshals an instance of WorkspaceResponseList from the specified map of raw messages.
 func UnmarshalWorkspaceResponseList(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(WorkspaceResponseList)
@@ -11697,7 +11519,6 @@ type WorkspaceStatusMessage struct {
 	// Status message.
 	StatusMsg *string `json:"status_msg,omitempty"`
 }
-
 
 // UnmarshalWorkspaceStatusMessage unmarshals an instance of WorkspaceStatusMessage from the specified map of raw messages.
 func UnmarshalWorkspaceStatusMessage(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -11734,7 +11555,6 @@ type WorkspaceStatusRequest struct {
 	// Locked at.
 	LockedTime *strfmt.DateTime `json:"locked_time,omitempty"`
 }
-
 
 // UnmarshalWorkspaceStatusRequest unmarshals an instance of WorkspaceStatusRequest from the specified map of raw messages.
 func UnmarshalWorkspaceStatusRequest(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -11788,7 +11608,6 @@ type WorkspaceStatusResponse struct {
 	LockedTime *strfmt.DateTime `json:"locked_time,omitempty"`
 }
 
-
 // UnmarshalWorkspaceStatusResponse unmarshals an instance of WorkspaceStatusResponse from the specified map of raw messages.
 func UnmarshalWorkspaceStatusResponse(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(WorkspaceStatusResponse)
@@ -11841,7 +11660,6 @@ type WorkspaceStatusUpdateRequest struct {
 	LockedTime *strfmt.DateTime `json:"locked_time,omitempty"`
 }
 
-
 // UnmarshalWorkspaceStatusUpdateRequest unmarshals an instance of WorkspaceStatusUpdateRequest from the specified map of raw messages.
 func UnmarshalWorkspaceStatusUpdateRequest(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(WorkspaceStatusUpdateRequest)
@@ -11885,7 +11703,6 @@ type WorkspaceTemplateValuesResponse struct {
 	TemplateData []TemplateSourceDataResponse `json:"template_data,omitempty"`
 }
 
-
 // UnmarshalWorkspaceTemplateValuesResponse unmarshals an instance of WorkspaceTemplateValuesResponse from the specified map of raw messages.
 func UnmarshalWorkspaceTemplateValuesResponse(m map[string]json.RawMessage, result interface{}) (err error) {
 	obj := new(WorkspaceTemplateValuesResponse)
@@ -11925,7 +11742,6 @@ type WorkspaceVariableRequest struct {
 	// Value of the Variable.
 	Value *string `json:"value,omitempty"`
 }
-
 
 // UnmarshalWorkspaceVariableRequest unmarshals an instance of WorkspaceVariableRequest from the specified map of raw messages.
 func UnmarshalWorkspaceVariableRequest(m map[string]json.RawMessage, result interface{}) (err error) {
@@ -11975,7 +11791,6 @@ type WorkspaceVariableResponse struct {
 	// Value of the Variable.
 	Value *string `json:"value,omitempty"`
 }
-
 
 // UnmarshalWorkspaceVariableResponse unmarshals an instance of WorkspaceVariableResponse from the specified map of raw messages.
 func UnmarshalWorkspaceVariableResponse(m map[string]json.RawMessage, result interface{}) (err error) {

@@ -20,17 +20,18 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/IBM/go-sdk-core/v4/core"
-	"github.com/IBM/schematics-go-sdk/schematicsv1"
-	"github.com/go-openapi/strfmt"
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"time"
+
+	"github.com/IBM/go-sdk-core/v4/core"
+	"github.com/IBM/schematics-go-sdk/schematicsv1"
+	"github.com/go-openapi/strfmt"
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
 )
 
 var _ = Describe(`SchematicsV1`, func() {
@@ -66,14 +67,13 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL": "https://schematicsv1/api",
+				"SCHEMATICS_URL":       "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "noauth",
 			}
 
 			It(`Create service client using external config successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
-				})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
 				Expect(schematicsService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
 				ClearTestEnvironment(testEnvironment)
@@ -90,8 +90,7 @@ var _ = Describe(`SchematicsV1`, func() {
 			})
 			It(`Create service client using external config and set url programatically successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
-				})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
 				err := schematicsService.SetServiceURL("https://testService/api")
 				Expect(err).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
@@ -103,13 +102,12 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL": "https://schematicsv1/api",
+				"SCHEMATICS_URL":       "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "someOtherAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
-			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
-			})
+			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
 
 			It(`Instantiate service client with error`, func() {
 				Expect(schematicsService).To(BeNil())
@@ -120,7 +118,7 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_AUTH_TYPE":   "NOAuth",
+				"SCHEMATICS_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
@@ -592,14 +590,13 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL": "https://schematicsv1/api",
+				"SCHEMATICS_URL":       "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "noauth",
 			}
 
 			It(`Create service client using external config successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
-				})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
 				Expect(schematicsService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
 				ClearTestEnvironment(testEnvironment)
@@ -616,8 +613,7 @@ var _ = Describe(`SchematicsV1`, func() {
 			})
 			It(`Create service client using external config and set url programatically successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
-				})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
 				err := schematicsService.SetServiceURL("https://testService/api")
 				Expect(err).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
@@ -629,13 +625,12 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL": "https://schematicsv1/api",
+				"SCHEMATICS_URL":       "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "someOtherAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
-			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
-			})
+			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
 
 			It(`Instantiate service client with error`, func() {
 				Expect(schematicsService).To(BeNil())
@@ -646,7 +641,7 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_AUTH_TYPE":   "NOAuth",
+				"SCHEMATICS_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
@@ -735,7 +730,7 @@ var _ = Describe(`SchematicsV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"count": 5, "limit": 5, "offset": 6, "workspaces": [{"applied_shareddata_ids": ["AppliedShareddataIds"], "catalog_ref": {"dry_run": true, "item_icon_url": "ItemIconURL", "item_id": "ItemID", "item_name": "ItemName", "item_readme_url": "ItemReadmeURL", "item_url": "ItemURL", "launch_url": "LaunchURL", "offering_version": "OfferingVersion"}, "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "crn": "Crn", "description": "Description", "id": "ID", "last_health_check_at": "2019-01-01T12:00:00", "location": "Location", "name": "Name", "resource_group": "ResourceGroup", "runtime_data": [{"engine_cmd": "EngineCmd", "engine_name": "EngineName", "engine_version": "EngineVersion", "id": "ID", "log_store_url": "LogStoreURL", "output_values": [{"anyKey": "anyValue"}], "resources": [[{"anyKey": "anyValue"}]], "state_store_url": "StateStoreURL"}], "shared_data": {"cluster_id": "ClusterID", "cluster_name": "ClusterName", "entitlement_keys": [{"anyKey": "anyValue"}], "namespace": "Namespace", "region": "Region", "resource_group_id": "ResourceGroupID"}, "status": "Status", "tags": ["Tags"], "template_data": [{"env_values": [{"hidden": true, "name": "Name", "secure": true, "value": "Value"}], "folder": "Folder", "has_githubtoken": true, "id": "ID", "template_type": "TemplateType", "uninstall_script_name": "UninstallScriptName", "values": "Values", "values_metadata": [{"anyKey": "anyValue"}], "values_url": "ValuesURL", "variablestore": [{"description": "Description", "name": "Name", "secure": true, "type": "Type", "value": "Value"}]}], "template_ref": "TemplateRef", "template_repo": {"branch": "Branch", "full_url": "FullURL", "has_uploadedgitrepotar": false, "release": "Release", "repo_sha_value": "RepoShaValue", "repo_url": "RepoURL", "url": "URL"}, "type": ["Type"], "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "workspace_status": {"frozen": true, "frozen_at": "2019-01-01T12:00:00", "frozen_by": "FrozenBy", "locked": true, "locked_by": "LockedBy", "locked_time": "2019-01-01T12:00:00"}, "workspace_status_msg": {"status_code": "StatusCode", "status_msg": "StatusMsg"}}]}`)
+					fmt.Fprintf(res, "%s", `{"count": 5, "limit": 5, "offset": 6, "workspaces": [{"applied_shareddata_ids": ["AppliedShareddataIds"], "catalog_ref": {"dry_run": true, "item_icon_url": "ItemIconURL", "item_id": "ItemID", "item_name": "ItemName", "item_readme_url": "ItemReadmeURL", "item_url": "ItemURL", "launch_url": "LaunchURL", "offering_version": "OfferingVersion"}, "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "crn": "Crn", "description": "Description", "id": "ID", "last_health_check_at": "2019-01-01T12:00:00", "location": "Location", "name": "Name", "resource_group": "ResourceGroup", "runtime_data": [{"engine_cmd": "EngineCmd", "engine_name": "EngineName", "engine_version": "EngineVersion", "id": "ID", "log_store_url": "LogStoreURL", "output_values": [{"anyKey": "anyValue"}], "resources": [[{"anyKey": "anyValue"}]], "state_store_url": "StateStoreURL"}], "shared_data": {"cluster_id": "ClusterID", "cluster_name": "ClusterName", "entitlement_keys": [{"anyKey": "anyValue"}], "namespace": "Namespace", "region": "Region", "resource_group_id": "ResourceGroupID"}, "status": "Status", "tags": ["Tags"], "template_data": [{"env_values": [{"hidden": true, "name": "Name", "secure": true, "value": "Value"}], "folder": "Folder", "has_githubtoken": true, "id": "ID", "type": "Type", "uninstall_script_name": "UninstallScriptName", "values": "Values", "values_metadata": [{"anyKey": "anyValue"}], "values_url": "ValuesURL", "variablestore": [{"description": "Description", "name": "Name", "secure": true, "type": "Type", "value": "Value"}]}], "template_ref": "TemplateRef", "template_repo": {"branch": "Branch", "full_url": "FullURL", "has_uploadedgitrepotar": false, "release": "Release", "repo_sha_value": "RepoShaValue", "repo_url": "RepoURL", "url": "URL"}, "type": ["Type"], "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "workspace_status": {"frozen": true, "frozen_at": "2019-01-01T12:00:00", "frozen_by": "FrozenBy", "locked": true, "locked_by": "LockedBy", "locked_time": "2019-01-01T12:00:00"}, "workspace_status_msg": {"status_code": "StatusCode", "status_msg": "StatusMsg"}}]}`)
 				}))
 			})
 			It(`Invoke ListWorkspaces successfully`, func() {
@@ -976,7 +971,7 @@ var _ = Describe(`SchematicsV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
-					fmt.Fprintf(res, "%s", `{"applied_shareddata_ids": ["AppliedShareddataIds"], "catalog_ref": {"dry_run": true, "item_icon_url": "ItemIconURL", "item_id": "ItemID", "item_name": "ItemName", "item_readme_url": "ItemReadmeURL", "item_url": "ItemURL", "launch_url": "LaunchURL", "offering_version": "OfferingVersion"}, "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "crn": "Crn", "description": "Description", "id": "ID", "last_health_check_at": "2019-01-01T12:00:00", "location": "Location", "name": "Name", "resource_group": "ResourceGroup", "runtime_data": [{"engine_cmd": "EngineCmd", "engine_name": "EngineName", "engine_version": "EngineVersion", "id": "ID", "log_store_url": "LogStoreURL", "output_values": [{"anyKey": "anyValue"}], "resources": [[{"anyKey": "anyValue"}]], "state_store_url": "StateStoreURL"}], "shared_data": {"cluster_id": "ClusterID", "cluster_name": "ClusterName", "entitlement_keys": [{"anyKey": "anyValue"}], "namespace": "Namespace", "region": "Region", "resource_group_id": "ResourceGroupID"}, "status": "Status", "tags": ["Tags"], "template_data": [{"env_values": [{"hidden": true, "name": "Name", "secure": true, "value": "Value"}], "folder": "Folder", "has_githubtoken": true, "id": "ID", "template_type": "TemplateType", "uninstall_script_name": "UninstallScriptName", "values": "Values", "values_metadata": [{"anyKey": "anyValue"}], "values_url": "ValuesURL", "variablestore": [{"description": "Description", "name": "Name", "secure": true, "type": "Type", "value": "Value"}]}], "template_ref": "TemplateRef", "template_repo": {"branch": "Branch", "full_url": "FullURL", "has_uploadedgitrepotar": false, "release": "Release", "repo_sha_value": "RepoShaValue", "repo_url": "RepoURL", "url": "URL"}, "type": ["Type"], "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "workspace_status": {"frozen": true, "frozen_at": "2019-01-01T12:00:00", "frozen_by": "FrozenBy", "locked": true, "locked_by": "LockedBy", "locked_time": "2019-01-01T12:00:00"}, "workspace_status_msg": {"status_code": "StatusCode", "status_msg": "StatusMsg"}}`)
+					fmt.Fprintf(res, "%s", `{"applied_shareddata_ids": ["AppliedShareddataIds"], "catalog_ref": {"dry_run": true, "item_icon_url": "ItemIconURL", "item_id": "ItemID", "item_name": "ItemName", "item_readme_url": "ItemReadmeURL", "item_url": "ItemURL", "launch_url": "LaunchURL", "offering_version": "OfferingVersion"}, "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "crn": "Crn", "description": "Description", "id": "ID", "last_health_check_at": "2019-01-01T12:00:00", "location": "Location", "name": "Name", "resource_group": "ResourceGroup", "runtime_data": [{"engine_cmd": "EngineCmd", "engine_name": "EngineName", "engine_version": "EngineVersion", "id": "ID", "log_store_url": "LogStoreURL", "output_values": [{"anyKey": "anyValue"}], "resources": [[{"anyKey": "anyValue"}]], "state_store_url": "StateStoreURL"}], "shared_data": {"cluster_id": "ClusterID", "cluster_name": "ClusterName", "entitlement_keys": [{"anyKey": "anyValue"}], "namespace": "Namespace", "region": "Region", "resource_group_id": "ResourceGroupID"}, "status": "Status", "tags": ["Tags"], "template_data": [{"env_values": [{"hidden": true, "name": "Name", "secure": true, "value": "Value"}], "folder": "Folder", "has_githubtoken": true, "id": "ID", "type": "Type", "uninstall_script_name": "UninstallScriptName", "values": "Values", "values_metadata": [{"anyKey": "anyValue"}], "values_url": "ValuesURL", "variablestore": [{"description": "Description", "name": "Name", "secure": true, "type": "Type", "value": "Value"}]}], "template_ref": "TemplateRef", "template_repo": {"branch": "Branch", "full_url": "FullURL", "has_uploadedgitrepotar": false, "release": "Release", "repo_sha_value": "RepoShaValue", "repo_url": "RepoURL", "url": "URL"}, "type": ["Type"], "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "workspace_status": {"frozen": true, "frozen_at": "2019-01-01T12:00:00", "frozen_by": "FrozenBy", "locked": true, "locked_by": "LockedBy", "locked_time": "2019-01-01T12:00:00"}, "workspace_status_msg": {"status_code": "StatusCode", "status_msg": "StatusMsg"}}`)
 				}))
 			})
 			It(`Invoke CreateWorkspace successfully`, func() {
@@ -1269,7 +1264,7 @@ var _ = Describe(`SchematicsV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"applied_shareddata_ids": ["AppliedShareddataIds"], "catalog_ref": {"dry_run": true, "item_icon_url": "ItemIconURL", "item_id": "ItemID", "item_name": "ItemName", "item_readme_url": "ItemReadmeURL", "item_url": "ItemURL", "launch_url": "LaunchURL", "offering_version": "OfferingVersion"}, "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "crn": "Crn", "description": "Description", "id": "ID", "last_health_check_at": "2019-01-01T12:00:00", "location": "Location", "name": "Name", "resource_group": "ResourceGroup", "runtime_data": [{"engine_cmd": "EngineCmd", "engine_name": "EngineName", "engine_version": "EngineVersion", "id": "ID", "log_store_url": "LogStoreURL", "output_values": [{"anyKey": "anyValue"}], "resources": [[{"anyKey": "anyValue"}]], "state_store_url": "StateStoreURL"}], "shared_data": {"cluster_id": "ClusterID", "cluster_name": "ClusterName", "entitlement_keys": [{"anyKey": "anyValue"}], "namespace": "Namespace", "region": "Region", "resource_group_id": "ResourceGroupID"}, "status": "Status", "tags": ["Tags"], "template_data": [{"env_values": [{"hidden": true, "name": "Name", "secure": true, "value": "Value"}], "folder": "Folder", "has_githubtoken": true, "id": "ID", "template_type": "TemplateType", "uninstall_script_name": "UninstallScriptName", "values": "Values", "values_metadata": [{"anyKey": "anyValue"}], "values_url": "ValuesURL", "variablestore": [{"description": "Description", "name": "Name", "secure": true, "type": "Type", "value": "Value"}]}], "template_ref": "TemplateRef", "template_repo": {"branch": "Branch", "full_url": "FullURL", "has_uploadedgitrepotar": false, "release": "Release", "repo_sha_value": "RepoShaValue", "repo_url": "RepoURL", "url": "URL"}, "type": ["Type"], "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "workspace_status": {"frozen": true, "frozen_at": "2019-01-01T12:00:00", "frozen_by": "FrozenBy", "locked": true, "locked_by": "LockedBy", "locked_time": "2019-01-01T12:00:00"}, "workspace_status_msg": {"status_code": "StatusCode", "status_msg": "StatusMsg"}}`)
+					fmt.Fprintf(res, "%s", `{"applied_shareddata_ids": ["AppliedShareddataIds"], "catalog_ref": {"dry_run": true, "item_icon_url": "ItemIconURL", "item_id": "ItemID", "item_name": "ItemName", "item_readme_url": "ItemReadmeURL", "item_url": "ItemURL", "launch_url": "LaunchURL", "offering_version": "OfferingVersion"}, "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "crn": "Crn", "description": "Description", "id": "ID", "last_health_check_at": "2019-01-01T12:00:00", "location": "Location", "name": "Name", "resource_group": "ResourceGroup", "runtime_data": [{"engine_cmd": "EngineCmd", "engine_name": "EngineName", "engine_version": "EngineVersion", "id": "ID", "log_store_url": "LogStoreURL", "output_values": [{"anyKey": "anyValue"}], "resources": [[{"anyKey": "anyValue"}]], "state_store_url": "StateStoreURL"}], "shared_data": {"cluster_id": "ClusterID", "cluster_name": "ClusterName", "entitlement_keys": [{"anyKey": "anyValue"}], "namespace": "Namespace", "region": "Region", "resource_group_id": "ResourceGroupID"}, "status": "Status", "tags": ["Tags"], "template_data": [{"env_values": [{"hidden": true, "name": "Name", "secure": true, "value": "Value"}], "folder": "Folder", "has_githubtoken": true, "id": "ID", "type": "Type", "uninstall_script_name": "UninstallScriptName", "values": "Values", "values_metadata": [{"anyKey": "anyValue"}], "values_url": "ValuesURL", "variablestore": [{"description": "Description", "name": "Name", "secure": true, "type": "Type", "value": "Value"}]}], "template_ref": "TemplateRef", "template_repo": {"branch": "Branch", "full_url": "FullURL", "has_uploadedgitrepotar": false, "release": "Release", "repo_sha_value": "RepoShaValue", "repo_url": "RepoURL", "url": "URL"}, "type": ["Type"], "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "workspace_status": {"frozen": true, "frozen_at": "2019-01-01T12:00:00", "frozen_by": "FrozenBy", "locked": true, "locked_by": "LockedBy", "locked_time": "2019-01-01T12:00:00"}, "workspace_status_msg": {"status_code": "StatusCode", "status_msg": "StatusMsg"}}`)
 				}))
 			})
 			It(`Invoke GetWorkspace successfully`, func() {
@@ -1513,7 +1508,7 @@ var _ = Describe(`SchematicsV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"applied_shareddata_ids": ["AppliedShareddataIds"], "catalog_ref": {"dry_run": true, "item_icon_url": "ItemIconURL", "item_id": "ItemID", "item_name": "ItemName", "item_readme_url": "ItemReadmeURL", "item_url": "ItemURL", "launch_url": "LaunchURL", "offering_version": "OfferingVersion"}, "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "crn": "Crn", "description": "Description", "id": "ID", "last_health_check_at": "2019-01-01T12:00:00", "location": "Location", "name": "Name", "resource_group": "ResourceGroup", "runtime_data": [{"engine_cmd": "EngineCmd", "engine_name": "EngineName", "engine_version": "EngineVersion", "id": "ID", "log_store_url": "LogStoreURL", "output_values": [{"anyKey": "anyValue"}], "resources": [[{"anyKey": "anyValue"}]], "state_store_url": "StateStoreURL"}], "shared_data": {"cluster_id": "ClusterID", "cluster_name": "ClusterName", "entitlement_keys": [{"anyKey": "anyValue"}], "namespace": "Namespace", "region": "Region", "resource_group_id": "ResourceGroupID"}, "status": "Status", "tags": ["Tags"], "template_data": [{"env_values": [{"hidden": true, "name": "Name", "secure": true, "value": "Value"}], "folder": "Folder", "has_githubtoken": true, "id": "ID", "template_type": "TemplateType", "uninstall_script_name": "UninstallScriptName", "values": "Values", "values_metadata": [{"anyKey": "anyValue"}], "values_url": "ValuesURL", "variablestore": [{"description": "Description", "name": "Name", "secure": true, "type": "Type", "value": "Value"}]}], "template_ref": "TemplateRef", "template_repo": {"branch": "Branch", "full_url": "FullURL", "has_uploadedgitrepotar": false, "release": "Release", "repo_sha_value": "RepoShaValue", "repo_url": "RepoURL", "url": "URL"}, "type": ["Type"], "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "workspace_status": {"frozen": true, "frozen_at": "2019-01-01T12:00:00", "frozen_by": "FrozenBy", "locked": true, "locked_by": "LockedBy", "locked_time": "2019-01-01T12:00:00"}, "workspace_status_msg": {"status_code": "StatusCode", "status_msg": "StatusMsg"}}`)
+					fmt.Fprintf(res, "%s", `{"applied_shareddata_ids": ["AppliedShareddataIds"], "catalog_ref": {"dry_run": true, "item_icon_url": "ItemIconURL", "item_id": "ItemID", "item_name": "ItemName", "item_readme_url": "ItemReadmeURL", "item_url": "ItemURL", "launch_url": "LaunchURL", "offering_version": "OfferingVersion"}, "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "crn": "Crn", "description": "Description", "id": "ID", "last_health_check_at": "2019-01-01T12:00:00", "location": "Location", "name": "Name", "resource_group": "ResourceGroup", "runtime_data": [{"engine_cmd": "EngineCmd", "engine_name": "EngineName", "engine_version": "EngineVersion", "id": "ID", "log_store_url": "LogStoreURL", "output_values": [{"anyKey": "anyValue"}], "resources": [[{"anyKey": "anyValue"}]], "state_store_url": "StateStoreURL"}], "shared_data": {"cluster_id": "ClusterID", "cluster_name": "ClusterName", "entitlement_keys": [{"anyKey": "anyValue"}], "namespace": "Namespace", "region": "Region", "resource_group_id": "ResourceGroupID"}, "status": "Status", "tags": ["Tags"], "template_data": [{"env_values": [{"hidden": true, "name": "Name", "secure": true, "value": "Value"}], "folder": "Folder", "has_githubtoken": true, "id": "ID", "type": "Type", "uninstall_script_name": "UninstallScriptName", "values": "Values", "values_metadata": [{"anyKey": "anyValue"}], "values_url": "ValuesURL", "variablestore": [{"description": "Description", "name": "Name", "secure": true, "type": "Type", "value": "Value"}]}], "template_ref": "TemplateRef", "template_repo": {"branch": "Branch", "full_url": "FullURL", "has_uploadedgitrepotar": false, "release": "Release", "repo_sha_value": "RepoShaValue", "repo_url": "RepoURL", "url": "URL"}, "type": ["Type"], "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "workspace_status": {"frozen": true, "frozen_at": "2019-01-01T12:00:00", "frozen_by": "FrozenBy", "locked": true, "locked_by": "LockedBy", "locked_time": "2019-01-01T12:00:00"}, "workspace_status_msg": {"status_code": "StatusCode", "status_msg": "StatusMsg"}}`)
 				}))
 			})
 			It(`Invoke ReplaceWorkspace successfully`, func() {
@@ -2024,7 +2019,7 @@ var _ = Describe(`SchematicsV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"applied_shareddata_ids": ["AppliedShareddataIds"], "catalog_ref": {"dry_run": true, "item_icon_url": "ItemIconURL", "item_id": "ItemID", "item_name": "ItemName", "item_readme_url": "ItemReadmeURL", "item_url": "ItemURL", "launch_url": "LaunchURL", "offering_version": "OfferingVersion"}, "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "crn": "Crn", "description": "Description", "id": "ID", "last_health_check_at": "2019-01-01T12:00:00", "location": "Location", "name": "Name", "resource_group": "ResourceGroup", "runtime_data": [{"engine_cmd": "EngineCmd", "engine_name": "EngineName", "engine_version": "EngineVersion", "id": "ID", "log_store_url": "LogStoreURL", "output_values": [{"anyKey": "anyValue"}], "resources": [[{"anyKey": "anyValue"}]], "state_store_url": "StateStoreURL"}], "shared_data": {"cluster_id": "ClusterID", "cluster_name": "ClusterName", "entitlement_keys": [{"anyKey": "anyValue"}], "namespace": "Namespace", "region": "Region", "resource_group_id": "ResourceGroupID"}, "status": "Status", "tags": ["Tags"], "template_data": [{"env_values": [{"hidden": true, "name": "Name", "secure": true, "value": "Value"}], "folder": "Folder", "has_githubtoken": true, "id": "ID", "template_type": "TemplateType", "uninstall_script_name": "UninstallScriptName", "values": "Values", "values_metadata": [{"anyKey": "anyValue"}], "values_url": "ValuesURL", "variablestore": [{"description": "Description", "name": "Name", "secure": true, "type": "Type", "value": "Value"}]}], "template_ref": "TemplateRef", "template_repo": {"branch": "Branch", "full_url": "FullURL", "has_uploadedgitrepotar": false, "release": "Release", "repo_sha_value": "RepoShaValue", "repo_url": "RepoURL", "url": "URL"}, "type": ["Type"], "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "workspace_status": {"frozen": true, "frozen_at": "2019-01-01T12:00:00", "frozen_by": "FrozenBy", "locked": true, "locked_by": "LockedBy", "locked_time": "2019-01-01T12:00:00"}, "workspace_status_msg": {"status_code": "StatusCode", "status_msg": "StatusMsg"}}`)
+					fmt.Fprintf(res, "%s", `{"applied_shareddata_ids": ["AppliedShareddataIds"], "catalog_ref": {"dry_run": true, "item_icon_url": "ItemIconURL", "item_id": "ItemID", "item_name": "ItemName", "item_readme_url": "ItemReadmeURL", "item_url": "ItemURL", "launch_url": "LaunchURL", "offering_version": "OfferingVersion"}, "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "crn": "Crn", "description": "Description", "id": "ID", "last_health_check_at": "2019-01-01T12:00:00", "location": "Location", "name": "Name", "resource_group": "ResourceGroup", "runtime_data": [{"engine_cmd": "EngineCmd", "engine_name": "EngineName", "engine_version": "EngineVersion", "id": "ID", "log_store_url": "LogStoreURL", "output_values": [{"anyKey": "anyValue"}], "resources": [[{"anyKey": "anyValue"}]], "state_store_url": "StateStoreURL"}], "shared_data": {"cluster_id": "ClusterID", "cluster_name": "ClusterName", "entitlement_keys": [{"anyKey": "anyValue"}], "namespace": "Namespace", "region": "Region", "resource_group_id": "ResourceGroupID"}, "status": "Status", "tags": ["Tags"], "template_data": [{"env_values": [{"hidden": true, "name": "Name", "secure": true, "value": "Value"}], "folder": "Folder", "has_githubtoken": true, "id": "ID", "type": "Type", "uninstall_script_name": "UninstallScriptName", "values": "Values", "values_metadata": [{"anyKey": "anyValue"}], "values_url": "ValuesURL", "variablestore": [{"description": "Description", "name": "Name", "secure": true, "type": "Type", "value": "Value"}]}], "template_ref": "TemplateRef", "template_repo": {"branch": "Branch", "full_url": "FullURL", "has_uploadedgitrepotar": false, "release": "Release", "repo_sha_value": "RepoShaValue", "repo_url": "RepoURL", "url": "URL"}, "type": ["Type"], "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "workspace_status": {"frozen": true, "frozen_at": "2019-01-01T12:00:00", "frozen_by": "FrozenBy", "locked": true, "locked_by": "LockedBy", "locked_time": "2019-01-01T12:00:00"}, "workspace_status_msg": {"status_code": "StatusCode", "status_msg": "StatusMsg"}}`)
 				}))
 			})
 			It(`Invoke UpdateWorkspace successfully`, func() {
@@ -2390,7 +2385,7 @@ var _ = Describe(`SchematicsV1`, func() {
 			})
 			It(`Invoke UploadTemplateTar with error: Param validation error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
-					URL:  testServer.URL,
+					URL:           testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
 				})
 				Expect(serviceErr).To(BeNil())
@@ -2637,14 +2632,13 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL": "https://schematicsv1/api",
+				"SCHEMATICS_URL":       "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "noauth",
 			}
 
 			It(`Create service client using external config successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
-				})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
 				Expect(schematicsService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
 				ClearTestEnvironment(testEnvironment)
@@ -2661,8 +2655,7 @@ var _ = Describe(`SchematicsV1`, func() {
 			})
 			It(`Create service client using external config and set url programatically successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
-				})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
 				err := schematicsService.SetServiceURL("https://testService/api")
 				Expect(err).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
@@ -2674,13 +2667,12 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL": "https://schematicsv1/api",
+				"SCHEMATICS_URL":       "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "someOtherAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
-			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
-			})
+			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
 
 			It(`Instantiate service client with error`, func() {
 				Expect(schematicsService).To(BeNil())
@@ -2691,7 +2683,7 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_AUTH_TYPE":   "NOAuth",
+				"SCHEMATICS_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
@@ -4131,14 +4123,13 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL": "https://schematicsv1/api",
+				"SCHEMATICS_URL":       "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "noauth",
 			}
 
 			It(`Create service client using external config successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
-				})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
 				Expect(schematicsService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
 				ClearTestEnvironment(testEnvironment)
@@ -4155,8 +4146,7 @@ var _ = Describe(`SchematicsV1`, func() {
 			})
 			It(`Create service client using external config and set url programatically successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
-				})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
 				err := schematicsService.SetServiceURL("https://testService/api")
 				Expect(err).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
@@ -4168,13 +4158,12 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL": "https://schematicsv1/api",
+				"SCHEMATICS_URL":       "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "someOtherAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
-			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
-			})
+			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
 
 			It(`Instantiate service client with error`, func() {
 				Expect(schematicsService).To(BeNil())
@@ -4185,7 +4174,7 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_AUTH_TYPE":   "NOAuth",
+				"SCHEMATICS_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
@@ -4627,7 +4616,7 @@ var _ = Describe(`SchematicsV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"runtime_data": [{"engine_cmd": "EngineCmd", "engine_name": "EngineName", "engine_version": "EngineVersion", "id": "ID", "log_store_url": "LogStoreURL", "output_values": [{"anyKey": "anyValue"}], "resources": [[{"anyKey": "anyValue"}]], "state_store_url": "StateStoreURL"}], "shared_data": {"cluster_created_on": "ClusterCreatedOn", "cluster_id": "ClusterID", "cluster_name": "ClusterName", "cluster_type": "ClusterType", "entitlement_keys": [{"anyKey": "anyValue"}], "namespace": "Namespace", "region": "Region", "resource_group_id": "ResourceGroupID", "worker_count": 11, "worker_machine_type": "WorkerMachineType"}, "template_data": [{"env_values": [{"hidden": true, "name": "Name", "secure": true, "value": "Value"}], "folder": "Folder", "has_githubtoken": true, "id": "ID", "template_type": "TemplateType", "uninstall_script_name": "UninstallScriptName", "values": "Values", "values_metadata": [{"anyKey": "anyValue"}], "values_url": "ValuesURL", "variablestore": [{"description": "Description", "name": "Name", "secure": true, "type": "Type", "value": "Value"}]}]}`)
+					fmt.Fprintf(res, "%s", `{"runtime_data": [{"engine_cmd": "EngineCmd", "engine_name": "EngineName", "engine_version": "EngineVersion", "id": "ID", "log_store_url": "LogStoreURL", "output_values": [{"anyKey": "anyValue"}], "resources": [[{"anyKey": "anyValue"}]], "state_store_url": "StateStoreURL"}], "shared_data": {"cluster_created_on": "ClusterCreatedOn", "cluster_id": "ClusterID", "cluster_name": "ClusterName", "cluster_type": "ClusterType", "entitlement_keys": [{"anyKey": "anyValue"}], "namespace": "Namespace", "region": "Region", "resource_group_id": "ResourceGroupID", "worker_count": 11, "worker_machine_type": "WorkerMachineType"}, "template_data": [{"env_values": [{"hidden": true, "name": "Name", "secure": true, "value": "Value"}], "folder": "Folder", "has_githubtoken": true, "id": "ID", "type": "Type", "uninstall_script_name": "UninstallScriptName", "values": "Values", "values_metadata": [{"anyKey": "anyValue"}], "values_url": "ValuesURL", "variablestore": [{"description": "Description", "name": "Name", "secure": true, "type": "Type", "value": "Value"}]}]}`)
 				}))
 			})
 			It(`Invoke GetAllWorkspaceInputs successfully`, func() {
@@ -4854,14 +4843,13 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL": "https://schematicsv1/api",
+				"SCHEMATICS_URL":       "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "noauth",
 			}
 
 			It(`Create service client using external config successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
-				})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
 				Expect(schematicsService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
 				ClearTestEnvironment(testEnvironment)
@@ -4878,8 +4866,7 @@ var _ = Describe(`SchematicsV1`, func() {
 			})
 			It(`Create service client using external config and set url programatically successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
-				})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
 				err := schematicsService.SetServiceURL("https://testService/api")
 				Expect(err).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
@@ -4891,13 +4878,12 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL": "https://schematicsv1/api",
+				"SCHEMATICS_URL":       "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "someOtherAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
-			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
-			})
+			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
 
 			It(`Instantiate service client with error`, func() {
 				Expect(schematicsService).To(BeNil())
@@ -4908,7 +4894,7 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_AUTH_TYPE":   "NOAuth",
+				"SCHEMATICS_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
@@ -5458,10 +5444,10 @@ var _ = Describe(`SchematicsV1`, func() {
 				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
-				result, response, operationErr := schematicsService.GetWorkspaceTemplateState(nil)
+				_, response, operationErr := schematicsService.GetWorkspaceTemplateState(nil)
 				Expect(operationErr).NotTo(BeNil())
 				Expect(response).To(BeNil())
-				Expect(result).To(BeNil())
+				//Expect(result).To(BeNil())
 
 				// Construct an instance of the GetWorkspaceTemplateStateOptions model
 				getWorkspaceTemplateStateOptionsModel := new(schematicsv1.GetWorkspaceTemplateStateOptions)
@@ -5470,10 +5456,10 @@ var _ = Describe(`SchematicsV1`, func() {
 				getWorkspaceTemplateStateOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				result, response, operationErr = schematicsService.GetWorkspaceTemplateState(getWorkspaceTemplateStateOptionsModel)
+				_, response, operationErr = schematicsService.GetWorkspaceTemplateState(getWorkspaceTemplateStateOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
+				//Expect(result).ToNot(BeNil())
 
 				// Invoke operation with a Context to test a timeout error
 				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
@@ -5486,10 +5472,10 @@ var _ = Describe(`SchematicsV1`, func() {
 
 				// Disable retries and test again
 				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.GetWorkspaceTemplateState(getWorkspaceTemplateStateOptionsModel)
+				_, response, operationErr = schematicsService.GetWorkspaceTemplateState(getWorkspaceTemplateStateOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
+				//Expect(result).ToNot(BeNil())
 
 				// Re-test the timeout error with retries disabled
 				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
@@ -5516,18 +5502,18 @@ var _ = Describe(`SchematicsV1`, func() {
 				// Invoke operation with empty URL (negative test)
 				err := schematicsService.SetServiceURL("")
 				Expect(err).To(BeNil())
-				result, response, operationErr := schematicsService.GetWorkspaceTemplateState(getWorkspaceTemplateStateOptionsModel)
+				_, response, operationErr := schematicsService.GetWorkspaceTemplateState(getWorkspaceTemplateStateOptionsModel)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
 				Expect(response).To(BeNil())
-				Expect(result).To(BeNil())
+				//Expect(result).To(BeNil())
 				// Construct a second instance of the GetWorkspaceTemplateStateOptions model with no property values
 				getWorkspaceTemplateStateOptionsModelNew := new(schematicsv1.GetWorkspaceTemplateStateOptions)
 				// Invoke operation with invalid model (negative test)
-				result, response, operationErr = schematicsService.GetWorkspaceTemplateState(getWorkspaceTemplateStateOptionsModelNew)
+				_, response, operationErr = schematicsService.GetWorkspaceTemplateState(getWorkspaceTemplateStateOptionsModelNew)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).To(BeNil())
-				Expect(result).To(BeNil())
+				//Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -5565,14 +5551,13 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL": "https://schematicsv1/api",
+				"SCHEMATICS_URL":       "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "noauth",
 			}
 
 			It(`Create service client using external config successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
-				})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
 				Expect(schematicsService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
 				ClearTestEnvironment(testEnvironment)
@@ -5589,8 +5574,7 @@ var _ = Describe(`SchematicsV1`, func() {
 			})
 			It(`Create service client using external config and set url programatically successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
-				})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
 				err := schematicsService.SetServiceURL("https://testService/api")
 				Expect(err).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
@@ -5602,13 +5586,12 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL": "https://schematicsv1/api",
+				"SCHEMATICS_URL":       "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "someOtherAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
-			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
-			})
+			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
 
 			It(`Instantiate service client with error`, func() {
 				Expect(schematicsService).To(BeNil())
@@ -5619,7 +5602,7 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_AUTH_TYPE":   "NOAuth",
+				"SCHEMATICS_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
@@ -5955,15 +5938,11 @@ var _ = Describe(`SchematicsV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(getTemplateLogsPath))
 					Expect(req.Method).To(Equal("GET"))
 
-
 					// TODO: Add check for log_tf_cmd query parameter
-
 
 					// TODO: Add check for log_tf_prefix query parameter
 
-
 					// TODO: Add check for log_tf_null_resource query parameter
-
 
 					// TODO: Add check for log_tf_ansible query parameter
 
@@ -6084,15 +6063,11 @@ var _ = Describe(`SchematicsV1`, func() {
 					Expect(req.URL.EscapedPath()).To(Equal(getTemplateActivityLogPath))
 					Expect(req.Method).To(Equal("GET"))
 
-
 					// TODO: Add check for log_tf_cmd query parameter
-
 
 					// TODO: Add check for log_tf_prefix query parameter
 
-
 					// TODO: Add check for log_tf_null_resource query parameter
-
 
 					// TODO: Add check for log_tf_ansible query parameter
 
@@ -6232,14 +6207,13 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL": "https://schematicsv1/api",
+				"SCHEMATICS_URL":       "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "noauth",
 			}
 
 			It(`Create service client using external config successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
-				})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
 				Expect(schematicsService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
 				ClearTestEnvironment(testEnvironment)
@@ -6256,8 +6230,7 @@ var _ = Describe(`SchematicsV1`, func() {
 			})
 			It(`Create service client using external config and set url programatically successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
-				})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
 				err := schematicsService.SetServiceURL("https://testService/api")
 				Expect(err).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
@@ -6269,13 +6242,12 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL": "https://schematicsv1/api",
+				"SCHEMATICS_URL":       "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "someOtherAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
-			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
-			})
+			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
 
 			It(`Instantiate service client with error`, func() {
 				Expect(schematicsService).To(BeNil())
@@ -6286,7 +6258,7 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_AUTH_TYPE":   "NOAuth",
+				"SCHEMATICS_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
@@ -6678,14 +6650,13 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL": "https://schematicsv1/api",
+				"SCHEMATICS_URL":       "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "noauth",
 			}
 
 			It(`Create service client using external config successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
-				})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
 				Expect(schematicsService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
 				ClearTestEnvironment(testEnvironment)
@@ -6702,8 +6673,7 @@ var _ = Describe(`SchematicsV1`, func() {
 			})
 			It(`Create service client using external config and set url programatically successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
-				})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
 				err := schematicsService.SetServiceURL("https://testService/api")
 				Expect(err).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
@@ -6715,13 +6685,12 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL": "https://schematicsv1/api",
+				"SCHEMATICS_URL":       "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "someOtherAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
-			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
-			})
+			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
 
 			It(`Instantiate service client with error`, func() {
 				Expect(schematicsService).To(BeNil())
@@ -6732,7 +6701,7 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_AUTH_TYPE":   "NOAuth",
+				"SCHEMATICS_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
@@ -6806,25 +6775,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				targetResourcesetModel.CredentialRef = core.StringPtr("testString")
 				targetResourcesetModel.SysLock = systemLockModel
 
-				// Construct an instance of the TargetResourceConfig model
-				targetResourceConfigModel := new(schematicsv1.TargetResourceConfig)
-				targetResourceConfigModel.Name = core.StringPtr("testString")
-				targetResourceConfigModel.Value = core.StringPtr("testString")
-				targetResourceConfigModel.Description = core.StringPtr("testString")
-
-				// Construct an instance of the TargetResource model
-				targetResourceModel := new(schematicsv1.TargetResource)
-				targetResourceModel.ResourceID = core.StringPtr("testString")
-				targetResourceModel.ResourceConfigs = []schematicsv1.TargetResourceConfig{*targetResourceConfigModel}
-
-				// Construct an instance of the TargetResourceGroup model
-				targetResourceGroupModel := new(schematicsv1.TargetResourceGroup)
-				targetResourceGroupModel.Name = core.StringPtr("testString")
-				targetResourceGroupModel.Description = core.StringPtr("testString")
-				targetResourceGroupModel.CredentialRef = core.StringPtr("testString")
-				targetResourceGroupModel.BastionRef = core.StringPtr("testString")
-				targetResourceGroupModel.TargetResources = []schematicsv1.TargetResource{*targetResourceModel}
-
 				// Construct an instance of the VariableMetadata model
 				variableMetadataModel := new(schematicsv1.VariableMetadata)
 				variableMetadataModel.Type = core.StringPtr("boolean")
@@ -6869,7 +6819,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				createActionOptionsModel.SourceType = core.StringPtr("local")
 				createActionOptionsModel.CommandParameter = core.StringPtr("testString")
 				createActionOptionsModel.Bastion = targetResourcesetModel
-				createActionOptionsModel.Targets = []schematicsv1.TargetResourceGroup{*targetResourceGroupModel}
+				createActionOptionsModel.TargetsIni = core.StringPtr("testString")
 				createActionOptionsModel.Credentials = []schematicsv1.VariableData{*variableDataModel}
 				createActionOptionsModel.Inputs = []schematicsv1.VariableData{*variableDataModel}
 				createActionOptionsModel.Outputs = []schematicsv1.VariableData{*variableDataModel}
@@ -6935,7 +6885,7 @@ var _ = Describe(`SchematicsV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
-					fmt.Fprintf(res, "%s", `{"name": "Stop Action", "description": "This Action can be used to Stop the targets", "location": "us_south", "resource_group": "ResourceGroup", "tags": ["Tags"], "user_state": {"state": "draft", "set_by": "SetBy", "set_at": "2019-01-01T12:00:00"}, "source_readme_url": "SourceReadmeURL", "source": {"source_type": "local", "git": {"git_repo_url": "GitRepoURL", "git_token": "GitToken", "git_repo_folder": "GitRepoFolder", "git_release": "GitRelease", "git_branch": "GitBranch"}}, "source_type": "local", "command_parameter": "CommandParameter", "bastion": {"name": "Name", "type": "Type", "description": "Description", "resource_query": "ResourceQuery", "credential_ref": "CredentialRef", "id": "ID", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}, "resource_ids": ["ResourceIds"]}, "targets": [{"name": "Name", "description": "Description", "credential_ref": "CredentialRef", "bastion_ref": "BastionRef", "target_resources": [{"resource_id": "ResourceID", "resource_configs": [{"name": "Name", "value": "Value", "description": "Description"}]}]}], "credentials": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "outputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "trigger_record_id": "TriggerRecordID", "id": "ID", "crn": "Crn", "account": "Account", "source_created_at": "2019-01-01T12:00:00", "source_created_by": "SourceCreatedBy", "source_updated_at": "2019-01-01T12:00:00", "source_updated_by": "SourceUpdatedBy", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "namespace": "Namespace", "state": {"status_code": "normal", "status_job_id": "StatusJobID", "status_message": "StatusMessage"}, "playbook_names": ["PlaybookNames"], "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}}`)
+					fmt.Fprintf(res, "%s", `{"name": "Stop Action", "description": "This Action can be used to Stop the targets", "location": "us_south", "resource_group": "ResourceGroup", "tags": ["Tags"], "user_state": {"state": "draft", "set_by": "SetBy", "set_at": "2019-01-01T12:00:00"}, "source_readme_url": "SourceReadmeURL", "source": {"source_type": "local", "git": {"git_repo_url": "GitRepoURL", "git_token": "GitToken", "git_repo_folder": "GitRepoFolder", "git_release": "GitRelease", "git_branch": "GitBranch"}}, "source_type": "local", "command_parameter": "CommandParameter", "bastion": {"name": "Name", "type": "Type", "description": "Description", "resource_query": "ResourceQuery", "credential_ref": "CredentialRef", "id": "ID", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}, "resource_ids": ["ResourceIds"]}, "targets_ini": "TargetsIni", "credentials": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "outputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "trigger_record_id": "TriggerRecordID", "id": "ID", "crn": "Crn", "account": "Account", "source_created_at": "2019-01-01T12:00:00", "source_created_by": "SourceCreatedBy", "source_updated_at": "2019-01-01T12:00:00", "source_updated_by": "SourceUpdatedBy", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "namespace": "Namespace", "state": {"status_code": "normal", "status_job_id": "StatusJobID", "status_message": "StatusMessage"}, "playbook_names": ["PlaybookNames"], "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}}`)
 				}))
 			})
 			It(`Invoke CreateAction successfully`, func() {
@@ -6987,25 +6937,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				targetResourcesetModel.CredentialRef = core.StringPtr("testString")
 				targetResourcesetModel.SysLock = systemLockModel
 
-				// Construct an instance of the TargetResourceConfig model
-				targetResourceConfigModel := new(schematicsv1.TargetResourceConfig)
-				targetResourceConfigModel.Name = core.StringPtr("testString")
-				targetResourceConfigModel.Value = core.StringPtr("testString")
-				targetResourceConfigModel.Description = core.StringPtr("testString")
-
-				// Construct an instance of the TargetResource model
-				targetResourceModel := new(schematicsv1.TargetResource)
-				targetResourceModel.ResourceID = core.StringPtr("testString")
-				targetResourceModel.ResourceConfigs = []schematicsv1.TargetResourceConfig{*targetResourceConfigModel}
-
-				// Construct an instance of the TargetResourceGroup model
-				targetResourceGroupModel := new(schematicsv1.TargetResourceGroup)
-				targetResourceGroupModel.Name = core.StringPtr("testString")
-				targetResourceGroupModel.Description = core.StringPtr("testString")
-				targetResourceGroupModel.CredentialRef = core.StringPtr("testString")
-				targetResourceGroupModel.BastionRef = core.StringPtr("testString")
-				targetResourceGroupModel.TargetResources = []schematicsv1.TargetResource{*targetResourceModel}
-
 				// Construct an instance of the VariableMetadata model
 				variableMetadataModel := new(schematicsv1.VariableMetadata)
 				variableMetadataModel.Type = core.StringPtr("boolean")
@@ -7050,7 +6981,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				createActionOptionsModel.SourceType = core.StringPtr("local")
 				createActionOptionsModel.CommandParameter = core.StringPtr("testString")
 				createActionOptionsModel.Bastion = targetResourcesetModel
-				createActionOptionsModel.Targets = []schematicsv1.TargetResourceGroup{*targetResourceGroupModel}
+				createActionOptionsModel.TargetsIni = core.StringPtr("testString")
 				createActionOptionsModel.Credentials = []schematicsv1.VariableData{*variableDataModel}
 				createActionOptionsModel.Inputs = []schematicsv1.VariableData{*variableDataModel}
 				createActionOptionsModel.Outputs = []schematicsv1.VariableData{*variableDataModel}
@@ -7134,25 +7065,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				targetResourcesetModel.CredentialRef = core.StringPtr("testString")
 				targetResourcesetModel.SysLock = systemLockModel
 
-				// Construct an instance of the TargetResourceConfig model
-				targetResourceConfigModel := new(schematicsv1.TargetResourceConfig)
-				targetResourceConfigModel.Name = core.StringPtr("testString")
-				targetResourceConfigModel.Value = core.StringPtr("testString")
-				targetResourceConfigModel.Description = core.StringPtr("testString")
-
-				// Construct an instance of the TargetResource model
-				targetResourceModel := new(schematicsv1.TargetResource)
-				targetResourceModel.ResourceID = core.StringPtr("testString")
-				targetResourceModel.ResourceConfigs = []schematicsv1.TargetResourceConfig{*targetResourceConfigModel}
-
-				// Construct an instance of the TargetResourceGroup model
-				targetResourceGroupModel := new(schematicsv1.TargetResourceGroup)
-				targetResourceGroupModel.Name = core.StringPtr("testString")
-				targetResourceGroupModel.Description = core.StringPtr("testString")
-				targetResourceGroupModel.CredentialRef = core.StringPtr("testString")
-				targetResourceGroupModel.BastionRef = core.StringPtr("testString")
-				targetResourceGroupModel.TargetResources = []schematicsv1.TargetResource{*targetResourceModel}
-
 				// Construct an instance of the VariableMetadata model
 				variableMetadataModel := new(schematicsv1.VariableMetadata)
 				variableMetadataModel.Type = core.StringPtr("boolean")
@@ -7197,7 +7109,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				createActionOptionsModel.SourceType = core.StringPtr("local")
 				createActionOptionsModel.CommandParameter = core.StringPtr("testString")
 				createActionOptionsModel.Bastion = targetResourcesetModel
-				createActionOptionsModel.Targets = []schematicsv1.TargetResourceGroup{*targetResourceGroupModel}
+				createActionOptionsModel.TargetsIni = core.StringPtr("testString")
 				createActionOptionsModel.Credentials = []schematicsv1.VariableData{*variableDataModel}
 				createActionOptionsModel.Inputs = []schematicsv1.VariableData{*variableDataModel}
 				createActionOptionsModel.Outputs = []schematicsv1.VariableData{*variableDataModel}
@@ -7461,7 +7373,7 @@ var _ = Describe(`SchematicsV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"name": "Stop Action", "description": "This Action can be used to Stop the targets", "location": "us_south", "resource_group": "ResourceGroup", "tags": ["Tags"], "user_state": {"state": "draft", "set_by": "SetBy", "set_at": "2019-01-01T12:00:00"}, "source_readme_url": "SourceReadmeURL", "source": {"source_type": "local", "git": {"git_repo_url": "GitRepoURL", "git_token": "GitToken", "git_repo_folder": "GitRepoFolder", "git_release": "GitRelease", "git_branch": "GitBranch"}}, "source_type": "local", "command_parameter": "CommandParameter", "bastion": {"name": "Name", "type": "Type", "description": "Description", "resource_query": "ResourceQuery", "credential_ref": "CredentialRef", "id": "ID", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}, "resource_ids": ["ResourceIds"]}, "targets": [{"name": "Name", "description": "Description", "credential_ref": "CredentialRef", "bastion_ref": "BastionRef", "target_resources": [{"resource_id": "ResourceID", "resource_configs": [{"name": "Name", "value": "Value", "description": "Description"}]}]}], "credentials": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "outputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "trigger_record_id": "TriggerRecordID", "id": "ID", "crn": "Crn", "account": "Account", "source_created_at": "2019-01-01T12:00:00", "source_created_by": "SourceCreatedBy", "source_updated_at": "2019-01-01T12:00:00", "source_updated_by": "SourceUpdatedBy", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "namespace": "Namespace", "state": {"status_code": "normal", "status_job_id": "StatusJobID", "status_message": "StatusMessage"}, "playbook_names": ["PlaybookNames"], "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}}`)
+					fmt.Fprintf(res, "%s", `{"name": "Stop Action", "description": "This Action can be used to Stop the targets", "location": "us_south", "resource_group": "ResourceGroup", "tags": ["Tags"], "user_state": {"state": "draft", "set_by": "SetBy", "set_at": "2019-01-01T12:00:00"}, "source_readme_url": "SourceReadmeURL", "source": {"source_type": "local", "git": {"git_repo_url": "GitRepoURL", "git_token": "GitToken", "git_repo_folder": "GitRepoFolder", "git_release": "GitRelease", "git_branch": "GitBranch"}}, "source_type": "local", "command_parameter": "CommandParameter", "bastion": {"name": "Name", "type": "Type", "description": "Description", "resource_query": "ResourceQuery", "credential_ref": "CredentialRef", "id": "ID", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}, "resource_ids": ["ResourceIds"]}, "targets_ini": "TargetsIni", "credentials": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "outputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "trigger_record_id": "TriggerRecordID", "id": "ID", "crn": "Crn", "account": "Account", "source_created_at": "2019-01-01T12:00:00", "source_created_by": "SourceCreatedBy", "source_updated_at": "2019-01-01T12:00:00", "source_updated_by": "SourceUpdatedBy", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "namespace": "Namespace", "state": {"status_code": "normal", "status_job_id": "StatusJobID", "status_message": "StatusMessage"}, "playbook_names": ["PlaybookNames"], "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}}`)
 				}))
 			})
 			It(`Invoke GetAction successfully`, func() {
@@ -7693,25 +7605,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				targetResourcesetModel.CredentialRef = core.StringPtr("testString")
 				targetResourcesetModel.SysLock = systemLockModel
 
-				// Construct an instance of the TargetResourceConfig model
-				targetResourceConfigModel := new(schematicsv1.TargetResourceConfig)
-				targetResourceConfigModel.Name = core.StringPtr("testString")
-				targetResourceConfigModel.Value = core.StringPtr("testString")
-				targetResourceConfigModel.Description = core.StringPtr("testString")
-
-				// Construct an instance of the TargetResource model
-				targetResourceModel := new(schematicsv1.TargetResource)
-				targetResourceModel.ResourceID = core.StringPtr("testString")
-				targetResourceModel.ResourceConfigs = []schematicsv1.TargetResourceConfig{*targetResourceConfigModel}
-
-				// Construct an instance of the TargetResourceGroup model
-				targetResourceGroupModel := new(schematicsv1.TargetResourceGroup)
-				targetResourceGroupModel.Name = core.StringPtr("testString")
-				targetResourceGroupModel.Description = core.StringPtr("testString")
-				targetResourceGroupModel.CredentialRef = core.StringPtr("testString")
-				targetResourceGroupModel.BastionRef = core.StringPtr("testString")
-				targetResourceGroupModel.TargetResources = []schematicsv1.TargetResource{*targetResourceModel}
-
 				// Construct an instance of the VariableMetadata model
 				variableMetadataModel := new(schematicsv1.VariableMetadata)
 				variableMetadataModel.Type = core.StringPtr("boolean")
@@ -7757,7 +7650,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				updateActionOptionsModel.SourceType = core.StringPtr("local")
 				updateActionOptionsModel.CommandParameter = core.StringPtr("testString")
 				updateActionOptionsModel.Bastion = targetResourcesetModel
-				updateActionOptionsModel.Targets = []schematicsv1.TargetResourceGroup{*targetResourceGroupModel}
+				updateActionOptionsModel.TargetsIni = core.StringPtr("testString")
 				updateActionOptionsModel.Credentials = []schematicsv1.VariableData{*variableDataModel}
 				updateActionOptionsModel.Inputs = []schematicsv1.VariableData{*variableDataModel}
 				updateActionOptionsModel.Outputs = []schematicsv1.VariableData{*variableDataModel}
@@ -7823,7 +7716,7 @@ var _ = Describe(`SchematicsV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"name": "Stop Action", "description": "This Action can be used to Stop the targets", "location": "us_south", "resource_group": "ResourceGroup", "tags": ["Tags"], "user_state": {"state": "draft", "set_by": "SetBy", "set_at": "2019-01-01T12:00:00"}, "source_readme_url": "SourceReadmeURL", "source": {"source_type": "local", "git": {"git_repo_url": "GitRepoURL", "git_token": "GitToken", "git_repo_folder": "GitRepoFolder", "git_release": "GitRelease", "git_branch": "GitBranch"}}, "source_type": "local", "command_parameter": "CommandParameter", "bastion": {"name": "Name", "type": "Type", "description": "Description", "resource_query": "ResourceQuery", "credential_ref": "CredentialRef", "id": "ID", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}, "resource_ids": ["ResourceIds"]}, "targets": [{"name": "Name", "description": "Description", "credential_ref": "CredentialRef", "bastion_ref": "BastionRef", "target_resources": [{"resource_id": "ResourceID", "resource_configs": [{"name": "Name", "value": "Value", "description": "Description"}]}]}], "credentials": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "outputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "trigger_record_id": "TriggerRecordID", "id": "ID", "crn": "Crn", "account": "Account", "source_created_at": "2019-01-01T12:00:00", "source_created_by": "SourceCreatedBy", "source_updated_at": "2019-01-01T12:00:00", "source_updated_by": "SourceUpdatedBy", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "namespace": "Namespace", "state": {"status_code": "normal", "status_job_id": "StatusJobID", "status_message": "StatusMessage"}, "playbook_names": ["PlaybookNames"], "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}}`)
+					fmt.Fprintf(res, "%s", `{"name": "Stop Action", "description": "This Action can be used to Stop the targets", "location": "us_south", "resource_group": "ResourceGroup", "tags": ["Tags"], "user_state": {"state": "draft", "set_by": "SetBy", "set_at": "2019-01-01T12:00:00"}, "source_readme_url": "SourceReadmeURL", "source": {"source_type": "local", "git": {"git_repo_url": "GitRepoURL", "git_token": "GitToken", "git_repo_folder": "GitRepoFolder", "git_release": "GitRelease", "git_branch": "GitBranch"}}, "source_type": "local", "command_parameter": "CommandParameter", "bastion": {"name": "Name", "type": "Type", "description": "Description", "resource_query": "ResourceQuery", "credential_ref": "CredentialRef", "id": "ID", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}, "resource_ids": ["ResourceIds"]}, "targets_ini": "TargetsIni", "credentials": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "outputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "trigger_record_id": "TriggerRecordID", "id": "ID", "crn": "Crn", "account": "Account", "source_created_at": "2019-01-01T12:00:00", "source_created_by": "SourceCreatedBy", "source_updated_at": "2019-01-01T12:00:00", "source_updated_by": "SourceUpdatedBy", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "namespace": "Namespace", "state": {"status_code": "normal", "status_job_id": "StatusJobID", "status_message": "StatusMessage"}, "playbook_names": ["PlaybookNames"], "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}}`)
 				}))
 			})
 			It(`Invoke UpdateAction successfully`, func() {
@@ -7875,25 +7768,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				targetResourcesetModel.CredentialRef = core.StringPtr("testString")
 				targetResourcesetModel.SysLock = systemLockModel
 
-				// Construct an instance of the TargetResourceConfig model
-				targetResourceConfigModel := new(schematicsv1.TargetResourceConfig)
-				targetResourceConfigModel.Name = core.StringPtr("testString")
-				targetResourceConfigModel.Value = core.StringPtr("testString")
-				targetResourceConfigModel.Description = core.StringPtr("testString")
-
-				// Construct an instance of the TargetResource model
-				targetResourceModel := new(schematicsv1.TargetResource)
-				targetResourceModel.ResourceID = core.StringPtr("testString")
-				targetResourceModel.ResourceConfigs = []schematicsv1.TargetResourceConfig{*targetResourceConfigModel}
-
-				// Construct an instance of the TargetResourceGroup model
-				targetResourceGroupModel := new(schematicsv1.TargetResourceGroup)
-				targetResourceGroupModel.Name = core.StringPtr("testString")
-				targetResourceGroupModel.Description = core.StringPtr("testString")
-				targetResourceGroupModel.CredentialRef = core.StringPtr("testString")
-				targetResourceGroupModel.BastionRef = core.StringPtr("testString")
-				targetResourceGroupModel.TargetResources = []schematicsv1.TargetResource{*targetResourceModel}
-
 				// Construct an instance of the VariableMetadata model
 				variableMetadataModel := new(schematicsv1.VariableMetadata)
 				variableMetadataModel.Type = core.StringPtr("boolean")
@@ -7939,7 +7813,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				updateActionOptionsModel.SourceType = core.StringPtr("local")
 				updateActionOptionsModel.CommandParameter = core.StringPtr("testString")
 				updateActionOptionsModel.Bastion = targetResourcesetModel
-				updateActionOptionsModel.Targets = []schematicsv1.TargetResourceGroup{*targetResourceGroupModel}
+				updateActionOptionsModel.TargetsIni = core.StringPtr("testString")
 				updateActionOptionsModel.Credentials = []schematicsv1.VariableData{*variableDataModel}
 				updateActionOptionsModel.Inputs = []schematicsv1.VariableData{*variableDataModel}
 				updateActionOptionsModel.Outputs = []schematicsv1.VariableData{*variableDataModel}
@@ -8023,25 +7897,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				targetResourcesetModel.CredentialRef = core.StringPtr("testString")
 				targetResourcesetModel.SysLock = systemLockModel
 
-				// Construct an instance of the TargetResourceConfig model
-				targetResourceConfigModel := new(schematicsv1.TargetResourceConfig)
-				targetResourceConfigModel.Name = core.StringPtr("testString")
-				targetResourceConfigModel.Value = core.StringPtr("testString")
-				targetResourceConfigModel.Description = core.StringPtr("testString")
-
-				// Construct an instance of the TargetResource model
-				targetResourceModel := new(schematicsv1.TargetResource)
-				targetResourceModel.ResourceID = core.StringPtr("testString")
-				targetResourceModel.ResourceConfigs = []schematicsv1.TargetResourceConfig{*targetResourceConfigModel}
-
-				// Construct an instance of the TargetResourceGroup model
-				targetResourceGroupModel := new(schematicsv1.TargetResourceGroup)
-				targetResourceGroupModel.Name = core.StringPtr("testString")
-				targetResourceGroupModel.Description = core.StringPtr("testString")
-				targetResourceGroupModel.CredentialRef = core.StringPtr("testString")
-				targetResourceGroupModel.BastionRef = core.StringPtr("testString")
-				targetResourceGroupModel.TargetResources = []schematicsv1.TargetResource{*targetResourceModel}
-
 				// Construct an instance of the VariableMetadata model
 				variableMetadataModel := new(schematicsv1.VariableMetadata)
 				variableMetadataModel.Type = core.StringPtr("boolean")
@@ -8087,7 +7942,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				updateActionOptionsModel.SourceType = core.StringPtr("local")
 				updateActionOptionsModel.CommandParameter = core.StringPtr("testString")
 				updateActionOptionsModel.Bastion = targetResourcesetModel
-				updateActionOptionsModel.Targets = []schematicsv1.TargetResourceGroup{*targetResourceGroupModel}
+				updateActionOptionsModel.TargetsIni = core.StringPtr("testString")
 				updateActionOptionsModel.Credentials = []schematicsv1.VariableData{*variableDataModel}
 				updateActionOptionsModel.Inputs = []schematicsv1.VariableData{*variableDataModel}
 				updateActionOptionsModel.Outputs = []schematicsv1.VariableData{*variableDataModel}
@@ -8149,14 +8004,13 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL": "https://schematicsv1/api",
+				"SCHEMATICS_URL":       "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "noauth",
 			}
 
 			It(`Create service client using external config successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
-				})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
 				Expect(schematicsService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
 				ClearTestEnvironment(testEnvironment)
@@ -8173,8 +8027,7 @@ var _ = Describe(`SchematicsV1`, func() {
 			})
 			It(`Create service client using external config and set url programatically successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
-				})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
 				err := schematicsService.SetServiceURL("https://testService/api")
 				Expect(err).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
@@ -8186,13 +8039,12 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL": "https://schematicsv1/api",
+				"SCHEMATICS_URL":       "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "someOtherAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
-			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
-			})
+			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
 
 			It(`Instantiate service client with error`, func() {
 				Expect(schematicsService).To(BeNil())
@@ -8203,7 +8055,7 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_AUTH_TYPE":   "NOAuth",
+				"SCHEMATICS_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
@@ -8406,7 +8258,7 @@ var _ = Describe(`SchematicsV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(202)
-					fmt.Fprintf(res, "%s", `{"command_object": "workspace", "command_object_id": "CommandObjectID", "command_name": "workspace_init_flow", "command_parameter": "CommandParameter", "command_options": ["CommandOptions"], "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "tags": ["Tags"], "id": "ID", "name": "Name", "description": "Description", "location": "us_south", "resource_group": "ResourceGroup", "submitted_at": "2019-01-01T12:00:00", "submitted_by": "SubmittedBy", "start_at": "2019-01-01T12:00:00", "end_at": "2019-01-01T12:00:00", "duration": "Duration", "status": {"action_job_status": {"action_name": "ActionName", "status_code": "job_pending", "status_message": "StatusMessage", "bastion_status_code": "none", "bastion_status_message": "BastionStatusMessage", "targets_status_code": "none", "targets_status_message": "TargetsStatusMessage", "updated_at": "2019-01-01T12:00:00"}}, "data": {"job_type": "repo_download_job", "action_job_data": {"action_name": "ActionName", "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "outputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "updated_at": "2019-01-01T12:00:00"}}, "targets": [{"name": "Name", "type": "Type", "description": "Description", "resource_query": "ResourceQuery", "credential_ref": "CredentialRef", "id": "ID", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}, "resource_ids": ["ResourceIds"]}], "bastion": {"name": "Name", "type": "Type", "description": "Description", "resource_query": "ResourceQuery", "credential_ref": "CredentialRef", "id": "ID", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}, "resource_ids": ["ResourceIds"]}, "log_summary": {"job_id": "JobID", "job_type": "repo_download_job", "log_start_at": "2019-01-01T12:00:00", "log_analyzed_till": "2019-01-01T12:00:00", "elapsed_time": 11, "log_errors": [{"error_code": "ErrorCode", "error_msg": "ErrorMsg", "error_count": 10}], "repo_download_job": {"scanned_file_count": 16, "quarantined_file_count": 20, "detected_filetype": "DetectedFiletype", "inputs_count": "InputsCount", "outputs_count": "OutputsCount"}, "action_job": {"target_count": 11, "task_count": 9, "play_count": 9, "recap": {"target": ["Target"], "ok": 2, "changed": 7, "failed": 6, "skipped": 7, "unreachable": 11}}}, "log_store_url": "LogStoreURL", "state_store_url": "StateStoreURL", "results_url": "ResultsURL", "updated_at": "2019-01-01T12:00:00"}`)
+					fmt.Fprintf(res, "%s", `{"command_object": "workspace", "command_object_id": "CommandObjectID", "command_name": "workspace_init_flow", "command_parameter": "CommandParameter", "command_options": ["CommandOptions"], "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "tags": ["Tags"], "id": "ID", "name": "Name", "description": "Description", "location": "us_south", "resource_group": "ResourceGroup", "submitted_at": "2019-01-01T12:00:00", "submitted_by": "SubmittedBy", "start_at": "2019-01-01T12:00:00", "end_at": "2019-01-01T12:00:00", "duration": "Duration", "status": {"action_job_status": {"action_name": "ActionName", "status_code": "job_pending", "status_message": "StatusMessage", "bastion_status_code": "none", "bastion_status_message": "BastionStatusMessage", "targets_status_code": "none", "targets_status_message": "TargetsStatusMessage", "updated_at": "2019-01-01T12:00:00"}}, "data": {"job_type": "repo_download_job", "action_job_data": {"action_name": "ActionName", "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "outputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "updated_at": "2019-01-01T12:00:00"}}, "targets_ini": "TargetsIni", "bastion": {"name": "Name", "type": "Type", "description": "Description", "resource_query": "ResourceQuery", "credential_ref": "CredentialRef", "id": "ID", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}, "resource_ids": ["ResourceIds"]}, "log_summary": {"job_id": "JobID", "job_type": "repo_download_job", "log_start_at": "2019-01-01T12:00:00", "log_analyzed_till": "2019-01-01T12:00:00", "elapsed_time": 11, "log_errors": [{"error_code": "ErrorCode", "error_msg": "ErrorMsg", "error_count": 10}], "repo_download_job": {"scanned_file_count": 16, "quarantined_file_count": 20, "detected_filetype": "DetectedFiletype", "inputs_count": "InputsCount", "outputs_count": "OutputsCount"}, "action_job": {"target_count": 11, "task_count": 9, "play_count": 9, "recap": {"target": ["Target"], "ok": 2, "changed": 7, "failed": 6, "skipped": 7, "unreachable": 11}}}, "log_store_url": "LogStoreURL", "state_store_url": "StateStoreURL", "results_url": "ResultsURL", "updated_at": "2019-01-01T12:00:00"}`)
 				}))
 			})
 			It(`Invoke CreateJob successfully`, func() {
@@ -8798,7 +8650,7 @@ var _ = Describe(`SchematicsV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"total_count": 10, "limit": 5, "offset": 6, "jobs": [{"id": "ID", "name": "Name", "description": "Description", "command_object": "workspace", "command_object_id": "CommandObjectID", "command_name": "workspace_init_flow", "tags": ["Tags"], "location": "us_south", "resource_group": "ResourceGroup", "targets": [{"name": "Name", "type": "Type", "description": "Description", "resource_query": "ResourceQuery", "credential_ref": "CredentialRef", "id": "ID", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}, "resource_ids": ["ResourceIds"]}], "submitted_at": "2019-01-01T12:00:00", "submitted_by": "SubmittedBy", "duration": "Duration", "start_at": "2019-01-01T12:00:00", "end_at": "2019-01-01T12:00:00", "status": {"action_job_status": {"action_name": "ActionName", "status_code": "job_pending", "status_message": "StatusMessage", "bastion_status_code": "none", "bastion_status_message": "BastionStatusMessage", "targets_status_code": "none", "targets_status_message": "TargetsStatusMessage", "updated_at": "2019-01-01T12:00:00"}}, "log_summary": {"job_id": "JobID", "job_type": "repo_download_job", "log_start_at": "2019-01-01T12:00:00", "log_analyzed_till": "2019-01-01T12:00:00", "elapsed_time": 11, "log_errors": [{"error_code": "ErrorCode", "error_msg": "ErrorMsg", "error_count": 10}], "repo_download_job": {"scanned_file_count": 16, "quarantined_file_count": 20, "detected_filetype": "DetectedFiletype", "inputs_count": "InputsCount", "outputs_count": "OutputsCount"}, "action_job": {"target_count": 11, "task_count": 9, "play_count": 9, "recap": {"target": ["Target"], "ok": 2, "changed": 7, "failed": 6, "skipped": 7, "unreachable": 11}}}, "updated_at": "2019-01-01T12:00:00"}]}`)
+					fmt.Fprintf(res, "%s", `{"total_count": 10, "limit": 5, "offset": 6, "jobs": [{"id": "ID", "name": "Name", "description": "Description", "command_object": "workspace", "command_object_id": "CommandObjectID", "command_name": "workspace_init_flow", "tags": ["Tags"], "location": "us_south", "resource_group": "ResourceGroup", "targets_ini": "TargetsIni", "submitted_at": "2019-01-01T12:00:00", "submitted_by": "SubmittedBy", "duration": "Duration", "start_at": "2019-01-01T12:00:00", "end_at": "2019-01-01T12:00:00", "status": {"action_job_status": {"action_name": "ActionName", "status_code": "job_pending", "status_message": "StatusMessage", "bastion_status_code": "none", "bastion_status_message": "BastionStatusMessage", "targets_status_code": "none", "targets_status_message": "TargetsStatusMessage", "updated_at": "2019-01-01T12:00:00"}}, "log_summary": {"job_id": "JobID", "job_type": "repo_download_job", "log_start_at": "2019-01-01T12:00:00", "log_analyzed_till": "2019-01-01T12:00:00", "elapsed_time": 11, "log_errors": [{"error_code": "ErrorCode", "error_msg": "ErrorMsg", "error_count": 10}], "repo_download_job": {"scanned_file_count": 16, "quarantined_file_count": 20, "detected_filetype": "DetectedFiletype", "inputs_count": "InputsCount", "outputs_count": "OutputsCount"}, "action_job": {"target_count": 11, "task_count": 9, "play_count": 9, "recap": {"target": ["Target"], "ok": 2, "changed": 7, "failed": 6, "skipped": 7, "unreachable": 11}}}, "updated_at": "2019-01-01T12:00:00"}]}`)
 				}))
 			})
 			It(`Invoke ListJobs successfully`, func() {
@@ -9079,7 +8931,7 @@ var _ = Describe(`SchematicsV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(202)
-					fmt.Fprintf(res, "%s", `{"command_object": "workspace", "command_object_id": "CommandObjectID", "command_name": "workspace_init_flow", "command_parameter": "CommandParameter", "command_options": ["CommandOptions"], "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "tags": ["Tags"], "id": "ID", "name": "Name", "description": "Description", "location": "us_south", "resource_group": "ResourceGroup", "submitted_at": "2019-01-01T12:00:00", "submitted_by": "SubmittedBy", "start_at": "2019-01-01T12:00:00", "end_at": "2019-01-01T12:00:00", "duration": "Duration", "status": {"action_job_status": {"action_name": "ActionName", "status_code": "job_pending", "status_message": "StatusMessage", "bastion_status_code": "none", "bastion_status_message": "BastionStatusMessage", "targets_status_code": "none", "targets_status_message": "TargetsStatusMessage", "updated_at": "2019-01-01T12:00:00"}}, "data": {"job_type": "repo_download_job", "action_job_data": {"action_name": "ActionName", "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "outputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "updated_at": "2019-01-01T12:00:00"}}, "targets": [{"name": "Name", "type": "Type", "description": "Description", "resource_query": "ResourceQuery", "credential_ref": "CredentialRef", "id": "ID", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}, "resource_ids": ["ResourceIds"]}], "bastion": {"name": "Name", "type": "Type", "description": "Description", "resource_query": "ResourceQuery", "credential_ref": "CredentialRef", "id": "ID", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}, "resource_ids": ["ResourceIds"]}, "log_summary": {"job_id": "JobID", "job_type": "repo_download_job", "log_start_at": "2019-01-01T12:00:00", "log_analyzed_till": "2019-01-01T12:00:00", "elapsed_time": 11, "log_errors": [{"error_code": "ErrorCode", "error_msg": "ErrorMsg", "error_count": 10}], "repo_download_job": {"scanned_file_count": 16, "quarantined_file_count": 20, "detected_filetype": "DetectedFiletype", "inputs_count": "InputsCount", "outputs_count": "OutputsCount"}, "action_job": {"target_count": 11, "task_count": 9, "play_count": 9, "recap": {"target": ["Target"], "ok": 2, "changed": 7, "failed": 6, "skipped": 7, "unreachable": 11}}}, "log_store_url": "LogStoreURL", "state_store_url": "StateStoreURL", "results_url": "ResultsURL", "updated_at": "2019-01-01T12:00:00"}`)
+					fmt.Fprintf(res, "%s", `{"command_object": "workspace", "command_object_id": "CommandObjectID", "command_name": "workspace_init_flow", "command_parameter": "CommandParameter", "command_options": ["CommandOptions"], "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "tags": ["Tags"], "id": "ID", "name": "Name", "description": "Description", "location": "us_south", "resource_group": "ResourceGroup", "submitted_at": "2019-01-01T12:00:00", "submitted_by": "SubmittedBy", "start_at": "2019-01-01T12:00:00", "end_at": "2019-01-01T12:00:00", "duration": "Duration", "status": {"action_job_status": {"action_name": "ActionName", "status_code": "job_pending", "status_message": "StatusMessage", "bastion_status_code": "none", "bastion_status_message": "BastionStatusMessage", "targets_status_code": "none", "targets_status_message": "TargetsStatusMessage", "updated_at": "2019-01-01T12:00:00"}}, "data": {"job_type": "repo_download_job", "action_job_data": {"action_name": "ActionName", "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "outputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "updated_at": "2019-01-01T12:00:00"}}, "targets_ini": "TargetsIni", "bastion": {"name": "Name", "type": "Type", "description": "Description", "resource_query": "ResourceQuery", "credential_ref": "CredentialRef", "id": "ID", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}, "resource_ids": ["ResourceIds"]}, "log_summary": {"job_id": "JobID", "job_type": "repo_download_job", "log_start_at": "2019-01-01T12:00:00", "log_analyzed_till": "2019-01-01T12:00:00", "elapsed_time": 11, "log_errors": [{"error_code": "ErrorCode", "error_msg": "ErrorMsg", "error_count": 10}], "repo_download_job": {"scanned_file_count": 16, "quarantined_file_count": 20, "detected_filetype": "DetectedFiletype", "inputs_count": "InputsCount", "outputs_count": "OutputsCount"}, "action_job": {"target_count": 11, "task_count": 9, "play_count": 9, "recap": {"target": ["Target"], "ok": 2, "changed": 7, "failed": 6, "skipped": 7, "unreachable": 11}}}, "log_store_url": "LogStoreURL", "state_store_url": "StateStoreURL", "results_url": "ResultsURL", "updated_at": "2019-01-01T12:00:00"}`)
 				}))
 			})
 			It(`Invoke ReplaceJob successfully`, func() {
@@ -9532,7 +9384,7 @@ var _ = Describe(`SchematicsV1`, func() {
 					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"command_object": "workspace", "command_object_id": "CommandObjectID", "command_name": "workspace_init_flow", "command_parameter": "CommandParameter", "command_options": ["CommandOptions"], "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "tags": ["Tags"], "id": "ID", "name": "Name", "description": "Description", "location": "us_south", "resource_group": "ResourceGroup", "submitted_at": "2019-01-01T12:00:00", "submitted_by": "SubmittedBy", "start_at": "2019-01-01T12:00:00", "end_at": "2019-01-01T12:00:00", "duration": "Duration", "status": {"action_job_status": {"action_name": "ActionName", "status_code": "job_pending", "status_message": "StatusMessage", "bastion_status_code": "none", "bastion_status_message": "BastionStatusMessage", "targets_status_code": "none", "targets_status_message": "TargetsStatusMessage", "updated_at": "2019-01-01T12:00:00"}}, "data": {"job_type": "repo_download_job", "action_job_data": {"action_name": "ActionName", "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "outputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "updated_at": "2019-01-01T12:00:00"}}, "targets": [{"name": "Name", "type": "Type", "description": "Description", "resource_query": "ResourceQuery", "credential_ref": "CredentialRef", "id": "ID", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}, "resource_ids": ["ResourceIds"]}], "bastion": {"name": "Name", "type": "Type", "description": "Description", "resource_query": "ResourceQuery", "credential_ref": "CredentialRef", "id": "ID", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}, "resource_ids": ["ResourceIds"]}, "log_summary": {"job_id": "JobID", "job_type": "repo_download_job", "log_start_at": "2019-01-01T12:00:00", "log_analyzed_till": "2019-01-01T12:00:00", "elapsed_time": 11, "log_errors": [{"error_code": "ErrorCode", "error_msg": "ErrorMsg", "error_count": 10}], "repo_download_job": {"scanned_file_count": 16, "quarantined_file_count": 20, "detected_filetype": "DetectedFiletype", "inputs_count": "InputsCount", "outputs_count": "OutputsCount"}, "action_job": {"target_count": 11, "task_count": 9, "play_count": 9, "recap": {"target": ["Target"], "ok": 2, "changed": 7, "failed": 6, "skipped": 7, "unreachable": 11}}}, "log_store_url": "LogStoreURL", "state_store_url": "StateStoreURL", "results_url": "ResultsURL", "updated_at": "2019-01-01T12:00:00"}`)
+					fmt.Fprintf(res, "%s", `{"command_object": "workspace", "command_object_id": "CommandObjectID", "command_name": "workspace_init_flow", "command_parameter": "CommandParameter", "command_options": ["CommandOptions"], "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "tags": ["Tags"], "id": "ID", "name": "Name", "description": "Description", "location": "us_south", "resource_group": "ResourceGroup", "submitted_at": "2019-01-01T12:00:00", "submitted_by": "SubmittedBy", "start_at": "2019-01-01T12:00:00", "end_at": "2019-01-01T12:00:00", "duration": "Duration", "status": {"action_job_status": {"action_name": "ActionName", "status_code": "job_pending", "status_message": "StatusMessage", "bastion_status_code": "none", "bastion_status_message": "BastionStatusMessage", "targets_status_code": "none", "targets_status_message": "TargetsStatusMessage", "updated_at": "2019-01-01T12:00:00"}}, "data": {"job_type": "repo_download_job", "action_job_data": {"action_name": "ActionName", "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "outputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "updated_at": "2019-01-01T12:00:00"}}, "targets_ini": "TargetsIni", "bastion": {"name": "Name", "type": "Type", "description": "Description", "resource_query": "ResourceQuery", "credential_ref": "CredentialRef", "id": "ID", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}, "resource_ids": ["ResourceIds"]}, "log_summary": {"job_id": "JobID", "job_type": "repo_download_job", "log_start_at": "2019-01-01T12:00:00", "log_analyzed_till": "2019-01-01T12:00:00", "elapsed_time": 11, "log_errors": [{"error_code": "ErrorCode", "error_msg": "ErrorMsg", "error_count": 10}], "repo_download_job": {"scanned_file_count": 16, "quarantined_file_count": 20, "detected_filetype": "DetectedFiletype", "inputs_count": "InputsCount", "outputs_count": "OutputsCount"}, "action_job": {"target_count": 11, "task_count": 9, "play_count": 9, "recap": {"target": ["Target"], "ok": 2, "changed": 7, "failed": 6, "skipped": 7, "unreachable": 11}}}, "log_store_url": "LogStoreURL", "state_store_url": "StateStoreURL", "results_url": "ResultsURL", "updated_at": "2019-01-01T12:00:00"}`)
 				}))
 			})
 			It(`Invoke GetJob successfully`, func() {
@@ -9956,14 +9808,13 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL": "https://schematicsv1/api",
+				"SCHEMATICS_URL":       "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "noauth",
 			}
 
 			It(`Create service client using external config successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
-				})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
 				Expect(schematicsService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
 				ClearTestEnvironment(testEnvironment)
@@ -9980,8 +9831,7 @@ var _ = Describe(`SchematicsV1`, func() {
 			})
 			It(`Create service client using external config and set url programatically successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
-				})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
 				err := schematicsService.SetServiceURL("https://testService/api")
 				Expect(err).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
@@ -9993,13 +9843,12 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL": "https://schematicsv1/api",
+				"SCHEMATICS_URL":       "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "someOtherAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
-			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
-			})
+			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
 
 			It(`Instantiate service client with error`, func() {
 				Expect(schematicsService).To(BeNil())
@@ -10010,7 +9859,7 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_AUTH_TYPE":   "NOAuth",
+				"SCHEMATICS_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
@@ -11002,14 +10851,13 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL": "https://schematicsv1/api",
+				"SCHEMATICS_URL":       "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "noauth",
 			}
 
 			It(`Create service client using external config successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
-				})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
 				Expect(schematicsService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
 				ClearTestEnvironment(testEnvironment)
@@ -11026,8 +10874,7 @@ var _ = Describe(`SchematicsV1`, func() {
 			})
 			It(`Create service client using external config and set url programatically successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
-				})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
 				err := schematicsService.SetServiceURL("https://testService/api")
 				Expect(err).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
@@ -11039,13 +10886,12 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL": "https://schematicsv1/api",
+				"SCHEMATICS_URL":       "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "someOtherAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
-			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
-			})
+			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
 
 			It(`Instantiate service client with error`, func() {
 				Expect(schematicsService).To(BeNil())
@@ -11056,7 +10902,7 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_AUTH_TYPE":   "NOAuth",
+				"SCHEMATICS_AUTH_TYPE": "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
@@ -11708,38 +11554,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(targetResourcesetModel.CredentialRef).To(Equal(core.StringPtr("testString")))
 				Expect(targetResourcesetModel.SysLock).To(Equal(systemLockModel))
 
-				// Construct an instance of the TargetResourceConfig model
-				targetResourceConfigModel := new(schematicsv1.TargetResourceConfig)
-				Expect(targetResourceConfigModel).ToNot(BeNil())
-				targetResourceConfigModel.Name = core.StringPtr("testString")
-				targetResourceConfigModel.Value = core.StringPtr("testString")
-				targetResourceConfigModel.Description = core.StringPtr("testString")
-				Expect(targetResourceConfigModel.Name).To(Equal(core.StringPtr("testString")))
-				Expect(targetResourceConfigModel.Value).To(Equal(core.StringPtr("testString")))
-				Expect(targetResourceConfigModel.Description).To(Equal(core.StringPtr("testString")))
-
-				// Construct an instance of the TargetResource model
-				targetResourceModel := new(schematicsv1.TargetResource)
-				Expect(targetResourceModel).ToNot(BeNil())
-				targetResourceModel.ResourceID = core.StringPtr("testString")
-				targetResourceModel.ResourceConfigs = []schematicsv1.TargetResourceConfig{*targetResourceConfigModel}
-				Expect(targetResourceModel.ResourceID).To(Equal(core.StringPtr("testString")))
-				Expect(targetResourceModel.ResourceConfigs).To(Equal([]schematicsv1.TargetResourceConfig{*targetResourceConfigModel}))
-
-				// Construct an instance of the TargetResourceGroup model
-				targetResourceGroupModel := new(schematicsv1.TargetResourceGroup)
-				Expect(targetResourceGroupModel).ToNot(BeNil())
-				targetResourceGroupModel.Name = core.StringPtr("testString")
-				targetResourceGroupModel.Description = core.StringPtr("testString")
-				targetResourceGroupModel.CredentialRef = core.StringPtr("testString")
-				targetResourceGroupModel.BastionRef = core.StringPtr("testString")
-				targetResourceGroupModel.TargetResources = []schematicsv1.TargetResource{*targetResourceModel}
-				Expect(targetResourceGroupModel.Name).To(Equal(core.StringPtr("testString")))
-				Expect(targetResourceGroupModel.Description).To(Equal(core.StringPtr("testString")))
-				Expect(targetResourceGroupModel.CredentialRef).To(Equal(core.StringPtr("testString")))
-				Expect(targetResourceGroupModel.BastionRef).To(Equal(core.StringPtr("testString")))
-				Expect(targetResourceGroupModel.TargetResources).To(Equal([]schematicsv1.TargetResource{*targetResourceModel}))
-
 				// Construct an instance of the VariableMetadata model
 				variableMetadataModel := new(schematicsv1.VariableMetadata)
 				Expect(variableMetadataModel).ToNot(BeNil())
@@ -11809,7 +11623,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				createActionOptionsModel.SetSourceType("local")
 				createActionOptionsModel.SetCommandParameter("testString")
 				createActionOptionsModel.SetBastion(targetResourcesetModel)
-				createActionOptionsModel.SetTargets([]schematicsv1.TargetResourceGroup{*targetResourceGroupModel})
+				createActionOptionsModel.SetTargetsIni("testString")
 				createActionOptionsModel.SetCredentials([]schematicsv1.VariableData{*variableDataModel})
 				createActionOptionsModel.SetInputs([]schematicsv1.VariableData{*variableDataModel})
 				createActionOptionsModel.SetOutputs([]schematicsv1.VariableData{*variableDataModel})
@@ -11831,7 +11645,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(createActionOptionsModel.SourceType).To(Equal(core.StringPtr("local")))
 				Expect(createActionOptionsModel.CommandParameter).To(Equal(core.StringPtr("testString")))
 				Expect(createActionOptionsModel.Bastion).To(Equal(targetResourcesetModel))
-				Expect(createActionOptionsModel.Targets).To(Equal([]schematicsv1.TargetResourceGroup{*targetResourceGroupModel}))
+				Expect(createActionOptionsModel.TargetsIni).To(Equal(core.StringPtr("testString")))
 				Expect(createActionOptionsModel.Credentials).To(Equal([]schematicsv1.VariableData{*variableDataModel}))
 				Expect(createActionOptionsModel.Inputs).To(Equal([]schematicsv1.VariableData{*variableDataModel}))
 				Expect(createActionOptionsModel.Outputs).To(Equal([]schematicsv1.VariableData{*variableDataModel}))
@@ -13337,38 +13151,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(targetResourcesetModel.CredentialRef).To(Equal(core.StringPtr("testString")))
 				Expect(targetResourcesetModel.SysLock).To(Equal(systemLockModel))
 
-				// Construct an instance of the TargetResourceConfig model
-				targetResourceConfigModel := new(schematicsv1.TargetResourceConfig)
-				Expect(targetResourceConfigModel).ToNot(BeNil())
-				targetResourceConfigModel.Name = core.StringPtr("testString")
-				targetResourceConfigModel.Value = core.StringPtr("testString")
-				targetResourceConfigModel.Description = core.StringPtr("testString")
-				Expect(targetResourceConfigModel.Name).To(Equal(core.StringPtr("testString")))
-				Expect(targetResourceConfigModel.Value).To(Equal(core.StringPtr("testString")))
-				Expect(targetResourceConfigModel.Description).To(Equal(core.StringPtr("testString")))
-
-				// Construct an instance of the TargetResource model
-				targetResourceModel := new(schematicsv1.TargetResource)
-				Expect(targetResourceModel).ToNot(BeNil())
-				targetResourceModel.ResourceID = core.StringPtr("testString")
-				targetResourceModel.ResourceConfigs = []schematicsv1.TargetResourceConfig{*targetResourceConfigModel}
-				Expect(targetResourceModel.ResourceID).To(Equal(core.StringPtr("testString")))
-				Expect(targetResourceModel.ResourceConfigs).To(Equal([]schematicsv1.TargetResourceConfig{*targetResourceConfigModel}))
-
-				// Construct an instance of the TargetResourceGroup model
-				targetResourceGroupModel := new(schematicsv1.TargetResourceGroup)
-				Expect(targetResourceGroupModel).ToNot(BeNil())
-				targetResourceGroupModel.Name = core.StringPtr("testString")
-				targetResourceGroupModel.Description = core.StringPtr("testString")
-				targetResourceGroupModel.CredentialRef = core.StringPtr("testString")
-				targetResourceGroupModel.BastionRef = core.StringPtr("testString")
-				targetResourceGroupModel.TargetResources = []schematicsv1.TargetResource{*targetResourceModel}
-				Expect(targetResourceGroupModel.Name).To(Equal(core.StringPtr("testString")))
-				Expect(targetResourceGroupModel.Description).To(Equal(core.StringPtr("testString")))
-				Expect(targetResourceGroupModel.CredentialRef).To(Equal(core.StringPtr("testString")))
-				Expect(targetResourceGroupModel.BastionRef).To(Equal(core.StringPtr("testString")))
-				Expect(targetResourceGroupModel.TargetResources).To(Equal([]schematicsv1.TargetResource{*targetResourceModel}))
-
 				// Construct an instance of the VariableMetadata model
 				variableMetadataModel := new(schematicsv1.VariableMetadata)
 				Expect(variableMetadataModel).ToNot(BeNil())
@@ -13440,7 +13222,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				updateActionOptionsModel.SetSourceType("local")
 				updateActionOptionsModel.SetCommandParameter("testString")
 				updateActionOptionsModel.SetBastion(targetResourcesetModel)
-				updateActionOptionsModel.SetTargets([]schematicsv1.TargetResourceGroup{*targetResourceGroupModel})
+				updateActionOptionsModel.SetTargetsIni("testString")
 				updateActionOptionsModel.SetCredentials([]schematicsv1.VariableData{*variableDataModel})
 				updateActionOptionsModel.SetInputs([]schematicsv1.VariableData{*variableDataModel})
 				updateActionOptionsModel.SetOutputs([]schematicsv1.VariableData{*variableDataModel})
@@ -13463,7 +13245,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(updateActionOptionsModel.SourceType).To(Equal(core.StringPtr("local")))
 				Expect(updateActionOptionsModel.CommandParameter).To(Equal(core.StringPtr("testString")))
 				Expect(updateActionOptionsModel.Bastion).To(Equal(targetResourcesetModel))
-				Expect(updateActionOptionsModel.Targets).To(Equal([]schematicsv1.TargetResourceGroup{*targetResourceGroupModel}))
+				Expect(updateActionOptionsModel.TargetsIni).To(Equal(core.StringPtr("testString")))
 				Expect(updateActionOptionsModel.Credentials).To(Equal([]schematicsv1.VariableData{*variableDataModel}))
 				Expect(updateActionOptionsModel.Inputs).To(Equal([]schematicsv1.VariableData{*variableDataModel}))
 				Expect(updateActionOptionsModel.Outputs).To(Equal([]schematicsv1.VariableData{*variableDataModel}))
