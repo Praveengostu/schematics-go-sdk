@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/IBM/schematics-go-sdk.svg?branch=main)](https://travis-ci.org/IBM/schematics-go-sdk)
 
-# IBM Cloud Schematics Go SDK 0.0.1
+# IBM Cloud Schematics Go SDK 0.0.2
 Go client library to interact with the various [IBM Cloud Schematics APIs](https://cloud.ibm.com/apidocs?category=schematics).
 
 Disclaimer: this SDK is being released initially as a **pre-release** version.
@@ -19,7 +19,7 @@ Changes might occur which impact applications that use this SDK.
 
 <!-- toc -->
 
-- [IBM Cloud Schematics Go SDK 0.0.1](#ibm-cloud-schematics-go-sdk-001)
+- [IBM Cloud Schematics Go SDK 0.0.2](#ibm-cloud-schematics-go-sdk-002)
 	- [Table of Contents](#table-of-contents)
 	- [Overview](#overview)
 	- [Prerequisites](#prerequisites)
@@ -56,7 +56,7 @@ Service Name | Package name
 * Go version 1.12 or above.
 
 ## Installation
-The current version of this SDK: 0.0.1
+The current version of this SDK: 0.0.2
 
 There are a few different ways to download and install the Schematics Go SDK project for use by your
 Go application:
@@ -89,7 +89,7 @@ to your `Gopkg.toml` file.  Here is an example:
 ```
 [[constraint]]
   name = "github.com/IBM/schematics-go-sdk"
-  version = "0.0.1"
+  version = "0.0.2"
 
 ```
 
