@@ -18,20 +18,18 @@ package schematicsv1_test
 
 import (
 	"bytes"
-	"context"
 	"fmt"
+	"github.com/IBM/go-sdk-core/v4/core"
+	"github.com/IBM/schematics-go-sdk/schematicsv1"
+	"github.com/go-openapi/strfmt"
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"os"
 	"time"
-
-	"github.com/IBM/go-sdk-core/v4/core"
-	"github.com/IBM/schematics-go-sdk/schematicsv1"
-	"github.com/go-openapi/strfmt"
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
 )
 
 var _ = Describe(`SchematicsV1`, func() {
@@ -67,13 +65,14 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL":       "https://schematicsv1/api",
+				"SCHEMATICS_URL": "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "noauth",
 			}
 
 			It(`Create service client using external config successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+				})
 				Expect(schematicsService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
 				ClearTestEnvironment(testEnvironment)
@@ -90,7 +89,8 @@ var _ = Describe(`SchematicsV1`, func() {
 			})
 			It(`Create service client using external config and set url programatically successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+				})
 				err := schematicsService.SetServiceURL("https://testService/api")
 				Expect(err).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
@@ -102,12 +102,13 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL":       "https://schematicsv1/api",
+				"SCHEMATICS_URL": "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "someOtherAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
-			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
+			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+			})
 
 			It(`Instantiate service client with error`, func() {
 				Expect(schematicsService).To(BeNil())
@@ -118,7 +119,7 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_AUTH_TYPE": "NOAuth",
+				"SCHEMATICS_AUTH_TYPE":   "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
@@ -164,13 +165,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.ListSchematicsLocation(listSchematicsLocationOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -180,21 +174,14 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`ListSchematicsLocation(listSchematicsLocationOptions *ListSchematicsLocationOptions)`, func() {
 		listSchematicsLocationPath := "/v1/locations"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(listSchematicsLocationPath))
 					Expect(req.Method).To(Equal("GET"))
-
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, "%s", `[{"country": "Country", "geography": "Geography", "id": "ID", "kind": "Kind", "metro": "Metro", "multizone_metro": "MultizoneMetro", "name": "Name"}]`)
@@ -207,7 +194,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.ListSchematicsLocation(nil)
@@ -224,31 +210,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.ListSchematicsLocationWithContext(ctx, listSchematicsLocationOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.ListSchematicsLocation(listSchematicsLocationOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.ListSchematicsLocationWithContext(ctx, listSchematicsLocationOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListSchematicsLocation with error: Operation request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -306,13 +267,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.ListResourceGroup(listResourceGroupOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -322,21 +276,14 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`ListResourceGroup(listResourceGroupOptions *ListResourceGroupOptions)`, func() {
 		listResourceGroupPath := "/v1/resource_groups"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(listResourceGroupPath))
 					Expect(req.Method).To(Equal("GET"))
-
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, "%s", `[{"account_id": "AccountID", "crn": "Crn", "default": false, "name": "Name", "resource_group_id": "ResourceGroupID", "state": "State"}]`)
@@ -349,7 +296,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.ListResourceGroup(nil)
@@ -366,31 +312,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.ListResourceGroupWithContext(ctx, listResourceGroupOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.ListResourceGroup(listResourceGroupOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.ListResourceGroupWithContext(ctx, listResourceGroupOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListResourceGroup with error: Operation request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -448,13 +369,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.GetSchematicsVersion(getSchematicsVersionOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -464,21 +378,14 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`GetSchematicsVersion(getSchematicsVersionOptions *GetSchematicsVersionOptions)`, func() {
 		getSchematicsVersionPath := "/v1/version"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(getSchematicsVersionPath))
 					Expect(req.Method).To(Equal("GET"))
-
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, "%s", `{"builddate": "Builddate", "buildno": "Buildno", "commitsha": "Commitsha", "helm_provider_version": "HelmProviderVersion", "helm_version": "HelmVersion", "supported_template_types": {"anyKey": "anyValue"}, "terraform_provider_version": "TerraformProviderVersion", "terraform_version": "TerraformVersion"}`)
@@ -491,7 +398,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.GetSchematicsVersion(nil)
@@ -508,31 +414,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetSchematicsVersionWithContext(ctx, getSchematicsVersionOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.GetSchematicsVersion(getSchematicsVersionOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetSchematicsVersionWithContext(ctx, getSchematicsVersionOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetSchematicsVersion with error: Operation request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -590,13 +471,14 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL":       "https://schematicsv1/api",
+				"SCHEMATICS_URL": "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "noauth",
 			}
 
 			It(`Create service client using external config successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+				})
 				Expect(schematicsService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
 				ClearTestEnvironment(testEnvironment)
@@ -613,7 +495,8 @@ var _ = Describe(`SchematicsV1`, func() {
 			})
 			It(`Create service client using external config and set url programatically successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+				})
 				err := schematicsService.SetServiceURL("https://testService/api")
 				Expect(err).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
@@ -625,12 +508,13 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL":       "https://schematicsv1/api",
+				"SCHEMATICS_URL": "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "someOtherAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
-			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
+			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+			})
 
 			It(`Instantiate service client with error`, func() {
 				Expect(schematicsService).To(BeNil())
@@ -641,7 +525,7 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_AUTH_TYPE": "NOAuth",
+				"SCHEMATICS_AUTH_TYPE":   "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
@@ -693,13 +577,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.ListWorkspaces(listWorkspacesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -709,25 +586,18 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`ListWorkspaces(listWorkspacesOptions *ListWorkspacesOptions)`, func() {
 		listWorkspacesPath := "/v1/workspaces"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(listWorkspacesPath))
 					Expect(req.Method).To(Equal("GET"))
-
 					Expect(req.URL.Query()["offset"]).To(Equal([]string{fmt.Sprint(int64(0))}))
 
 					Expect(req.URL.Query()["limit"]).To(Equal([]string{fmt.Sprint(int64(1))}))
 
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, "%s", `{"count": 5, "limit": 5, "offset": 6, "workspaces": [{"applied_shareddata_ids": ["AppliedShareddataIds"], "catalog_ref": {"dry_run": true, "item_icon_url": "ItemIconURL", "item_id": "ItemID", "item_name": "ItemName", "item_readme_url": "ItemReadmeURL", "item_url": "ItemURL", "launch_url": "LaunchURL", "offering_version": "OfferingVersion"}, "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "crn": "Crn", "description": "Description", "id": "ID", "last_health_check_at": "2019-01-01T12:00:00", "location": "Location", "name": "Name", "resource_group": "ResourceGroup", "runtime_data": [{"engine_cmd": "EngineCmd", "engine_name": "EngineName", "engine_version": "EngineVersion", "id": "ID", "log_store_url": "LogStoreURL", "output_values": [{"anyKey": "anyValue"}], "resources": [[{"anyKey": "anyValue"}]], "state_store_url": "StateStoreURL"}], "shared_data": {"cluster_id": "ClusterID", "cluster_name": "ClusterName", "entitlement_keys": [{"anyKey": "anyValue"}], "namespace": "Namespace", "region": "Region", "resource_group_id": "ResourceGroupID"}, "status": "Status", "tags": ["Tags"], "template_data": [{"env_values": [{"hidden": true, "name": "Name", "secure": true, "value": "Value"}], "folder": "Folder", "has_githubtoken": true, "id": "ID", "type": "Type", "uninstall_script_name": "UninstallScriptName", "values": "Values", "values_metadata": [{"anyKey": "anyValue"}], "values_url": "ValuesURL", "variablestore": [{"description": "Description", "name": "Name", "secure": true, "type": "Type", "value": "Value"}]}], "template_ref": "TemplateRef", "template_repo": {"branch": "Branch", "full_url": "FullURL", "has_uploadedgitrepotar": false, "release": "Release", "repo_sha_value": "RepoShaValue", "repo_url": "RepoURL", "url": "URL"}, "type": ["Type"], "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "workspace_status": {"frozen": true, "frozen_at": "2019-01-01T12:00:00", "frozen_by": "FrozenBy", "locked": true, "locked_by": "LockedBy", "locked_time": "2019-01-01T12:00:00"}, "workspace_status_msg": {"status_code": "StatusCode", "status_msg": "StatusMsg"}}]}`)
@@ -740,7 +610,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.ListWorkspaces(nil)
@@ -759,31 +628,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.ListWorkspacesWithContext(ctx, listWorkspacesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.ListWorkspaces(listWorkspacesOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.ListWorkspacesWithContext(ctx, listWorkspacesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListWorkspaces with error: Operation request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -920,13 +764,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.CreateWorkspace(createWorkspaceOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -936,39 +773,16 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`CreateWorkspace(createWorkspaceOptions *CreateWorkspaceOptions)`, func() {
 		createWorkspacePath := "/v1/workspaces"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(createWorkspacePath))
 					Expect(req.Method).To(Equal("POST"))
-
-					// For gzip-disabled operation, verify Content-Encoding is not set.
-					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
-
-					// If there is a body, then make sure we can read it
-					bodyBuf := new(bytes.Buffer)
-					if req.Header.Get("Content-Encoding") == "gzip" {
-						body, err := core.NewGzipDecompressionReader(req.Body)
-						Expect(err).To(BeNil())
-						_, err = bodyBuf.ReadFrom(body)
-						Expect(err).To(BeNil())
-					} else {
-						_, err := bodyBuf.ReadFrom(req.Body)
-						Expect(err).To(BeNil())
-					}
-					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
-
 					Expect(req.Header["X-Github-Token"]).ToNot(BeNil())
 					Expect(req.Header["X-Github-Token"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
 					fmt.Fprintf(res, "%s", `{"applied_shareddata_ids": ["AppliedShareddataIds"], "catalog_ref": {"dry_run": true, "item_icon_url": "ItemIconURL", "item_id": "ItemID", "item_name": "ItemName", "item_readme_url": "ItemReadmeURL", "item_url": "ItemURL", "launch_url": "LaunchURL", "offering_version": "OfferingVersion"}, "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "crn": "Crn", "description": "Description", "id": "ID", "last_health_check_at": "2019-01-01T12:00:00", "location": "Location", "name": "Name", "resource_group": "ResourceGroup", "runtime_data": [{"engine_cmd": "EngineCmd", "engine_name": "EngineName", "engine_version": "EngineVersion", "id": "ID", "log_store_url": "LogStoreURL", "output_values": [{"anyKey": "anyValue"}], "resources": [[{"anyKey": "anyValue"}]], "state_store_url": "StateStoreURL"}], "shared_data": {"cluster_id": "ClusterID", "cluster_name": "ClusterName", "entitlement_keys": [{"anyKey": "anyValue"}], "namespace": "Namespace", "region": "Region", "resource_group_id": "ResourceGroupID"}, "status": "Status", "tags": ["Tags"], "template_data": [{"env_values": [{"hidden": true, "name": "Name", "secure": true, "value": "Value"}], "folder": "Folder", "has_githubtoken": true, "id": "ID", "type": "Type", "uninstall_script_name": "UninstallScriptName", "values": "Values", "values_metadata": [{"anyKey": "anyValue"}], "values_url": "ValuesURL", "variablestore": [{"description": "Description", "name": "Name", "secure": true, "type": "Type", "value": "Value"}]}], "template_ref": "TemplateRef", "template_repo": {"branch": "Branch", "full_url": "FullURL", "has_uploadedgitrepotar": false, "release": "Release", "repo_sha_value": "RepoShaValue", "repo_url": "RepoURL", "url": "URL"}, "type": ["Type"], "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "workspace_status": {"frozen": true, "frozen_at": "2019-01-01T12:00:00", "frozen_by": "FrozenBy", "locked": true, "locked_by": "LockedBy", "locked_time": "2019-01-01T12:00:00"}, "workspace_status_msg": {"status_code": "StatusCode", "status_msg": "StatusMsg"}}`)
@@ -981,7 +795,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.CreateWorkspace(nil)
@@ -1073,31 +886,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.CreateWorkspaceWithContext(ctx, createWorkspaceOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.CreateWorkspace(createWorkspaceOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.CreateWorkspaceWithContext(ctx, createWorkspaceOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke CreateWorkspace with error: Operation request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -1231,13 +1019,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.GetWorkspace(getWorkspaceOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -1247,21 +1028,14 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`GetWorkspace(getWorkspaceOptions *GetWorkspaceOptions)`, func() {
 		getWorkspacePath := "/v1/workspaces/testString"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(getWorkspacePath))
 					Expect(req.Method).To(Equal("GET"))
-
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, "%s", `{"applied_shareddata_ids": ["AppliedShareddataIds"], "catalog_ref": {"dry_run": true, "item_icon_url": "ItemIconURL", "item_id": "ItemID", "item_name": "ItemName", "item_readme_url": "ItemReadmeURL", "item_url": "ItemURL", "launch_url": "LaunchURL", "offering_version": "OfferingVersion"}, "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "crn": "Crn", "description": "Description", "id": "ID", "last_health_check_at": "2019-01-01T12:00:00", "location": "Location", "name": "Name", "resource_group": "ResourceGroup", "runtime_data": [{"engine_cmd": "EngineCmd", "engine_name": "EngineName", "engine_version": "EngineVersion", "id": "ID", "log_store_url": "LogStoreURL", "output_values": [{"anyKey": "anyValue"}], "resources": [[{"anyKey": "anyValue"}]], "state_store_url": "StateStoreURL"}], "shared_data": {"cluster_id": "ClusterID", "cluster_name": "ClusterName", "entitlement_keys": [{"anyKey": "anyValue"}], "namespace": "Namespace", "region": "Region", "resource_group_id": "ResourceGroupID"}, "status": "Status", "tags": ["Tags"], "template_data": [{"env_values": [{"hidden": true, "name": "Name", "secure": true, "value": "Value"}], "folder": "Folder", "has_githubtoken": true, "id": "ID", "type": "Type", "uninstall_script_name": "UninstallScriptName", "values": "Values", "values_metadata": [{"anyKey": "anyValue"}], "values_url": "ValuesURL", "variablestore": [{"description": "Description", "name": "Name", "secure": true, "type": "Type", "value": "Value"}]}], "template_ref": "TemplateRef", "template_repo": {"branch": "Branch", "full_url": "FullURL", "has_uploadedgitrepotar": false, "release": "Release", "repo_sha_value": "RepoShaValue", "repo_url": "RepoURL", "url": "URL"}, "type": ["Type"], "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "workspace_status": {"frozen": true, "frozen_at": "2019-01-01T12:00:00", "frozen_by": "FrozenBy", "locked": true, "locked_by": "LockedBy", "locked_time": "2019-01-01T12:00:00"}, "workspace_status_msg": {"status_code": "StatusCode", "status_msg": "StatusMsg"}}`)
@@ -1274,7 +1048,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.GetWorkspace(nil)
@@ -1292,31 +1065,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetWorkspaceWithContext(ctx, getWorkspaceOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.GetWorkspace(getWorkspaceOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetWorkspaceWithContext(ctx, getWorkspaceOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetWorkspace with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -1459,13 +1207,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.ReplaceWorkspace(replaceWorkspaceOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -1475,37 +1216,14 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`ReplaceWorkspace(replaceWorkspaceOptions *ReplaceWorkspaceOptions)`, func() {
 		replaceWorkspacePath := "/v1/workspaces/testString"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(replaceWorkspacePath))
 					Expect(req.Method).To(Equal("PUT"))
-
-					// For gzip-disabled operation, verify Content-Encoding is not set.
-					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
-
-					// If there is a body, then make sure we can read it
-					bodyBuf := new(bytes.Buffer)
-					if req.Header.Get("Content-Encoding") == "gzip" {
-						body, err := core.NewGzipDecompressionReader(req.Body)
-						Expect(err).To(BeNil())
-						_, err = bodyBuf.ReadFrom(body)
-						Expect(err).To(BeNil())
-					} else {
-						_, err := bodyBuf.ReadFrom(req.Body)
-						Expect(err).To(BeNil())
-					}
-					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
-
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, "%s", `{"applied_shareddata_ids": ["AppliedShareddataIds"], "catalog_ref": {"dry_run": true, "item_icon_url": "ItemIconURL", "item_id": "ItemID", "item_name": "ItemName", "item_readme_url": "ItemReadmeURL", "item_url": "ItemURL", "launch_url": "LaunchURL", "offering_version": "OfferingVersion"}, "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "crn": "Crn", "description": "Description", "id": "ID", "last_health_check_at": "2019-01-01T12:00:00", "location": "Location", "name": "Name", "resource_group": "ResourceGroup", "runtime_data": [{"engine_cmd": "EngineCmd", "engine_name": "EngineName", "engine_version": "EngineVersion", "id": "ID", "log_store_url": "LogStoreURL", "output_values": [{"anyKey": "anyValue"}], "resources": [[{"anyKey": "anyValue"}]], "state_store_url": "StateStoreURL"}], "shared_data": {"cluster_id": "ClusterID", "cluster_name": "ClusterName", "entitlement_keys": [{"anyKey": "anyValue"}], "namespace": "Namespace", "region": "Region", "resource_group_id": "ResourceGroupID"}, "status": "Status", "tags": ["Tags"], "template_data": [{"env_values": [{"hidden": true, "name": "Name", "secure": true, "value": "Value"}], "folder": "Folder", "has_githubtoken": true, "id": "ID", "type": "Type", "uninstall_script_name": "UninstallScriptName", "values": "Values", "values_metadata": [{"anyKey": "anyValue"}], "values_url": "ValuesURL", "variablestore": [{"description": "Description", "name": "Name", "secure": true, "type": "Type", "value": "Value"}]}], "template_ref": "TemplateRef", "template_repo": {"branch": "Branch", "full_url": "FullURL", "has_uploadedgitrepotar": false, "release": "Release", "repo_sha_value": "RepoShaValue", "repo_url": "RepoURL", "url": "URL"}, "type": ["Type"], "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "workspace_status": {"frozen": true, "frozen_at": "2019-01-01T12:00:00", "frozen_by": "FrozenBy", "locked": true, "locked_by": "LockedBy", "locked_time": "2019-01-01T12:00:00"}, "workspace_status_msg": {"status_code": "StatusCode", "status_msg": "StatusMsg"}}`)
@@ -1518,7 +1236,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.ReplaceWorkspace(nil)
@@ -1612,31 +1329,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.ReplaceWorkspaceWithContext(ctx, replaceWorkspaceOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.ReplaceWorkspace(replaceWorkspaceOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.ReplaceWorkspaceWithContext(ctx, replaceWorkspaceOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ReplaceWorkspace with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -1750,25 +1442,18 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`DeleteWorkspace(deleteWorkspaceOptions *DeleteWorkspaceOptions)`, func() {
 		deleteWorkspacePath := "/v1/workspaces/testString"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(deleteWorkspacePath))
 					Expect(req.Method).To(Equal("DELETE"))
-
 					Expect(req.Header["Refresh_token"]).ToNot(BeNil())
 					Expect(req.Header["Refresh_token"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
 					Expect(req.URL.Query()["destroy_resources"]).To(Equal([]string{"testString"}))
 
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, "%s", `"OperationResponse"`)
@@ -1781,7 +1466,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.DeleteWorkspace(nil)
@@ -1801,31 +1485,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.DeleteWorkspaceWithContext(ctx, deleteWorkspaceOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.DeleteWorkspace(deleteWorkspaceOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.DeleteWorkspaceWithContext(ctx, deleteWorkspaceOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke DeleteWorkspace with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -1970,13 +1629,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.UpdateWorkspace(updateWorkspaceOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -1986,37 +1638,14 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`UpdateWorkspace(updateWorkspaceOptions *UpdateWorkspaceOptions)`, func() {
 		updateWorkspacePath := "/v1/workspaces/testString"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(updateWorkspacePath))
 					Expect(req.Method).To(Equal("PATCH"))
-
-					// For gzip-disabled operation, verify Content-Encoding is not set.
-					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
-
-					// If there is a body, then make sure we can read it
-					bodyBuf := new(bytes.Buffer)
-					if req.Header.Get("Content-Encoding") == "gzip" {
-						body, err := core.NewGzipDecompressionReader(req.Body)
-						Expect(err).To(BeNil())
-						_, err = bodyBuf.ReadFrom(body)
-						Expect(err).To(BeNil())
-					} else {
-						_, err := bodyBuf.ReadFrom(req.Body)
-						Expect(err).To(BeNil())
-					}
-					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
-
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, "%s", `{"applied_shareddata_ids": ["AppliedShareddataIds"], "catalog_ref": {"dry_run": true, "item_icon_url": "ItemIconURL", "item_id": "ItemID", "item_name": "ItemName", "item_readme_url": "ItemReadmeURL", "item_url": "ItemURL", "launch_url": "LaunchURL", "offering_version": "OfferingVersion"}, "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "crn": "Crn", "description": "Description", "id": "ID", "last_health_check_at": "2019-01-01T12:00:00", "location": "Location", "name": "Name", "resource_group": "ResourceGroup", "runtime_data": [{"engine_cmd": "EngineCmd", "engine_name": "EngineName", "engine_version": "EngineVersion", "id": "ID", "log_store_url": "LogStoreURL", "output_values": [{"anyKey": "anyValue"}], "resources": [[{"anyKey": "anyValue"}]], "state_store_url": "StateStoreURL"}], "shared_data": {"cluster_id": "ClusterID", "cluster_name": "ClusterName", "entitlement_keys": [{"anyKey": "anyValue"}], "namespace": "Namespace", "region": "Region", "resource_group_id": "ResourceGroupID"}, "status": "Status", "tags": ["Tags"], "template_data": [{"env_values": [{"hidden": true, "name": "Name", "secure": true, "value": "Value"}], "folder": "Folder", "has_githubtoken": true, "id": "ID", "type": "Type", "uninstall_script_name": "UninstallScriptName", "values": "Values", "values_metadata": [{"anyKey": "anyValue"}], "values_url": "ValuesURL", "variablestore": [{"description": "Description", "name": "Name", "secure": true, "type": "Type", "value": "Value"}]}], "template_ref": "TemplateRef", "template_repo": {"branch": "Branch", "full_url": "FullURL", "has_uploadedgitrepotar": false, "release": "Release", "repo_sha_value": "RepoShaValue", "repo_url": "RepoURL", "url": "URL"}, "type": ["Type"], "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "workspace_status": {"frozen": true, "frozen_at": "2019-01-01T12:00:00", "frozen_by": "FrozenBy", "locked": true, "locked_by": "LockedBy", "locked_time": "2019-01-01T12:00:00"}, "workspace_status_msg": {"status_code": "StatusCode", "status_msg": "StatusMsg"}}`)
@@ -2029,7 +1658,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.UpdateWorkspace(nil)
@@ -2123,31 +1751,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.UpdateWorkspaceWithContext(ctx, updateWorkspaceOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.UpdateWorkspace(updateWorkspaceOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.UpdateWorkspaceWithContext(ctx, updateWorkspaceOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke UpdateWorkspace with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -2293,13 +1896,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.UploadTemplateTar(uploadTemplateTarOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -2309,21 +1905,14 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`UploadTemplateTar(uploadTemplateTarOptions *UploadTemplateTarOptions)`, func() {
 		uploadTemplateTarPath := "/v1/workspaces/testString/template_data/testString/template_repo_upload"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(uploadTemplateTarPath))
 					Expect(req.Method).To(Equal("PUT"))
-
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, "%s", `{"file_value": "FileValue", "has_received_file": false, "id": "ID"}`)
@@ -2336,7 +1925,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.UploadTemplateTar(nil)
@@ -2357,35 +1945,10 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.UploadTemplateTarWithContext(ctx, uploadTemplateTarOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.UploadTemplateTar(uploadTemplateTarOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.UploadTemplateTarWithContext(ctx, uploadTemplateTarOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke UploadTemplateTar with error: Param validation error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
-					URL:           testServer.URL,
+					URL:  testServer.URL,
 					Authenticator: &core.NoAuthAuthenticator{},
 				})
 				Expect(serviceErr).To(BeNil())
@@ -2473,13 +2036,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.GetWorkspaceReadme(getWorkspaceReadmeOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -2489,25 +2045,18 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`GetWorkspaceReadme(getWorkspaceReadmeOptions *GetWorkspaceReadmeOptions)`, func() {
 		getWorkspaceReadmePath := "/v1/workspaces/testString/templates/readme"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(getWorkspaceReadmePath))
 					Expect(req.Method).To(Equal("GET"))
-
 					Expect(req.URL.Query()["ref"]).To(Equal([]string{"testString"}))
 
 					Expect(req.URL.Query()["formatted"]).To(Equal([]string{"markdown"}))
 
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, "%s", `{"readme": "Readme"}`)
@@ -2520,7 +2069,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.GetWorkspaceReadme(nil)
@@ -2540,31 +2088,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetWorkspaceReadmeWithContext(ctx, getWorkspaceReadmeOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.GetWorkspaceReadme(getWorkspaceReadmeOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetWorkspaceReadmeWithContext(ctx, getWorkspaceReadmeOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetWorkspaceReadme with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -2632,13 +2155,14 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL":       "https://schematicsv1/api",
+				"SCHEMATICS_URL": "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "noauth",
 			}
 
 			It(`Create service client using external config successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+				})
 				Expect(schematicsService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
 				ClearTestEnvironment(testEnvironment)
@@ -2655,7 +2179,8 @@ var _ = Describe(`SchematicsV1`, func() {
 			})
 			It(`Create service client using external config and set url programatically successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+				})
 				err := schematicsService.SetServiceURL("https://testService/api")
 				Expect(err).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
@@ -2667,12 +2192,13 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL":       "https://schematicsv1/api",
+				"SCHEMATICS_URL": "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "someOtherAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
-			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
+			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+			})
 
 			It(`Instantiate service client with error`, func() {
 				Expect(schematicsService).To(BeNil())
@@ -2683,7 +2209,7 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_AUTH_TYPE": "NOAuth",
+				"SCHEMATICS_AUTH_TYPE":   "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
@@ -2736,13 +2262,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.ListWorkspaceActivities(listWorkspaceActivitiesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -2752,25 +2271,18 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`ListWorkspaceActivities(listWorkspaceActivitiesOptions *ListWorkspaceActivitiesOptions)`, func() {
 		listWorkspaceActivitiesPath := "/v1/workspaces/testString/actions"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(listWorkspaceActivitiesPath))
 					Expect(req.Method).To(Equal("GET"))
-
 					Expect(req.URL.Query()["offset"]).To(Equal([]string{fmt.Sprint(int64(0))}))
 
 					Expect(req.URL.Query()["limit"]).To(Equal([]string{fmt.Sprint(int64(1))}))
 
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, "%s", `{"actions": [{"action_id": "ActionID", "message": ["Message"], "name": "Name", "performed_at": "2019-01-01T12:00:00", "performed_by": "PerformedBy", "status": "Status", "templates": [{"end_time": "2019-01-01T12:00:00", "log_summary": {"activity_status": "ActivityStatus", "detected_template_type": "DetectedTemplateType", "discarded_files": 14, "error": "Error", "resources_added": 14, "resources_destroyed": 18, "resources_modified": 17, "scanned_files": 12, "template_variable_count": 21, "time_taken": 9}, "log_url": "LogURL", "message": "Message", "start_time": "2019-01-01T12:00:00", "status": "Status", "template_id": "TemplateID", "template_type": "TemplateType"}]}], "workspace_id": "WorkspaceID", "workspace_name": "WorkspaceName"}`)
@@ -2783,7 +2295,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.ListWorkspaceActivities(nil)
@@ -2803,31 +2314,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.ListWorkspaceActivitiesWithContext(ctx, listWorkspaceActivitiesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.ListWorkspaceActivities(listWorkspaceActivitiesOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.ListWorkspaceActivitiesWithContext(ctx, listWorkspaceActivitiesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListWorkspaceActivities with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -2897,13 +2383,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.GetWorkspaceActivity(getWorkspaceActivityOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -2913,21 +2392,14 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`GetWorkspaceActivity(getWorkspaceActivityOptions *GetWorkspaceActivityOptions)`, func() {
 		getWorkspaceActivityPath := "/v1/workspaces/testString/actions/testString"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(getWorkspaceActivityPath))
 					Expect(req.Method).To(Equal("GET"))
-
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, "%s", `{"action_id": "ActionID", "message": ["Message"], "name": "Name", "performed_at": "2019-01-01T12:00:00", "performed_by": "PerformedBy", "status": "Status", "templates": [{"end_time": "2019-01-01T12:00:00", "log_summary": {"activity_status": "ActivityStatus", "detected_template_type": "DetectedTemplateType", "discarded_files": 14, "error": "Error", "resources_added": 14, "resources_destroyed": 18, "resources_modified": 17, "scanned_files": 12, "template_variable_count": 21, "time_taken": 9}, "log_url": "LogURL", "message": "Message", "start_time": "2019-01-01T12:00:00", "status": "Status", "template_id": "TemplateID", "template_type": "TemplateType"}]}`)
@@ -2940,7 +2412,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.GetWorkspaceActivity(nil)
@@ -2959,31 +2430,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetWorkspaceActivityWithContext(ctx, getWorkspaceActivityOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.GetWorkspaceActivity(getWorkspaceActivityOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetWorkspaceActivityWithContext(ctx, getWorkspaceActivityOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetWorkspaceActivity with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -3052,13 +2498,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.DeleteWorkspaceActivity(deleteWorkspaceActivityOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -3068,21 +2507,14 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`DeleteWorkspaceActivity(deleteWorkspaceActivityOptions *DeleteWorkspaceActivityOptions)`, func() {
 		deleteWorkspaceActivityPath := "/v1/workspaces/testString/actions/testString"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(deleteWorkspaceActivityPath))
 					Expect(req.Method).To(Equal("DELETE"))
-
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(202)
 					fmt.Fprintf(res, "%s", `{"activityid": "Activityid"}`)
@@ -3095,7 +2527,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.DeleteWorkspaceActivity(nil)
@@ -3114,31 +2545,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.DeleteWorkspaceActivityWithContext(ctx, deleteWorkspaceActivityOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.DeleteWorkspaceActivity(deleteWorkspaceActivityOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.DeleteWorkspaceActivityWithContext(ctx, deleteWorkspaceActivityOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke DeleteWorkspaceActivity with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -3222,13 +2628,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.RunWorkspaceCommands(runWorkspaceCommandsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -3238,39 +2637,16 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`RunWorkspaceCommands(runWorkspaceCommandsOptions *RunWorkspaceCommandsOptions)`, func() {
 		runWorkspaceCommandsPath := "/v1/workspaces/testString/commands"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(runWorkspaceCommandsPath))
 					Expect(req.Method).To(Equal("PUT"))
-
-					// For gzip-disabled operation, verify Content-Encoding is not set.
-					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
-
-					// If there is a body, then make sure we can read it
-					bodyBuf := new(bytes.Buffer)
-					if req.Header.Get("Content-Encoding") == "gzip" {
-						body, err := core.NewGzipDecompressionReader(req.Body)
-						Expect(err).To(BeNil())
-						_, err = bodyBuf.ReadFrom(body)
-						Expect(err).To(BeNil())
-					} else {
-						_, err := bodyBuf.ReadFrom(req.Body)
-						Expect(err).To(BeNil())
-					}
-					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
-
 					Expect(req.Header["Refresh_token"]).ToNot(BeNil())
 					Expect(req.Header["Refresh_token"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(202)
 					fmt.Fprintf(res, "%s", `{"activityid": "Activityid"}`)
@@ -3283,7 +2659,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.RunWorkspaceCommands(nil)
@@ -3315,31 +2690,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.RunWorkspaceCommandsWithContext(ctx, runWorkspaceCommandsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.RunWorkspaceCommands(runWorkspaceCommandsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.RunWorkspaceCommandsWithContext(ctx, runWorkspaceCommandsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke RunWorkspaceCommands with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -3429,13 +2779,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.ApplyWorkspaceCommand(applyWorkspaceCommandOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -3445,39 +2788,16 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`ApplyWorkspaceCommand(applyWorkspaceCommandOptions *ApplyWorkspaceCommandOptions)`, func() {
 		applyWorkspaceCommandPath := "/v1/workspaces/testString/apply"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(applyWorkspaceCommandPath))
 					Expect(req.Method).To(Equal("PUT"))
-
-					// For gzip-disabled operation, verify Content-Encoding is not set.
-					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
-
-					// If there is a body, then make sure we can read it
-					bodyBuf := new(bytes.Buffer)
-					if req.Header.Get("Content-Encoding") == "gzip" {
-						body, err := core.NewGzipDecompressionReader(req.Body)
-						Expect(err).To(BeNil())
-						_, err = bodyBuf.ReadFrom(body)
-						Expect(err).To(BeNil())
-					} else {
-						_, err := bodyBuf.ReadFrom(req.Body)
-						Expect(err).To(BeNil())
-					}
-					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
-
 					Expect(req.Header["Refresh_token"]).ToNot(BeNil())
 					Expect(req.Header["Refresh_token"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(202)
 					fmt.Fprintf(res, "%s", `{"activityid": "Activityid"}`)
@@ -3490,7 +2810,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.ApplyWorkspaceCommand(nil)
@@ -3515,31 +2834,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.ApplyWorkspaceCommandWithContext(ctx, applyWorkspaceCommandOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.ApplyWorkspaceCommand(applyWorkspaceCommandOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.ApplyWorkspaceCommandWithContext(ctx, applyWorkspaceCommandOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ApplyWorkspaceCommand with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -3622,13 +2916,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.DestroyWorkspaceCommand(destroyWorkspaceCommandOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -3638,39 +2925,16 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`DestroyWorkspaceCommand(destroyWorkspaceCommandOptions *DestroyWorkspaceCommandOptions)`, func() {
 		destroyWorkspaceCommandPath := "/v1/workspaces/testString/destroy"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(destroyWorkspaceCommandPath))
 					Expect(req.Method).To(Equal("PUT"))
-
-					// For gzip-disabled operation, verify Content-Encoding is not set.
-					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
-
-					// If there is a body, then make sure we can read it
-					bodyBuf := new(bytes.Buffer)
-					if req.Header.Get("Content-Encoding") == "gzip" {
-						body, err := core.NewGzipDecompressionReader(req.Body)
-						Expect(err).To(BeNil())
-						_, err = bodyBuf.ReadFrom(body)
-						Expect(err).To(BeNil())
-					} else {
-						_, err := bodyBuf.ReadFrom(req.Body)
-						Expect(err).To(BeNil())
-					}
-					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
-
 					Expect(req.Header["Refresh_token"]).ToNot(BeNil())
 					Expect(req.Header["Refresh_token"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(202)
 					fmt.Fprintf(res, "%s", `{"activityid": "Activityid"}`)
@@ -3683,7 +2947,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.DestroyWorkspaceCommand(nil)
@@ -3708,31 +2971,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.DestroyWorkspaceCommandWithContext(ctx, destroyWorkspaceCommandOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.DestroyWorkspaceCommand(destroyWorkspaceCommandOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.DestroyWorkspaceCommandWithContext(ctx, destroyWorkspaceCommandOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke DestroyWorkspaceCommand with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -3809,13 +3047,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.PlanWorkspaceCommand(planWorkspaceCommandOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -3825,23 +3056,16 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`PlanWorkspaceCommand(planWorkspaceCommandOptions *PlanWorkspaceCommandOptions)`, func() {
 		planWorkspaceCommandPath := "/v1/workspaces/testString/plan"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(planWorkspaceCommandPath))
 					Expect(req.Method).To(Equal("POST"))
-
 					Expect(req.Header["Refresh_token"]).ToNot(BeNil())
 					Expect(req.Header["Refresh_token"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(202)
 					fmt.Fprintf(res, "%s", `{"activityid": "Activityid"}`)
@@ -3854,7 +3078,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.PlanWorkspaceCommand(nil)
@@ -3873,31 +3096,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.PlanWorkspaceCommandWithContext(ctx, planWorkspaceCommandOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.PlanWorkspaceCommand(planWorkspaceCommandOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.PlanWorkspaceCommandWithContext(ctx, planWorkspaceCommandOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke PlanWorkspaceCommand with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -3968,13 +3166,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.RefreshWorkspaceCommand(refreshWorkspaceCommandOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -3984,23 +3175,16 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`RefreshWorkspaceCommand(refreshWorkspaceCommandOptions *RefreshWorkspaceCommandOptions)`, func() {
 		refreshWorkspaceCommandPath := "/v1/workspaces/testString/refresh"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(refreshWorkspaceCommandPath))
 					Expect(req.Method).To(Equal("PUT"))
-
 					Expect(req.Header["Refresh_token"]).ToNot(BeNil())
 					Expect(req.Header["Refresh_token"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(202)
 					fmt.Fprintf(res, "%s", `{"activityid": "Activityid"}`)
@@ -4013,7 +3197,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.RefreshWorkspaceCommand(nil)
@@ -4032,31 +3215,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.RefreshWorkspaceCommandWithContext(ctx, refreshWorkspaceCommandOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.RefreshWorkspaceCommand(refreshWorkspaceCommandOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.RefreshWorkspaceCommandWithContext(ctx, refreshWorkspaceCommandOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke RefreshWorkspaceCommand with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -4123,13 +3281,14 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL":       "https://schematicsv1/api",
+				"SCHEMATICS_URL": "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "noauth",
 			}
 
 			It(`Create service client using external config successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+				})
 				Expect(schematicsService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
 				ClearTestEnvironment(testEnvironment)
@@ -4146,7 +3305,8 @@ var _ = Describe(`SchematicsV1`, func() {
 			})
 			It(`Create service client using external config and set url programatically successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+				})
 				err := schematicsService.SetServiceURL("https://testService/api")
 				Expect(err).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
@@ -4158,12 +3318,13 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL":       "https://schematicsv1/api",
+				"SCHEMATICS_URL": "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "someOtherAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
-			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
+			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+			})
 
 			It(`Instantiate service client with error`, func() {
 				Expect(schematicsService).To(BeNil())
@@ -4174,7 +3335,7 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_AUTH_TYPE": "NOAuth",
+				"SCHEMATICS_AUTH_TYPE":   "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
@@ -4222,13 +3383,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.GetWorkspaceInputs(getWorkspaceInputsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -4238,21 +3392,14 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`GetWorkspaceInputs(getWorkspaceInputsOptions *GetWorkspaceInputsOptions)`, func() {
 		getWorkspaceInputsPath := "/v1/workspaces/testString/template_data/testString/values"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(getWorkspaceInputsPath))
 					Expect(req.Method).To(Equal("GET"))
-
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, "%s", `{"values_metadata": [{"anyKey": "anyValue"}]}`)
@@ -4265,7 +3412,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.GetWorkspaceInputs(nil)
@@ -4284,31 +3430,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetWorkspaceInputsWithContext(ctx, getWorkspaceInputsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.GetWorkspaceInputs(getWorkspaceInputsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetWorkspaceInputsWithContext(ctx, getWorkspaceInputsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetWorkspaceInputs with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -4389,13 +3510,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.ReplaceWorkspaceInputs(replaceWorkspaceInputsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -4405,37 +3519,14 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`ReplaceWorkspaceInputs(replaceWorkspaceInputsOptions *ReplaceWorkspaceInputsOptions)`, func() {
 		replaceWorkspaceInputsPath := "/v1/workspaces/testString/template_data/testString/values"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(replaceWorkspaceInputsPath))
 					Expect(req.Method).To(Equal("PUT"))
-
-					// For gzip-disabled operation, verify Content-Encoding is not set.
-					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
-
-					// If there is a body, then make sure we can read it
-					bodyBuf := new(bytes.Buffer)
-					if req.Header.Get("Content-Encoding") == "gzip" {
-						body, err := core.NewGzipDecompressionReader(req.Body)
-						Expect(err).To(BeNil())
-						_, err = bodyBuf.ReadFrom(body)
-						Expect(err).To(BeNil())
-					} else {
-						_, err := bodyBuf.ReadFrom(req.Body)
-						Expect(err).To(BeNil())
-					}
-					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
-
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, "%s", `{"env_values": [{"anyKey": "anyValue"}], "values": "Values", "variablestore": [{"description": "Description", "name": "Name", "secure": true, "type": "Type", "value": "Value"}]}`)
@@ -4448,7 +3539,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.ReplaceWorkspaceInputs(nil)
@@ -4479,31 +3569,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.ReplaceWorkspaceInputsWithContext(ctx, replaceWorkspaceInputsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.ReplaceWorkspaceInputs(replaceWorkspaceInputsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.ReplaceWorkspaceInputsWithContext(ctx, replaceWorkspaceInputsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ReplaceWorkspaceInputs with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -4583,13 +3648,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.GetAllWorkspaceInputs(getAllWorkspaceInputsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -4599,21 +3657,14 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`GetAllWorkspaceInputs(getAllWorkspaceInputsOptions *GetAllWorkspaceInputsOptions)`, func() {
 		getAllWorkspaceInputsPath := "/v1/workspaces/testString/templates/values"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(getAllWorkspaceInputsPath))
 					Expect(req.Method).To(Equal("GET"))
-
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, "%s", `{"runtime_data": [{"engine_cmd": "EngineCmd", "engine_name": "EngineName", "engine_version": "EngineVersion", "id": "ID", "log_store_url": "LogStoreURL", "output_values": [{"anyKey": "anyValue"}], "resources": [[{"anyKey": "anyValue"}]], "state_store_url": "StateStoreURL"}], "shared_data": {"cluster_created_on": "ClusterCreatedOn", "cluster_id": "ClusterID", "cluster_name": "ClusterName", "cluster_type": "ClusterType", "entitlement_keys": [{"anyKey": "anyValue"}], "namespace": "Namespace", "region": "Region", "resource_group_id": "ResourceGroupID", "worker_count": 11, "worker_machine_type": "WorkerMachineType"}, "template_data": [{"env_values": [{"hidden": true, "name": "Name", "secure": true, "value": "Value"}], "folder": "Folder", "has_githubtoken": true, "id": "ID", "type": "Type", "uninstall_script_name": "UninstallScriptName", "values": "Values", "values_metadata": [{"anyKey": "anyValue"}], "values_url": "ValuesURL", "variablestore": [{"description": "Description", "name": "Name", "secure": true, "type": "Type", "value": "Value"}]}]}`)
@@ -4626,7 +3677,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.GetAllWorkspaceInputs(nil)
@@ -4644,31 +3694,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetAllWorkspaceInputsWithContext(ctx, getAllWorkspaceInputsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.GetAllWorkspaceInputs(getAllWorkspaceInputsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetAllWorkspaceInputsWithContext(ctx, getAllWorkspaceInputsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetAllWorkspaceInputs with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -4706,21 +3731,14 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`GetWorkspaceInputMetadata(getWorkspaceInputMetadataOptions *GetWorkspaceInputMetadataOptions)`, func() {
 		getWorkspaceInputMetadataPath := "/v1/workspaces/testString/template_data/testString/values_metadata"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(getWorkspaceInputMetadataPath))
 					Expect(req.Method).To(Equal("GET"))
-
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, "%s", `[{"anyKey": "anyValue"}]`)
@@ -4733,7 +3751,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.GetWorkspaceInputMetadata(nil)
@@ -4752,31 +3769,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetWorkspaceInputMetadataWithContext(ctx, getWorkspaceInputMetadataOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.GetWorkspaceInputMetadata(getWorkspaceInputMetadataOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetWorkspaceInputMetadataWithContext(ctx, getWorkspaceInputMetadataOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetWorkspaceInputMetadata with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -4843,13 +3835,14 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL":       "https://schematicsv1/api",
+				"SCHEMATICS_URL": "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "noauth",
 			}
 
 			It(`Create service client using external config successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+				})
 				Expect(schematicsService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
 				ClearTestEnvironment(testEnvironment)
@@ -4866,7 +3859,8 @@ var _ = Describe(`SchematicsV1`, func() {
 			})
 			It(`Create service client using external config and set url programatically successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+				})
 				err := schematicsService.SetServiceURL("https://testService/api")
 				Expect(err).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
@@ -4878,12 +3872,13 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL":       "https://schematicsv1/api",
+				"SCHEMATICS_URL": "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "someOtherAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
-			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
+			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+			})
 
 			It(`Instantiate service client with error`, func() {
 				Expect(schematicsService).To(BeNil())
@@ -4894,7 +3889,7 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_AUTH_TYPE": "NOAuth",
+				"SCHEMATICS_AUTH_TYPE":   "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
@@ -4941,13 +3936,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.GetWorkspaceOutputs(getWorkspaceOutputsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -4957,21 +3945,14 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`GetWorkspaceOutputs(getWorkspaceOutputsOptions *GetWorkspaceOutputsOptions)`, func() {
 		getWorkspaceOutputsPath := "/v1/workspaces/testString/output_values"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(getWorkspaceOutputsPath))
 					Expect(req.Method).To(Equal("GET"))
-
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, "%s", `[{"folder": "Folder", "id": "ID", "output_values": [{"anyKey": "anyValue"}], "value_type": "ValueType"}]`)
@@ -4984,7 +3965,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.GetWorkspaceOutputs(nil)
@@ -5002,31 +3982,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetWorkspaceOutputsWithContext(ctx, getWorkspaceOutputsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.GetWorkspaceOutputs(getWorkspaceOutputsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetWorkspaceOutputsWithContext(ctx, getWorkspaceOutputsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetWorkspaceOutputs with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -5093,13 +4048,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.GetWorkspaceResources(getWorkspaceResourcesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -5109,21 +4057,14 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`GetWorkspaceResources(getWorkspaceResourcesOptions *GetWorkspaceResourcesOptions)`, func() {
 		getWorkspaceResourcesPath := "/v1/workspaces/testString/resources"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(getWorkspaceResourcesPath))
 					Expect(req.Method).To(Equal("GET"))
-
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, "%s", `[{"folder": "Folder", "id": "ID", "null_resources": [{"anyKey": "anyValue"}], "related_resources": [{"anyKey": "anyValue"}], "resources": [{"anyKey": "anyValue"}], "resources_count": 14, "template_type": "TemplateType"}]`)
@@ -5136,7 +4077,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.GetWorkspaceResources(nil)
@@ -5154,31 +4094,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetWorkspaceResourcesWithContext(ctx, getWorkspaceResourcesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.GetWorkspaceResources(getWorkspaceResourcesOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetWorkspaceResourcesWithContext(ctx, getWorkspaceResourcesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetWorkspaceResources with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -5245,13 +4160,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.GetWorkspaceState(getWorkspaceStateOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -5261,21 +4169,14 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`GetWorkspaceState(getWorkspaceStateOptions *GetWorkspaceStateOptions)`, func() {
 		getWorkspaceStatePath := "/v1/workspaces/testString/state_stores"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(getWorkspaceStatePath))
 					Expect(req.Method).To(Equal("GET"))
-
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, "%s", `{"runtime_data": [{"engine_name": "EngineName", "engine_version": "EngineVersion", "id": "ID", "state_store_url": "StateStoreURL"}]}`)
@@ -5288,7 +4189,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.GetWorkspaceState(nil)
@@ -5306,31 +4206,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetWorkspaceStateWithContext(ctx, getWorkspaceStateOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.GetWorkspaceState(getWorkspaceStateOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetWorkspaceStateWithContext(ctx, getWorkspaceStateOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetWorkspaceState with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -5398,13 +4273,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.GetWorkspaceTemplateState(getWorkspaceTemplateStateOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -5414,21 +4282,14 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`GetWorkspaceTemplateState(getWorkspaceTemplateStateOptions *GetWorkspaceTemplateStateOptions)`, func() {
 		getWorkspaceTemplateStatePath := "/v1/workspaces/testString/runtime_data/testString/state_store"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(getWorkspaceTemplateStatePath))
 					Expect(req.Method).To(Equal("GET"))
-
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, "%s", `{"version": 7, "terraform_version": "TerraformVersion", "serial": 6, "lineage": "Lineage", "modules": [{"anyKey": "anyValue"}]}`)
@@ -5441,13 +4302,12 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
-				_, response, operationErr := schematicsService.GetWorkspaceTemplateState(nil)
+				result, response, operationErr := schematicsService.GetWorkspaceTemplateState(nil)
 				Expect(operationErr).NotTo(BeNil())
 				Expect(response).To(BeNil())
-				//Expect(result).To(BeNil())
+				Expect(result).To(BeNil())
 
 				// Construct an instance of the GetWorkspaceTemplateStateOptions model
 				getWorkspaceTemplateStateOptionsModel := new(schematicsv1.GetWorkspaceTemplateStateOptions)
@@ -5456,35 +4316,10 @@ var _ = Describe(`SchematicsV1`, func() {
 				getWorkspaceTemplateStateOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				_, response, operationErr = schematicsService.GetWorkspaceTemplateState(getWorkspaceTemplateStateOptionsModel)
+				result, response, operationErr = schematicsService.GetWorkspaceTemplateState(getWorkspaceTemplateStateOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
-				//Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetWorkspaceTemplateStateWithContext(ctx, getWorkspaceTemplateStateOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				_, response, operationErr = schematicsService.GetWorkspaceTemplateState(getWorkspaceTemplateStateOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				//Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetWorkspaceTemplateStateWithContext(ctx, getWorkspaceTemplateStateOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
+				Expect(result).ToNot(BeNil())
 			})
 			It(`Invoke GetWorkspaceTemplateState with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -5502,18 +4337,18 @@ var _ = Describe(`SchematicsV1`, func() {
 				// Invoke operation with empty URL (negative test)
 				err := schematicsService.SetServiceURL("")
 				Expect(err).To(BeNil())
-				_, response, operationErr := schematicsService.GetWorkspaceTemplateState(getWorkspaceTemplateStateOptionsModel)
+				result, response, operationErr := schematicsService.GetWorkspaceTemplateState(getWorkspaceTemplateStateOptionsModel)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
 				Expect(response).To(BeNil())
-				//Expect(result).To(BeNil())
+				Expect(result).To(BeNil())
 				// Construct a second instance of the GetWorkspaceTemplateStateOptions model with no property values
 				getWorkspaceTemplateStateOptionsModelNew := new(schematicsv1.GetWorkspaceTemplateStateOptions)
 				// Invoke operation with invalid model (negative test)
-				_, response, operationErr = schematicsService.GetWorkspaceTemplateState(getWorkspaceTemplateStateOptionsModelNew)
+				result, response, operationErr = schematicsService.GetWorkspaceTemplateState(getWorkspaceTemplateStateOptionsModelNew)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).To(BeNil())
-				//Expect(result).To(BeNil())
+				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -5551,13 +4386,14 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL":       "https://schematicsv1/api",
+				"SCHEMATICS_URL": "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "noauth",
 			}
 
 			It(`Create service client using external config successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+				})
 				Expect(schematicsService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
 				ClearTestEnvironment(testEnvironment)
@@ -5574,7 +4410,8 @@ var _ = Describe(`SchematicsV1`, func() {
 			})
 			It(`Create service client using external config and set url programatically successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+				})
 				err := schematicsService.SetServiceURL("https://testService/api")
 				Expect(err).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
@@ -5586,12 +4423,13 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL":       "https://schematicsv1/api",
+				"SCHEMATICS_URL": "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "someOtherAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
-			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
+			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+			})
 
 			It(`Instantiate service client with error`, func() {
 				Expect(schematicsService).To(BeNil())
@@ -5602,7 +4440,7 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_AUTH_TYPE": "NOAuth",
+				"SCHEMATICS_AUTH_TYPE":   "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
@@ -5650,13 +4488,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.GetWorkspaceActivityLogs(getWorkspaceActivityLogsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -5666,21 +4497,14 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`GetWorkspaceActivityLogs(getWorkspaceActivityLogsOptions *GetWorkspaceActivityLogsOptions)`, func() {
 		getWorkspaceActivityLogsPath := "/v1/workspaces/testString/actions/testString/logs"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(getWorkspaceActivityLogsPath))
 					Expect(req.Method).To(Equal("GET"))
-
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, "%s", `{"action_id": "ActionID", "name": "Name", "templates": [{"log_url": "LogURL", "template_id": "TemplateID", "template_type": "TemplateType"}]}`)
@@ -5693,7 +4517,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.GetWorkspaceActivityLogs(nil)
@@ -5712,31 +4535,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetWorkspaceActivityLogsWithContext(ctx, getWorkspaceActivityLogsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.GetWorkspaceActivityLogs(getWorkspaceActivityLogsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetWorkspaceActivityLogsWithContext(ctx, getWorkspaceActivityLogsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetWorkspaceActivityLogs with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -5804,13 +4602,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.GetWorkspaceLogUrls(getWorkspaceLogUrlsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -5820,21 +4611,14 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`GetWorkspaceLogUrls(getWorkspaceLogUrlsOptions *GetWorkspaceLogUrlsOptions)`, func() {
 		getWorkspaceLogUrlsPath := "/v1/workspaces/testString/log_stores"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(getWorkspaceLogUrlsPath))
 					Expect(req.Method).To(Equal("GET"))
-
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, "%s", `{"runtime_data": [{"engine_name": "EngineName", "engine_version": "EngineVersion", "id": "ID", "log_store_url": "LogStoreURL"}]}`)
@@ -5847,7 +4631,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.GetWorkspaceLogUrls(nil)
@@ -5865,31 +4648,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetWorkspaceLogUrlsWithContext(ctx, getWorkspaceLogUrlsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.GetWorkspaceLogUrls(getWorkspaceLogUrlsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetWorkspaceLogUrlsWithContext(ctx, getWorkspaceLogUrlsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetWorkspaceLogUrls with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -5927,10 +4685,8 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`GetTemplateLogs(getTemplateLogsOptions *GetTemplateLogsOptions)`, func() {
 		getTemplateLogsPath := "/v1/workspaces/testString/runtime_data/testString/log_store"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -5940,16 +4696,15 @@ var _ = Describe(`SchematicsV1`, func() {
 
 					// TODO: Add check for log_tf_cmd query parameter
 
+
 					// TODO: Add check for log_tf_prefix query parameter
+
 
 					// TODO: Add check for log_tf_null_resource query parameter
 
+
 					// TODO: Add check for log_tf_ansible query parameter
 
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, "%s", `"OperationResponse"`)
@@ -5962,7 +4717,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.GetTemplateLogs(nil)
@@ -5985,31 +4739,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetTemplateLogsWithContext(ctx, getTemplateLogsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.GetTemplateLogs(getTemplateLogsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetTemplateLogsWithContext(ctx, getTemplateLogsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetTemplateLogs with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -6052,10 +4781,8 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`GetTemplateActivityLog(getTemplateActivityLogOptions *GetTemplateActivityLogOptions)`, func() {
 		getTemplateActivityLogPath := "/v1/workspaces/testString/runtime_data/testString/log_store/actions/testString"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
@@ -6065,16 +4792,15 @@ var _ = Describe(`SchematicsV1`, func() {
 
 					// TODO: Add check for log_tf_cmd query parameter
 
+
 					// TODO: Add check for log_tf_prefix query parameter
+
 
 					// TODO: Add check for log_tf_null_resource query parameter
 
+
 					// TODO: Add check for log_tf_ansible query parameter
 
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, "%s", `"OperationResponse"`)
@@ -6087,7 +4813,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.GetTemplateActivityLog(nil)
@@ -6111,31 +4836,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetTemplateActivityLogWithContext(ctx, getTemplateActivityLogOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.GetTemplateActivityLog(getTemplateActivityLogOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetTemplateActivityLogWithContext(ctx, getTemplateActivityLogOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetTemplateActivityLog with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -6207,13 +4907,14 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL":       "https://schematicsv1/api",
+				"SCHEMATICS_URL": "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "noauth",
 			}
 
 			It(`Create service client using external config successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+				})
 				Expect(schematicsService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
 				ClearTestEnvironment(testEnvironment)
@@ -6230,7 +4931,8 @@ var _ = Describe(`SchematicsV1`, func() {
 			})
 			It(`Create service client using external config and set url programatically successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+				})
 				err := schematicsService.SetServiceURL("https://testService/api")
 				Expect(err).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
@@ -6242,12 +4944,13 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL":       "https://schematicsv1/api",
+				"SCHEMATICS_URL": "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "someOtherAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
-			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
+			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+			})
 
 			It(`Instantiate service client with error`, func() {
 				Expect(schematicsService).To(BeNil())
@@ -6258,7 +4961,7 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_AUTH_TYPE": "NOAuth",
+				"SCHEMATICS_AUTH_TYPE":   "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
@@ -6315,13 +5018,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.CreateWorkspaceDeletionJob(createWorkspaceDeletionJobOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -6331,41 +5027,18 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`CreateWorkspaceDeletionJob(createWorkspaceDeletionJobOptions *CreateWorkspaceDeletionJobOptions)`, func() {
 		createWorkspaceDeletionJobPath := "/v1/workspace_jobs"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(createWorkspaceDeletionJobPath))
 					Expect(req.Method).To(Equal("POST"))
-
-					// For gzip-disabled operation, verify Content-Encoding is not set.
-					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
-
-					// If there is a body, then make sure we can read it
-					bodyBuf := new(bytes.Buffer)
-					if req.Header.Get("Content-Encoding") == "gzip" {
-						body, err := core.NewGzipDecompressionReader(req.Body)
-						Expect(err).To(BeNil())
-						_, err = bodyBuf.ReadFrom(body)
-						Expect(err).To(BeNil())
-					} else {
-						_, err := bodyBuf.ReadFrom(req.Body)
-						Expect(err).To(BeNil())
-					}
-					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
-
 					Expect(req.Header["Refresh_token"]).ToNot(BeNil())
 					Expect(req.Header["Refresh_token"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
 					Expect(req.URL.Query()["destroy_resources"]).To(Equal([]string{"testString"}))
 
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, "%s", `{"job": "Job", "job_id": "JobID"}`)
@@ -6378,7 +5051,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.CreateWorkspaceDeletionJob(nil)
@@ -6402,31 +5074,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.CreateWorkspaceDeletionJobWithContext(ctx, createWorkspaceDeletionJobOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.CreateWorkspaceDeletionJob(createWorkspaceDeletionJobOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.CreateWorkspaceDeletionJobWithContext(ctx, createWorkspaceDeletionJobOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke CreateWorkspaceDeletionJob with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -6499,13 +5146,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.GetWorkspaceDeletionJobStatus(getWorkspaceDeletionJobStatusOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -6515,21 +5155,14 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`GetWorkspaceDeletionJobStatus(getWorkspaceDeletionJobStatusOptions *GetWorkspaceDeletionJobStatusOptions)`, func() {
 		getWorkspaceDeletionJobStatusPath := "/v1/workspace_jobs/testString/status"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(getWorkspaceDeletionJobStatusPath))
 					Expect(req.Method).To(Equal("GET"))
-
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, "%s", `{"job_status": {"failed": ["Failed"], "in_progress": ["InProgress"], "success": ["Success"], "last_updated_on": "2019-01-01T12:00:00"}}`)
@@ -6542,7 +5175,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.GetWorkspaceDeletionJobStatus(nil)
@@ -6560,31 +5192,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetWorkspaceDeletionJobStatusWithContext(ctx, getWorkspaceDeletionJobStatusOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.GetWorkspaceDeletionJobStatus(getWorkspaceDeletionJobStatusOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetWorkspaceDeletionJobStatusWithContext(ctx, getWorkspaceDeletionJobStatusOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetWorkspaceDeletionJobStatus with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -6650,13 +5257,14 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL":       "https://schematicsv1/api",
+				"SCHEMATICS_URL": "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "noauth",
 			}
 
 			It(`Create service client using external config successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+				})
 				Expect(schematicsService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
 				ClearTestEnvironment(testEnvironment)
@@ -6673,7 +5281,8 @@ var _ = Describe(`SchematicsV1`, func() {
 			})
 			It(`Create service client using external config and set url programatically successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+				})
 				err := schematicsService.SetServiceURL("https://testService/api")
 				Expect(err).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
@@ -6685,12 +5294,13 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL":       "https://schematicsv1/api",
+				"SCHEMATICS_URL": "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "someOtherAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
-			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
+			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+			})
 
 			It(`Instantiate service client with error`, func() {
 				Expect(schematicsService).To(BeNil())
@@ -6701,7 +5311,7 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_AUTH_TYPE": "NOAuth",
+				"SCHEMATICS_AUTH_TYPE":   "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
@@ -6760,20 +5370,10 @@ var _ = Describe(`SchematicsV1`, func() {
 				externalSourceModel.SourceType = core.StringPtr("local")
 				externalSourceModel.Git = externalSourceGitModel
 
-				// Construct an instance of the SystemLock model
-				systemLockModel := new(schematicsv1.SystemLock)
-				systemLockModel.SysLocked = core.BoolPtr(true)
-				systemLockModel.SysLockedBy = core.StringPtr("testString")
-				systemLockModel.SysLockedAt = CreateMockDateTime()
-
-				// Construct an instance of the TargetResourceset model
-				targetResourcesetModel := new(schematicsv1.TargetResourceset)
-				targetResourcesetModel.Name = core.StringPtr("testString")
-				targetResourcesetModel.Type = core.StringPtr("testString")
-				targetResourcesetModel.Description = core.StringPtr("testString")
-				targetResourcesetModel.ResourceQuery = core.StringPtr("testString")
-				targetResourcesetModel.CredentialRef = core.StringPtr("testString")
-				targetResourcesetModel.SysLock = systemLockModel
+				// Construct an instance of the BastionResourceDefinition model
+				bastionResourceDefinitionModel := new(schematicsv1.BastionResourceDefinition)
+				bastionResourceDefinitionModel.Name = core.StringPtr("testString")
+				bastionResourceDefinitionModel.Host = core.StringPtr("testString")
 
 				// Construct an instance of the VariableMetadata model
 				variableMetadataModel := new(schematicsv1.VariableMetadata)
@@ -6806,10 +5406,16 @@ var _ = Describe(`SchematicsV1`, func() {
 				actionStateModel.StatusJobID = core.StringPtr("testString")
 				actionStateModel.StatusMessage = core.StringPtr("testString")
 
+				// Construct an instance of the SystemLock model
+				systemLockModel := new(schematicsv1.SystemLock)
+				systemLockModel.SysLocked = core.BoolPtr(true)
+				systemLockModel.SysLockedBy = core.StringPtr("testString")
+				systemLockModel.SysLockedAt = CreateMockDateTime()
+
 				// Construct an instance of the CreateActionOptions model
 				createActionOptionsModel := new(schematicsv1.CreateActionOptions)
 				createActionOptionsModel.Name = core.StringPtr("Stop Action")
-				createActionOptionsModel.Description = core.StringPtr("This Action can be used to Stop the targets")
+				createActionOptionsModel.Description = core.StringPtr("This Action can be used to Stop the VSIs")
 				createActionOptionsModel.Location = core.StringPtr("us_south")
 				createActionOptionsModel.ResourceGroup = core.StringPtr("testString")
 				createActionOptionsModel.Tags = []string{"testString"}
@@ -6818,8 +5424,8 @@ var _ = Describe(`SchematicsV1`, func() {
 				createActionOptionsModel.Source = externalSourceModel
 				createActionOptionsModel.SourceType = core.StringPtr("local")
 				createActionOptionsModel.CommandParameter = core.StringPtr("testString")
-				createActionOptionsModel.Bastion = targetResourcesetModel
-				createActionOptionsModel.TargetsIni = core.StringPtr("testString")
+				createActionOptionsModel.Bastion = bastionResourceDefinitionModel
+				createActionOptionsModel.Inventory = core.StringPtr("testString")
 				createActionOptionsModel.Credentials = []schematicsv1.VariableData{*variableDataModel}
 				createActionOptionsModel.Inputs = []schematicsv1.VariableData{*variableDataModel}
 				createActionOptionsModel.Outputs = []schematicsv1.VariableData{*variableDataModel}
@@ -6834,13 +5440,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.CreateAction(createActionOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -6850,42 +5449,19 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`CreateAction(createActionOptions *CreateActionOptions)`, func() {
 		createActionPath := "/v2/actions"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(createActionPath))
 					Expect(req.Method).To(Equal("POST"))
-
-					// For gzip-disabled operation, verify Content-Encoding is not set.
-					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
-
-					// If there is a body, then make sure we can read it
-					bodyBuf := new(bytes.Buffer)
-					if req.Header.Get("Content-Encoding") == "gzip" {
-						body, err := core.NewGzipDecompressionReader(req.Body)
-						Expect(err).To(BeNil())
-						_, err = bodyBuf.ReadFrom(body)
-						Expect(err).To(BeNil())
-					} else {
-						_, err := bodyBuf.ReadFrom(req.Body)
-						Expect(err).To(BeNil())
-					}
-					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
-
 					Expect(req.Header["X-Github-Token"]).ToNot(BeNil())
 					Expect(req.Header["X-Github-Token"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
-					fmt.Fprintf(res, "%s", `{"name": "Stop Action", "description": "This Action can be used to Stop the targets", "location": "us_south", "resource_group": "ResourceGroup", "tags": ["Tags"], "user_state": {"state": "draft", "set_by": "SetBy", "set_at": "2019-01-01T12:00:00"}, "source_readme_url": "SourceReadmeURL", "source": {"source_type": "local", "git": {"git_repo_url": "GitRepoURL", "git_token": "GitToken", "git_repo_folder": "GitRepoFolder", "git_release": "GitRelease", "git_branch": "GitBranch"}}, "source_type": "local", "command_parameter": "CommandParameter", "bastion": {"name": "Name", "type": "Type", "description": "Description", "resource_query": "ResourceQuery", "credential_ref": "CredentialRef", "id": "ID", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}, "resource_ids": ["ResourceIds"]}, "targets_ini": "TargetsIni", "credentials": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "outputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "trigger_record_id": "TriggerRecordID", "id": "ID", "crn": "Crn", "account": "Account", "source_created_at": "2019-01-01T12:00:00", "source_created_by": "SourceCreatedBy", "source_updated_at": "2019-01-01T12:00:00", "source_updated_by": "SourceUpdatedBy", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "namespace": "Namespace", "state": {"status_code": "normal", "status_job_id": "StatusJobID", "status_message": "StatusMessage"}, "playbook_names": ["PlaybookNames"], "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}}`)
+					fmt.Fprintf(res, "%s", `{"name": "Stop Action", "description": "This Action can be used to Stop the VSIs", "location": "us_south", "resource_group": "ResourceGroup", "tags": ["Tags"], "user_state": {"state": "draft", "set_by": "SetBy", "set_at": "2019-01-01T12:00:00"}, "source_readme_url": "SourceReadmeURL", "source": {"source_type": "local", "git": {"git_repo_url": "GitRepoURL", "git_token": "GitToken", "git_repo_folder": "GitRepoFolder", "git_release": "GitRelease", "git_branch": "GitBranch"}}, "source_type": "local", "command_parameter": "CommandParameter", "bastion": {"name": "Name", "host": "Host"}, "inventory": "Inventory", "credentials": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "outputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "trigger_record_id": "TriggerRecordID", "id": "ID", "crn": "Crn", "account": "Account", "source_created_at": "2019-01-01T12:00:00", "source_created_by": "SourceCreatedBy", "source_updated_at": "2019-01-01T12:00:00", "source_updated_by": "SourceUpdatedBy", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "namespace": "Namespace", "state": {"status_code": "normal", "status_job_id": "StatusJobID", "status_message": "StatusMessage"}, "playbook_names": ["PlaybookNames"], "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}}`)
 				}))
 			})
 			It(`Invoke CreateAction successfully`, func() {
@@ -6895,7 +5471,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.CreateAction(nil)
@@ -6922,20 +5497,10 @@ var _ = Describe(`SchematicsV1`, func() {
 				externalSourceModel.SourceType = core.StringPtr("local")
 				externalSourceModel.Git = externalSourceGitModel
 
-				// Construct an instance of the SystemLock model
-				systemLockModel := new(schematicsv1.SystemLock)
-				systemLockModel.SysLocked = core.BoolPtr(true)
-				systemLockModel.SysLockedBy = core.StringPtr("testString")
-				systemLockModel.SysLockedAt = CreateMockDateTime()
-
-				// Construct an instance of the TargetResourceset model
-				targetResourcesetModel := new(schematicsv1.TargetResourceset)
-				targetResourcesetModel.Name = core.StringPtr("testString")
-				targetResourcesetModel.Type = core.StringPtr("testString")
-				targetResourcesetModel.Description = core.StringPtr("testString")
-				targetResourcesetModel.ResourceQuery = core.StringPtr("testString")
-				targetResourcesetModel.CredentialRef = core.StringPtr("testString")
-				targetResourcesetModel.SysLock = systemLockModel
+				// Construct an instance of the BastionResourceDefinition model
+				bastionResourceDefinitionModel := new(schematicsv1.BastionResourceDefinition)
+				bastionResourceDefinitionModel.Name = core.StringPtr("testString")
+				bastionResourceDefinitionModel.Host = core.StringPtr("testString")
 
 				// Construct an instance of the VariableMetadata model
 				variableMetadataModel := new(schematicsv1.VariableMetadata)
@@ -6968,10 +5533,16 @@ var _ = Describe(`SchematicsV1`, func() {
 				actionStateModel.StatusJobID = core.StringPtr("testString")
 				actionStateModel.StatusMessage = core.StringPtr("testString")
 
+				// Construct an instance of the SystemLock model
+				systemLockModel := new(schematicsv1.SystemLock)
+				systemLockModel.SysLocked = core.BoolPtr(true)
+				systemLockModel.SysLockedBy = core.StringPtr("testString")
+				systemLockModel.SysLockedAt = CreateMockDateTime()
+
 				// Construct an instance of the CreateActionOptions model
 				createActionOptionsModel := new(schematicsv1.CreateActionOptions)
 				createActionOptionsModel.Name = core.StringPtr("Stop Action")
-				createActionOptionsModel.Description = core.StringPtr("This Action can be used to Stop the targets")
+				createActionOptionsModel.Description = core.StringPtr("This Action can be used to Stop the VSIs")
 				createActionOptionsModel.Location = core.StringPtr("us_south")
 				createActionOptionsModel.ResourceGroup = core.StringPtr("testString")
 				createActionOptionsModel.Tags = []string{"testString"}
@@ -6980,8 +5551,8 @@ var _ = Describe(`SchematicsV1`, func() {
 				createActionOptionsModel.Source = externalSourceModel
 				createActionOptionsModel.SourceType = core.StringPtr("local")
 				createActionOptionsModel.CommandParameter = core.StringPtr("testString")
-				createActionOptionsModel.Bastion = targetResourcesetModel
-				createActionOptionsModel.TargetsIni = core.StringPtr("testString")
+				createActionOptionsModel.Bastion = bastionResourceDefinitionModel
+				createActionOptionsModel.Inventory = core.StringPtr("testString")
 				createActionOptionsModel.Credentials = []schematicsv1.VariableData{*variableDataModel}
 				createActionOptionsModel.Inputs = []schematicsv1.VariableData{*variableDataModel}
 				createActionOptionsModel.Outputs = []schematicsv1.VariableData{*variableDataModel}
@@ -6997,31 +5568,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.CreateActionWithContext(ctx, createActionOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.CreateAction(createActionOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.CreateActionWithContext(ctx, createActionOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke CreateAction with error: Operation request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -7050,20 +5596,10 @@ var _ = Describe(`SchematicsV1`, func() {
 				externalSourceModel.SourceType = core.StringPtr("local")
 				externalSourceModel.Git = externalSourceGitModel
 
-				// Construct an instance of the SystemLock model
-				systemLockModel := new(schematicsv1.SystemLock)
-				systemLockModel.SysLocked = core.BoolPtr(true)
-				systemLockModel.SysLockedBy = core.StringPtr("testString")
-				systemLockModel.SysLockedAt = CreateMockDateTime()
-
-				// Construct an instance of the TargetResourceset model
-				targetResourcesetModel := new(schematicsv1.TargetResourceset)
-				targetResourcesetModel.Name = core.StringPtr("testString")
-				targetResourcesetModel.Type = core.StringPtr("testString")
-				targetResourcesetModel.Description = core.StringPtr("testString")
-				targetResourcesetModel.ResourceQuery = core.StringPtr("testString")
-				targetResourcesetModel.CredentialRef = core.StringPtr("testString")
-				targetResourcesetModel.SysLock = systemLockModel
+				// Construct an instance of the BastionResourceDefinition model
+				bastionResourceDefinitionModel := new(schematicsv1.BastionResourceDefinition)
+				bastionResourceDefinitionModel.Name = core.StringPtr("testString")
+				bastionResourceDefinitionModel.Host = core.StringPtr("testString")
 
 				// Construct an instance of the VariableMetadata model
 				variableMetadataModel := new(schematicsv1.VariableMetadata)
@@ -7096,10 +5632,16 @@ var _ = Describe(`SchematicsV1`, func() {
 				actionStateModel.StatusJobID = core.StringPtr("testString")
 				actionStateModel.StatusMessage = core.StringPtr("testString")
 
+				// Construct an instance of the SystemLock model
+				systemLockModel := new(schematicsv1.SystemLock)
+				systemLockModel.SysLocked = core.BoolPtr(true)
+				systemLockModel.SysLockedBy = core.StringPtr("testString")
+				systemLockModel.SysLockedAt = CreateMockDateTime()
+
 				// Construct an instance of the CreateActionOptions model
 				createActionOptionsModel := new(schematicsv1.CreateActionOptions)
 				createActionOptionsModel.Name = core.StringPtr("Stop Action")
-				createActionOptionsModel.Description = core.StringPtr("This Action can be used to Stop the targets")
+				createActionOptionsModel.Description = core.StringPtr("This Action can be used to Stop the VSIs")
 				createActionOptionsModel.Location = core.StringPtr("us_south")
 				createActionOptionsModel.ResourceGroup = core.StringPtr("testString")
 				createActionOptionsModel.Tags = []string{"testString"}
@@ -7108,8 +5650,8 @@ var _ = Describe(`SchematicsV1`, func() {
 				createActionOptionsModel.Source = externalSourceModel
 				createActionOptionsModel.SourceType = core.StringPtr("local")
 				createActionOptionsModel.CommandParameter = core.StringPtr("testString")
-				createActionOptionsModel.Bastion = targetResourcesetModel
-				createActionOptionsModel.TargetsIni = core.StringPtr("testString")
+				createActionOptionsModel.Bastion = bastionResourceDefinitionModel
+				createActionOptionsModel.Inventory = core.StringPtr("testString")
 				createActionOptionsModel.Credentials = []schematicsv1.VariableData{*variableDataModel}
 				createActionOptionsModel.Inputs = []schematicsv1.VariableData{*variableDataModel}
 				createActionOptionsModel.Outputs = []schematicsv1.VariableData{*variableDataModel}
@@ -7176,13 +5718,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.ListActions(listActionsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -7192,17 +5727,14 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`ListActions(listActionsOptions *ListActionsOptions)`, func() {
 		listActionsPath := "/v2/actions"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(listActionsPath))
 					Expect(req.Method).To(Equal("GET"))
-
 					Expect(req.URL.Query()["offset"]).To(Equal([]string{fmt.Sprint(int64(0))}))
 
 					Expect(req.URL.Query()["limit"]).To(Equal([]string{fmt.Sprint(int64(1))}))
@@ -7211,13 +5743,9 @@ var _ = Describe(`SchematicsV1`, func() {
 
 					Expect(req.URL.Query()["profile"]).To(Equal([]string{"ids"}))
 
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"total_count": 10, "limit": 5, "offset": 6, "actions": [{"name": "Stop Action", "description": "This Action can be used to Stop the targets", "id": "ID", "crn": "Crn", "location": "us_south", "resource_group": "ResourceGroup", "namespace": "Namespace", "tags": ["Tags"], "playbook_name": "PlaybookName", "user_state": {"state": "draft", "set_by": "SetBy", "set_at": "2019-01-01T12:00:00"}, "state": {"status_code": "normal", "status_message": "StatusMessage"}, "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}, "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy"}]}`)
+					fmt.Fprintf(res, "%s", `{"total_count": 10, "limit": 5, "offset": 6, "actions": [{"name": "Stop Action", "description": "This Action can be used to Stop the VSIs", "id": "ID", "crn": "Crn", "location": "us_south", "resource_group": "ResourceGroup", "namespace": "Namespace", "tags": ["Tags"], "playbook_name": "PlaybookName", "user_state": {"state": "draft", "set_by": "SetBy", "set_at": "2019-01-01T12:00:00"}, "state": {"status_code": "normal", "status_message": "StatusMessage"}, "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}, "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy"}]}`)
 				}))
 			})
 			It(`Invoke ListActions successfully`, func() {
@@ -7227,7 +5755,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.ListActions(nil)
@@ -7248,31 +5775,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.ListActionsWithContext(ctx, listActionsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.ListActions(listActionsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.ListActionsWithContext(ctx, listActionsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListActions with error: Operation request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -7338,13 +5840,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.GetAction(getActionOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -7354,26 +5849,19 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`GetAction(getActionOptions *GetActionOptions)`, func() {
 		getActionPath := "/v2/actions/testString"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(getActionPath))
 					Expect(req.Method).To(Equal("GET"))
-
 					Expect(req.URL.Query()["profile"]).To(Equal([]string{"summary"}))
 
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"name": "Stop Action", "description": "This Action can be used to Stop the targets", "location": "us_south", "resource_group": "ResourceGroup", "tags": ["Tags"], "user_state": {"state": "draft", "set_by": "SetBy", "set_at": "2019-01-01T12:00:00"}, "source_readme_url": "SourceReadmeURL", "source": {"source_type": "local", "git": {"git_repo_url": "GitRepoURL", "git_token": "GitToken", "git_repo_folder": "GitRepoFolder", "git_release": "GitRelease", "git_branch": "GitBranch"}}, "source_type": "local", "command_parameter": "CommandParameter", "bastion": {"name": "Name", "type": "Type", "description": "Description", "resource_query": "ResourceQuery", "credential_ref": "CredentialRef", "id": "ID", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}, "resource_ids": ["ResourceIds"]}, "targets_ini": "TargetsIni", "credentials": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "outputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "trigger_record_id": "TriggerRecordID", "id": "ID", "crn": "Crn", "account": "Account", "source_created_at": "2019-01-01T12:00:00", "source_created_by": "SourceCreatedBy", "source_updated_at": "2019-01-01T12:00:00", "source_updated_by": "SourceUpdatedBy", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "namespace": "Namespace", "state": {"status_code": "normal", "status_job_id": "StatusJobID", "status_message": "StatusMessage"}, "playbook_names": ["PlaybookNames"], "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}}`)
+					fmt.Fprintf(res, "%s", `{"name": "Stop Action", "description": "This Action can be used to Stop the VSIs", "location": "us_south", "resource_group": "ResourceGroup", "tags": ["Tags"], "user_state": {"state": "draft", "set_by": "SetBy", "set_at": "2019-01-01T12:00:00"}, "source_readme_url": "SourceReadmeURL", "source": {"source_type": "local", "git": {"git_repo_url": "GitRepoURL", "git_token": "GitToken", "git_repo_folder": "GitRepoFolder", "git_release": "GitRelease", "git_branch": "GitBranch"}}, "source_type": "local", "command_parameter": "CommandParameter", "bastion": {"name": "Name", "host": "Host"}, "inventory": "Inventory", "credentials": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "outputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "trigger_record_id": "TriggerRecordID", "id": "ID", "crn": "Crn", "account": "Account", "source_created_at": "2019-01-01T12:00:00", "source_created_by": "SourceCreatedBy", "source_updated_at": "2019-01-01T12:00:00", "source_updated_by": "SourceUpdatedBy", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "namespace": "Namespace", "state": {"status_code": "normal", "status_job_id": "StatusJobID", "status_message": "StatusMessage"}, "playbook_names": ["PlaybookNames"], "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}}`)
 				}))
 			})
 			It(`Invoke GetAction successfully`, func() {
@@ -7383,7 +5871,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.GetAction(nil)
@@ -7402,31 +5889,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetActionWithContext(ctx, getActionOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.GetAction(getActionOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetActionWithContext(ctx, getActionOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetAction with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -7473,7 +5935,6 @@ var _ = Describe(`SchematicsV1`, func() {
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(deleteActionPath))
 					Expect(req.Method).To(Equal("DELETE"))
-
 					Expect(req.Header["Force"]).ToNot(BeNil())
 					Expect(req.Header["Force"][0]).To(Equal(fmt.Sprintf("%v", true)))
 					Expect(req.Header["Propagate"]).ToNot(BeNil())
@@ -7488,7 +5949,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				response, operationErr := schematicsService.DeleteAction(nil)
@@ -7503,12 +5963,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				deleteActionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				response, operationErr = schematicsService.DeleteAction(deleteActionOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
 				response, operationErr = schematicsService.DeleteAction(deleteActionOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -7590,20 +6044,10 @@ var _ = Describe(`SchematicsV1`, func() {
 				externalSourceModel.SourceType = core.StringPtr("local")
 				externalSourceModel.Git = externalSourceGitModel
 
-				// Construct an instance of the SystemLock model
-				systemLockModel := new(schematicsv1.SystemLock)
-				systemLockModel.SysLocked = core.BoolPtr(true)
-				systemLockModel.SysLockedBy = core.StringPtr("testString")
-				systemLockModel.SysLockedAt = CreateMockDateTime()
-
-				// Construct an instance of the TargetResourceset model
-				targetResourcesetModel := new(schematicsv1.TargetResourceset)
-				targetResourcesetModel.Name = core.StringPtr("testString")
-				targetResourcesetModel.Type = core.StringPtr("testString")
-				targetResourcesetModel.Description = core.StringPtr("testString")
-				targetResourcesetModel.ResourceQuery = core.StringPtr("testString")
-				targetResourcesetModel.CredentialRef = core.StringPtr("testString")
-				targetResourcesetModel.SysLock = systemLockModel
+				// Construct an instance of the BastionResourceDefinition model
+				bastionResourceDefinitionModel := new(schematicsv1.BastionResourceDefinition)
+				bastionResourceDefinitionModel.Name = core.StringPtr("testString")
+				bastionResourceDefinitionModel.Host = core.StringPtr("testString")
 
 				// Construct an instance of the VariableMetadata model
 				variableMetadataModel := new(schematicsv1.VariableMetadata)
@@ -7636,11 +6080,17 @@ var _ = Describe(`SchematicsV1`, func() {
 				actionStateModel.StatusJobID = core.StringPtr("testString")
 				actionStateModel.StatusMessage = core.StringPtr("testString")
 
+				// Construct an instance of the SystemLock model
+				systemLockModel := new(schematicsv1.SystemLock)
+				systemLockModel.SysLocked = core.BoolPtr(true)
+				systemLockModel.SysLockedBy = core.StringPtr("testString")
+				systemLockModel.SysLockedAt = CreateMockDateTime()
+
 				// Construct an instance of the UpdateActionOptions model
 				updateActionOptionsModel := new(schematicsv1.UpdateActionOptions)
 				updateActionOptionsModel.ActionID = core.StringPtr("testString")
 				updateActionOptionsModel.Name = core.StringPtr("Stop Action")
-				updateActionOptionsModel.Description = core.StringPtr("This Action can be used to Stop the targets")
+				updateActionOptionsModel.Description = core.StringPtr("This Action can be used to Stop the VSIs")
 				updateActionOptionsModel.Location = core.StringPtr("us_south")
 				updateActionOptionsModel.ResourceGroup = core.StringPtr("testString")
 				updateActionOptionsModel.Tags = []string{"testString"}
@@ -7649,8 +6099,8 @@ var _ = Describe(`SchematicsV1`, func() {
 				updateActionOptionsModel.Source = externalSourceModel
 				updateActionOptionsModel.SourceType = core.StringPtr("local")
 				updateActionOptionsModel.CommandParameter = core.StringPtr("testString")
-				updateActionOptionsModel.Bastion = targetResourcesetModel
-				updateActionOptionsModel.TargetsIni = core.StringPtr("testString")
+				updateActionOptionsModel.Bastion = bastionResourceDefinitionModel
+				updateActionOptionsModel.Inventory = core.StringPtr("testString")
 				updateActionOptionsModel.Credentials = []schematicsv1.VariableData{*variableDataModel}
 				updateActionOptionsModel.Inputs = []schematicsv1.VariableData{*variableDataModel}
 				updateActionOptionsModel.Outputs = []schematicsv1.VariableData{*variableDataModel}
@@ -7665,13 +6115,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.UpdateAction(updateActionOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -7681,42 +6124,19 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`UpdateAction(updateActionOptions *UpdateActionOptions)`, func() {
 		updateActionPath := "/v2/actions/testString"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(updateActionPath))
 					Expect(req.Method).To(Equal("PATCH"))
-
-					// For gzip-disabled operation, verify Content-Encoding is not set.
-					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
-
-					// If there is a body, then make sure we can read it
-					bodyBuf := new(bytes.Buffer)
-					if req.Header.Get("Content-Encoding") == "gzip" {
-						body, err := core.NewGzipDecompressionReader(req.Body)
-						Expect(err).To(BeNil())
-						_, err = bodyBuf.ReadFrom(body)
-						Expect(err).To(BeNil())
-					} else {
-						_, err := bodyBuf.ReadFrom(req.Body)
-						Expect(err).To(BeNil())
-					}
-					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
-
 					Expect(req.Header["X-Github-Token"]).ToNot(BeNil())
 					Expect(req.Header["X-Github-Token"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"name": "Stop Action", "description": "This Action can be used to Stop the targets", "location": "us_south", "resource_group": "ResourceGroup", "tags": ["Tags"], "user_state": {"state": "draft", "set_by": "SetBy", "set_at": "2019-01-01T12:00:00"}, "source_readme_url": "SourceReadmeURL", "source": {"source_type": "local", "git": {"git_repo_url": "GitRepoURL", "git_token": "GitToken", "git_repo_folder": "GitRepoFolder", "git_release": "GitRelease", "git_branch": "GitBranch"}}, "source_type": "local", "command_parameter": "CommandParameter", "bastion": {"name": "Name", "type": "Type", "description": "Description", "resource_query": "ResourceQuery", "credential_ref": "CredentialRef", "id": "ID", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}, "resource_ids": ["ResourceIds"]}, "targets_ini": "TargetsIni", "credentials": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "outputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "trigger_record_id": "TriggerRecordID", "id": "ID", "crn": "Crn", "account": "Account", "source_created_at": "2019-01-01T12:00:00", "source_created_by": "SourceCreatedBy", "source_updated_at": "2019-01-01T12:00:00", "source_updated_by": "SourceUpdatedBy", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "namespace": "Namespace", "state": {"status_code": "normal", "status_job_id": "StatusJobID", "status_message": "StatusMessage"}, "playbook_names": ["PlaybookNames"], "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}}`)
+					fmt.Fprintf(res, "%s", `{"name": "Stop Action", "description": "This Action can be used to Stop the VSIs", "location": "us_south", "resource_group": "ResourceGroup", "tags": ["Tags"], "user_state": {"state": "draft", "set_by": "SetBy", "set_at": "2019-01-01T12:00:00"}, "source_readme_url": "SourceReadmeURL", "source": {"source_type": "local", "git": {"git_repo_url": "GitRepoURL", "git_token": "GitToken", "git_repo_folder": "GitRepoFolder", "git_release": "GitRelease", "git_branch": "GitBranch"}}, "source_type": "local", "command_parameter": "CommandParameter", "bastion": {"name": "Name", "host": "Host"}, "inventory": "Inventory", "credentials": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "outputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "trigger_record_id": "TriggerRecordID", "id": "ID", "crn": "Crn", "account": "Account", "source_created_at": "2019-01-01T12:00:00", "source_created_by": "SourceCreatedBy", "source_updated_at": "2019-01-01T12:00:00", "source_updated_by": "SourceUpdatedBy", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "namespace": "Namespace", "state": {"status_code": "normal", "status_job_id": "StatusJobID", "status_message": "StatusMessage"}, "playbook_names": ["PlaybookNames"], "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}}`)
 				}))
 			})
 			It(`Invoke UpdateAction successfully`, func() {
@@ -7726,7 +6146,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.UpdateAction(nil)
@@ -7753,20 +6172,10 @@ var _ = Describe(`SchematicsV1`, func() {
 				externalSourceModel.SourceType = core.StringPtr("local")
 				externalSourceModel.Git = externalSourceGitModel
 
-				// Construct an instance of the SystemLock model
-				systemLockModel := new(schematicsv1.SystemLock)
-				systemLockModel.SysLocked = core.BoolPtr(true)
-				systemLockModel.SysLockedBy = core.StringPtr("testString")
-				systemLockModel.SysLockedAt = CreateMockDateTime()
-
-				// Construct an instance of the TargetResourceset model
-				targetResourcesetModel := new(schematicsv1.TargetResourceset)
-				targetResourcesetModel.Name = core.StringPtr("testString")
-				targetResourcesetModel.Type = core.StringPtr("testString")
-				targetResourcesetModel.Description = core.StringPtr("testString")
-				targetResourcesetModel.ResourceQuery = core.StringPtr("testString")
-				targetResourcesetModel.CredentialRef = core.StringPtr("testString")
-				targetResourcesetModel.SysLock = systemLockModel
+				// Construct an instance of the BastionResourceDefinition model
+				bastionResourceDefinitionModel := new(schematicsv1.BastionResourceDefinition)
+				bastionResourceDefinitionModel.Name = core.StringPtr("testString")
+				bastionResourceDefinitionModel.Host = core.StringPtr("testString")
 
 				// Construct an instance of the VariableMetadata model
 				variableMetadataModel := new(schematicsv1.VariableMetadata)
@@ -7799,11 +6208,17 @@ var _ = Describe(`SchematicsV1`, func() {
 				actionStateModel.StatusJobID = core.StringPtr("testString")
 				actionStateModel.StatusMessage = core.StringPtr("testString")
 
+				// Construct an instance of the SystemLock model
+				systemLockModel := new(schematicsv1.SystemLock)
+				systemLockModel.SysLocked = core.BoolPtr(true)
+				systemLockModel.SysLockedBy = core.StringPtr("testString")
+				systemLockModel.SysLockedAt = CreateMockDateTime()
+
 				// Construct an instance of the UpdateActionOptions model
 				updateActionOptionsModel := new(schematicsv1.UpdateActionOptions)
 				updateActionOptionsModel.ActionID = core.StringPtr("testString")
 				updateActionOptionsModel.Name = core.StringPtr("Stop Action")
-				updateActionOptionsModel.Description = core.StringPtr("This Action can be used to Stop the targets")
+				updateActionOptionsModel.Description = core.StringPtr("This Action can be used to Stop the VSIs")
 				updateActionOptionsModel.Location = core.StringPtr("us_south")
 				updateActionOptionsModel.ResourceGroup = core.StringPtr("testString")
 				updateActionOptionsModel.Tags = []string{"testString"}
@@ -7812,8 +6227,8 @@ var _ = Describe(`SchematicsV1`, func() {
 				updateActionOptionsModel.Source = externalSourceModel
 				updateActionOptionsModel.SourceType = core.StringPtr("local")
 				updateActionOptionsModel.CommandParameter = core.StringPtr("testString")
-				updateActionOptionsModel.Bastion = targetResourcesetModel
-				updateActionOptionsModel.TargetsIni = core.StringPtr("testString")
+				updateActionOptionsModel.Bastion = bastionResourceDefinitionModel
+				updateActionOptionsModel.Inventory = core.StringPtr("testString")
 				updateActionOptionsModel.Credentials = []schematicsv1.VariableData{*variableDataModel}
 				updateActionOptionsModel.Inputs = []schematicsv1.VariableData{*variableDataModel}
 				updateActionOptionsModel.Outputs = []schematicsv1.VariableData{*variableDataModel}
@@ -7829,31 +6244,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.UpdateActionWithContext(ctx, updateActionOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.UpdateAction(updateActionOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.UpdateActionWithContext(ctx, updateActionOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke UpdateAction with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -7882,20 +6272,10 @@ var _ = Describe(`SchematicsV1`, func() {
 				externalSourceModel.SourceType = core.StringPtr("local")
 				externalSourceModel.Git = externalSourceGitModel
 
-				// Construct an instance of the SystemLock model
-				systemLockModel := new(schematicsv1.SystemLock)
-				systemLockModel.SysLocked = core.BoolPtr(true)
-				systemLockModel.SysLockedBy = core.StringPtr("testString")
-				systemLockModel.SysLockedAt = CreateMockDateTime()
-
-				// Construct an instance of the TargetResourceset model
-				targetResourcesetModel := new(schematicsv1.TargetResourceset)
-				targetResourcesetModel.Name = core.StringPtr("testString")
-				targetResourcesetModel.Type = core.StringPtr("testString")
-				targetResourcesetModel.Description = core.StringPtr("testString")
-				targetResourcesetModel.ResourceQuery = core.StringPtr("testString")
-				targetResourcesetModel.CredentialRef = core.StringPtr("testString")
-				targetResourcesetModel.SysLock = systemLockModel
+				// Construct an instance of the BastionResourceDefinition model
+				bastionResourceDefinitionModel := new(schematicsv1.BastionResourceDefinition)
+				bastionResourceDefinitionModel.Name = core.StringPtr("testString")
+				bastionResourceDefinitionModel.Host = core.StringPtr("testString")
 
 				// Construct an instance of the VariableMetadata model
 				variableMetadataModel := new(schematicsv1.VariableMetadata)
@@ -7928,11 +6308,17 @@ var _ = Describe(`SchematicsV1`, func() {
 				actionStateModel.StatusJobID = core.StringPtr("testString")
 				actionStateModel.StatusMessage = core.StringPtr("testString")
 
+				// Construct an instance of the SystemLock model
+				systemLockModel := new(schematicsv1.SystemLock)
+				systemLockModel.SysLocked = core.BoolPtr(true)
+				systemLockModel.SysLockedBy = core.StringPtr("testString")
+				systemLockModel.SysLockedAt = CreateMockDateTime()
+
 				// Construct an instance of the UpdateActionOptions model
 				updateActionOptionsModel := new(schematicsv1.UpdateActionOptions)
 				updateActionOptionsModel.ActionID = core.StringPtr("testString")
 				updateActionOptionsModel.Name = core.StringPtr("Stop Action")
-				updateActionOptionsModel.Description = core.StringPtr("This Action can be used to Stop the targets")
+				updateActionOptionsModel.Description = core.StringPtr("This Action can be used to Stop the VSIs")
 				updateActionOptionsModel.Location = core.StringPtr("us_south")
 				updateActionOptionsModel.ResourceGroup = core.StringPtr("testString")
 				updateActionOptionsModel.Tags = []string{"testString"}
@@ -7941,8 +6327,8 @@ var _ = Describe(`SchematicsV1`, func() {
 				updateActionOptionsModel.Source = externalSourceModel
 				updateActionOptionsModel.SourceType = core.StringPtr("local")
 				updateActionOptionsModel.CommandParameter = core.StringPtr("testString")
-				updateActionOptionsModel.Bastion = targetResourcesetModel
-				updateActionOptionsModel.TargetsIni = core.StringPtr("testString")
+				updateActionOptionsModel.Bastion = bastionResourceDefinitionModel
+				updateActionOptionsModel.Inventory = core.StringPtr("testString")
 				updateActionOptionsModel.Credentials = []schematicsv1.VariableData{*variableDataModel}
 				updateActionOptionsModel.Inputs = []schematicsv1.VariableData{*variableDataModel}
 				updateActionOptionsModel.Outputs = []schematicsv1.VariableData{*variableDataModel}
@@ -7964,6 +6350,140 @@ var _ = Describe(`SchematicsV1`, func() {
 				updateActionOptionsModelNew := new(schematicsv1.UpdateActionOptions)
 				// Invoke operation with invalid model (negative test)
 				result, response, operationErr = schematicsService.UpdateAction(updateActionOptionsModelNew)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`UploadTemplateTarAction(uploadTemplateTarActionOptions *UploadTemplateTarActionOptions) - Operation response error`, func() {
+		uploadTemplateTarActionPath := "/v2/actions/testString/template_repo_upload"
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(uploadTemplateTarActionPath))
+					Expect(req.Method).To(Equal("PUT"))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, `} this is not valid json {`)
+				}))
+			})
+			It(`Invoke UploadTemplateTarAction with error: Operation response processing error`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Construct an instance of the UploadTemplateTarActionOptions model
+				uploadTemplateTarActionOptionsModel := new(schematicsv1.UploadTemplateTarActionOptions)
+				uploadTemplateTarActionOptionsModel.ActionID = core.StringPtr("testString")
+				uploadTemplateTarActionOptionsModel.File = CreateMockReader("This is a mock file.")
+				uploadTemplateTarActionOptionsModel.FileContentType = core.StringPtr("testString")
+				uploadTemplateTarActionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Expect response parsing to fail since we are receiving a text/plain response
+				result, response, operationErr := schematicsService.UploadTemplateTarAction(uploadTemplateTarActionOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+
+	Describe(`UploadTemplateTarAction(uploadTemplateTarActionOptions *UploadTemplateTarActionOptions)`, func() {
+		uploadTemplateTarActionPath := "/v2/actions/testString/template_repo_upload"
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(uploadTemplateTarActionPath))
+					Expect(req.Method).To(Equal("PUT"))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"file_value": "FileValue", "has_received_file": false, "id": "ID"}`)
+				}))
+			})
+			It(`Invoke UploadTemplateTarAction successfully`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Invoke operation with nil options model (negative test)
+				result, response, operationErr := schematicsService.UploadTemplateTarAction(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				// Construct an instance of the UploadTemplateTarActionOptions model
+				uploadTemplateTarActionOptionsModel := new(schematicsv1.UploadTemplateTarActionOptions)
+				uploadTemplateTarActionOptionsModel.ActionID = core.StringPtr("testString")
+				uploadTemplateTarActionOptionsModel.File = CreateMockReader("This is a mock file.")
+				uploadTemplateTarActionOptionsModel.FileContentType = core.StringPtr("testString")
+				uploadTemplateTarActionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				result, response, operationErr = schematicsService.UploadTemplateTarAction(uploadTemplateTarActionOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+			})
+			It(`Invoke UploadTemplateTarAction with error: Param validation error`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:  testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Construct an instance of the UploadTemplateTarActionOptions model
+				uploadTemplateTarActionOptionsModel := new(schematicsv1.UploadTemplateTarActionOptions)
+				// Invoke operation with invalid options model (negative test)
+				result, response, operationErr := schematicsService.UploadTemplateTarAction(uploadTemplateTarActionOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+			})
+			It(`Invoke UploadTemplateTarAction with error: Operation validation and request error`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Construct an instance of the UploadTemplateTarActionOptions model
+				uploadTemplateTarActionOptionsModel := new(schematicsv1.UploadTemplateTarActionOptions)
+				uploadTemplateTarActionOptionsModel.ActionID = core.StringPtr("testString")
+				uploadTemplateTarActionOptionsModel.File = CreateMockReader("This is a mock file.")
+				uploadTemplateTarActionOptionsModel.FileContentType = core.StringPtr("testString")
+				uploadTemplateTarActionOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := schematicsService.SetServiceURL("")
+				Expect(err).To(BeNil())
+				result, response, operationErr := schematicsService.UploadTemplateTarAction(uploadTemplateTarActionOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+				// Construct a second instance of the UploadTemplateTarActionOptions model with no property values
+				uploadTemplateTarActionOptionsModelNew := new(schematicsv1.UploadTemplateTarActionOptions)
+				// Invoke operation with invalid model (negative test)
+				result, response, operationErr = schematicsService.UploadTemplateTarAction(uploadTemplateTarActionOptionsModelNew)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
@@ -8004,13 +6524,14 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL":       "https://schematicsv1/api",
+				"SCHEMATICS_URL": "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "noauth",
 			}
 
 			It(`Create service client using external config successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+				})
 				Expect(schematicsService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
 				ClearTestEnvironment(testEnvironment)
@@ -8027,7 +6548,8 @@ var _ = Describe(`SchematicsV1`, func() {
 			})
 			It(`Create service client using external config and set url programatically successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+				})
 				err := schematicsService.SetServiceURL("https://testService/api")
 				Expect(err).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
@@ -8039,12 +6561,13 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL":       "https://schematicsv1/api",
+				"SCHEMATICS_URL": "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "someOtherAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
-			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
+			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+			})
 
 			It(`Instantiate service client with error`, func() {
 				Expect(schematicsService).To(BeNil())
@@ -8055,7 +6578,7 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_AUTH_TYPE": "NOAuth",
+				"SCHEMATICS_AUTH_TYPE":   "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
@@ -8127,13 +6650,21 @@ var _ = Describe(`SchematicsV1`, func() {
 				jobStatusActionModel.StatusMessage = core.StringPtr("testString")
 				jobStatusActionModel.BastionStatusCode = core.StringPtr("none")
 				jobStatusActionModel.BastionStatusMessage = core.StringPtr("testString")
-				jobStatusActionModel.TargetsStatusCode = core.StringPtr("none")
-				jobStatusActionModel.TargetsStatusMessage = core.StringPtr("testString")
+				jobStatusActionModel.InventoryStatusCode = core.StringPtr("none")
+				jobStatusActionModel.InventoryStatusMessage = core.StringPtr("testString")
 				jobStatusActionModel.UpdatedAt = CreateMockDateTime()
 
 				// Construct an instance of the JobStatus model
 				jobStatusModel := new(schematicsv1.JobStatus)
 				jobStatusModel.ActionJobStatus = jobStatusActionModel
+
+				// Construct an instance of the InventoryResourceRecord model
+				inventoryResourceRecordModel := new(schematicsv1.InventoryResourceRecord)
+				inventoryResourceRecordModel.Name = core.StringPtr("testString")
+				inventoryResourceRecordModel.Location = core.StringPtr("us_south")
+				inventoryResourceRecordModel.ResourceGroup = core.StringPtr("testString")
+				inventoryResourceRecordModel.InventoriesIni = core.StringPtr("testString")
+				inventoryResourceRecordModel.ResourceQueries = []string{"testString"}
 
 				// Construct an instance of the JobDataAction model
 				jobDataActionModel := new(schematicsv1.JobDataAction)
@@ -8142,33 +6673,25 @@ var _ = Describe(`SchematicsV1`, func() {
 				jobDataActionModel.Outputs = []schematicsv1.VariableData{*variableDataModel}
 				jobDataActionModel.Settings = []schematicsv1.VariableData{*variableDataModel}
 				jobDataActionModel.UpdatedAt = CreateMockDateTime()
+				jobDataActionModel.InventoryRecord = inventoryResourceRecordModel
+				jobDataActionModel.MaterializedInventory = core.StringPtr("testString")
 
 				// Construct an instance of the JobData model
 				jobDataModel := new(schematicsv1.JobData)
 				jobDataModel.JobType = core.StringPtr("repo_download_job")
 				jobDataModel.ActionJobData = jobDataActionModel
 
-				// Construct an instance of the SystemLock model
-				systemLockModel := new(schematicsv1.SystemLock)
-				systemLockModel.SysLocked = core.BoolPtr(true)
-				systemLockModel.SysLockedBy = core.StringPtr("testString")
-				systemLockModel.SysLockedAt = CreateMockDateTime()
-
-				// Construct an instance of the TargetResourceset model
-				targetResourcesetModel := new(schematicsv1.TargetResourceset)
-				targetResourcesetModel.Name = core.StringPtr("testString")
-				targetResourcesetModel.Type = core.StringPtr("testString")
-				targetResourcesetModel.Description = core.StringPtr("testString")
-				targetResourcesetModel.ResourceQuery = core.StringPtr("testString")
-				targetResourcesetModel.CredentialRef = core.StringPtr("testString")
-				targetResourcesetModel.SysLock = systemLockModel
+				// Construct an instance of the BastionResourceDefinition model
+				bastionResourceDefinitionModel := new(schematicsv1.BastionResourceDefinition)
+				bastionResourceDefinitionModel.Name = core.StringPtr("testString")
+				bastionResourceDefinitionModel.Host = core.StringPtr("testString")
 
 				// Construct an instance of the JobLogSummaryRepoDownloadJob model
 				jobLogSummaryRepoDownloadJobModel := new(schematicsv1.JobLogSummaryRepoDownloadJob)
 
 				// Construct an instance of the JobLogSummaryActionJobRecap model
 				jobLogSummaryActionJobRecapModel := new(schematicsv1.JobLogSummaryActionJobRecap)
-				jobLogSummaryActionJobRecapModel.Target = []string{"testString"}
+				jobLogSummaryActionJobRecapModel.Hosts = []string{"testString"}
 				jobLogSummaryActionJobRecapModel.Ok = core.Float64Ptr(float64(72.5))
 				jobLogSummaryActionJobRecapModel.Changed = core.Float64Ptr(float64(72.5))
 				jobLogSummaryActionJobRecapModel.Failed = core.Float64Ptr(float64(72.5))
@@ -8199,18 +6722,11 @@ var _ = Describe(`SchematicsV1`, func() {
 				createJobOptionsModel.Location = core.StringPtr("us_south")
 				createJobOptionsModel.Status = jobStatusModel
 				createJobOptionsModel.Data = jobDataModel
-				createJobOptionsModel.Bastion = targetResourcesetModel
+				createJobOptionsModel.Bastion = bastionResourceDefinitionModel
 				createJobOptionsModel.LogSummary = jobLogSummaryModel
 				createJobOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := schematicsService.CreateJob(createJobOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.CreateJob(createJobOptionsModel)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
@@ -8223,42 +6739,19 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`CreateJob(createJobOptions *CreateJobOptions)`, func() {
 		createJobPath := "/v2/jobs"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(createJobPath))
 					Expect(req.Method).To(Equal("POST"))
-
-					// For gzip-disabled operation, verify Content-Encoding is not set.
-					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
-
-					// If there is a body, then make sure we can read it
-					bodyBuf := new(bytes.Buffer)
-					if req.Header.Get("Content-Encoding") == "gzip" {
-						body, err := core.NewGzipDecompressionReader(req.Body)
-						Expect(err).To(BeNil())
-						_, err = bodyBuf.ReadFrom(body)
-						Expect(err).To(BeNil())
-					} else {
-						_, err := bodyBuf.ReadFrom(req.Body)
-						Expect(err).To(BeNil())
-					}
-					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
-
 					Expect(req.Header["Refresh_token"]).ToNot(BeNil())
 					Expect(req.Header["Refresh_token"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(202)
-					fmt.Fprintf(res, "%s", `{"command_object": "workspace", "command_object_id": "CommandObjectID", "command_name": "workspace_init_flow", "command_parameter": "CommandParameter", "command_options": ["CommandOptions"], "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "tags": ["Tags"], "id": "ID", "name": "Name", "description": "Description", "location": "us_south", "resource_group": "ResourceGroup", "submitted_at": "2019-01-01T12:00:00", "submitted_by": "SubmittedBy", "start_at": "2019-01-01T12:00:00", "end_at": "2019-01-01T12:00:00", "duration": "Duration", "status": {"action_job_status": {"action_name": "ActionName", "status_code": "job_pending", "status_message": "StatusMessage", "bastion_status_code": "none", "bastion_status_message": "BastionStatusMessage", "targets_status_code": "none", "targets_status_message": "TargetsStatusMessage", "updated_at": "2019-01-01T12:00:00"}}, "data": {"job_type": "repo_download_job", "action_job_data": {"action_name": "ActionName", "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "outputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "updated_at": "2019-01-01T12:00:00"}}, "targets_ini": "TargetsIni", "bastion": {"name": "Name", "type": "Type", "description": "Description", "resource_query": "ResourceQuery", "credential_ref": "CredentialRef", "id": "ID", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}, "resource_ids": ["ResourceIds"]}, "log_summary": {"job_id": "JobID", "job_type": "repo_download_job", "log_start_at": "2019-01-01T12:00:00", "log_analyzed_till": "2019-01-01T12:00:00", "elapsed_time": 11, "log_errors": [{"error_code": "ErrorCode", "error_msg": "ErrorMsg", "error_count": 10}], "repo_download_job": {"scanned_file_count": 16, "quarantined_file_count": 20, "detected_filetype": "DetectedFiletype", "inputs_count": "InputsCount", "outputs_count": "OutputsCount"}, "action_job": {"target_count": 11, "task_count": 9, "play_count": 9, "recap": {"target": ["Target"], "ok": 2, "changed": 7, "failed": 6, "skipped": 7, "unreachable": 11}}}, "log_store_url": "LogStoreURL", "state_store_url": "StateStoreURL", "results_url": "ResultsURL", "updated_at": "2019-01-01T12:00:00"}`)
+					fmt.Fprintf(res, "%s", `{"command_object": "workspace", "command_object_id": "CommandObjectID", "command_name": "workspace_init_flow", "command_parameter": "CommandParameter", "command_options": ["CommandOptions"], "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "tags": ["Tags"], "id": "ID", "name": "Name", "description": "Description", "location": "us_south", "resource_group": "ResourceGroup", "submitted_at": "2019-01-01T12:00:00", "submitted_by": "SubmittedBy", "start_at": "2019-01-01T12:00:00", "end_at": "2019-01-01T12:00:00", "duration": "Duration", "status": {"action_job_status": {"action_name": "ActionName", "status_code": "job_pending", "status_message": "StatusMessage", "bastion_status_code": "none", "bastion_status_message": "BastionStatusMessage", "inventory_status_code": "none", "inventory_status_message": "InventoryStatusMessage", "updated_at": "2019-01-01T12:00:00"}}, "data": {"job_type": "repo_download_job", "action_job_data": {"action_name": "ActionName", "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "outputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "updated_at": "2019-01-01T12:00:00", "inventory_record": {"name": "Name", "id": "ID", "location": "us_south", "resource_group": "ResourceGroup", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "inventories_ini": "InventoriesIni", "resource_queries": ["ResourceQueries"]}, "materialized_inventory": "MaterializedInventory"}}, "bastion": {"name": "Name", "host": "Host"}, "log_summary": {"job_id": "JobID", "job_type": "repo_download_job", "log_start_at": "2019-01-01T12:00:00", "log_analyzed_till": "2019-01-01T12:00:00", "elapsed_time": 11, "log_errors": [{"error_code": "ErrorCode", "error_msg": "ErrorMsg", "error_count": 10}], "repo_download_job": {"scanned_file_count": 16, "quarantined_file_count": 20, "detected_filetype": "DetectedFiletype", "inputs_count": "InputsCount", "outputs_count": "OutputsCount"}, "action_job": {"host_count": 9, "task_count": 9, "play_count": 9, "recap": {"hosts": ["Hosts"], "ok": 2, "changed": 7, "failed": 6, "skipped": 7, "unreachable": 11}}}, "log_store_url": "LogStoreURL", "state_store_url": "StateStoreURL", "results_url": "ResultsURL", "updated_at": "2019-01-01T12:00:00"}`)
 				}))
 			})
 			It(`Invoke CreateJob successfully`, func() {
@@ -8268,7 +6761,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.CreateJob(nil)
@@ -8308,13 +6800,21 @@ var _ = Describe(`SchematicsV1`, func() {
 				jobStatusActionModel.StatusMessage = core.StringPtr("testString")
 				jobStatusActionModel.BastionStatusCode = core.StringPtr("none")
 				jobStatusActionModel.BastionStatusMessage = core.StringPtr("testString")
-				jobStatusActionModel.TargetsStatusCode = core.StringPtr("none")
-				jobStatusActionModel.TargetsStatusMessage = core.StringPtr("testString")
+				jobStatusActionModel.InventoryStatusCode = core.StringPtr("none")
+				jobStatusActionModel.InventoryStatusMessage = core.StringPtr("testString")
 				jobStatusActionModel.UpdatedAt = CreateMockDateTime()
 
 				// Construct an instance of the JobStatus model
 				jobStatusModel := new(schematicsv1.JobStatus)
 				jobStatusModel.ActionJobStatus = jobStatusActionModel
+
+				// Construct an instance of the InventoryResourceRecord model
+				inventoryResourceRecordModel := new(schematicsv1.InventoryResourceRecord)
+				inventoryResourceRecordModel.Name = core.StringPtr("testString")
+				inventoryResourceRecordModel.Location = core.StringPtr("us_south")
+				inventoryResourceRecordModel.ResourceGroup = core.StringPtr("testString")
+				inventoryResourceRecordModel.InventoriesIni = core.StringPtr("testString")
+				inventoryResourceRecordModel.ResourceQueries = []string{"testString"}
 
 				// Construct an instance of the JobDataAction model
 				jobDataActionModel := new(schematicsv1.JobDataAction)
@@ -8323,33 +6823,25 @@ var _ = Describe(`SchematicsV1`, func() {
 				jobDataActionModel.Outputs = []schematicsv1.VariableData{*variableDataModel}
 				jobDataActionModel.Settings = []schematicsv1.VariableData{*variableDataModel}
 				jobDataActionModel.UpdatedAt = CreateMockDateTime()
+				jobDataActionModel.InventoryRecord = inventoryResourceRecordModel
+				jobDataActionModel.MaterializedInventory = core.StringPtr("testString")
 
 				// Construct an instance of the JobData model
 				jobDataModel := new(schematicsv1.JobData)
 				jobDataModel.JobType = core.StringPtr("repo_download_job")
 				jobDataModel.ActionJobData = jobDataActionModel
 
-				// Construct an instance of the SystemLock model
-				systemLockModel := new(schematicsv1.SystemLock)
-				systemLockModel.SysLocked = core.BoolPtr(true)
-				systemLockModel.SysLockedBy = core.StringPtr("testString")
-				systemLockModel.SysLockedAt = CreateMockDateTime()
-
-				// Construct an instance of the TargetResourceset model
-				targetResourcesetModel := new(schematicsv1.TargetResourceset)
-				targetResourcesetModel.Name = core.StringPtr("testString")
-				targetResourcesetModel.Type = core.StringPtr("testString")
-				targetResourcesetModel.Description = core.StringPtr("testString")
-				targetResourcesetModel.ResourceQuery = core.StringPtr("testString")
-				targetResourcesetModel.CredentialRef = core.StringPtr("testString")
-				targetResourcesetModel.SysLock = systemLockModel
+				// Construct an instance of the BastionResourceDefinition model
+				bastionResourceDefinitionModel := new(schematicsv1.BastionResourceDefinition)
+				bastionResourceDefinitionModel.Name = core.StringPtr("testString")
+				bastionResourceDefinitionModel.Host = core.StringPtr("testString")
 
 				// Construct an instance of the JobLogSummaryRepoDownloadJob model
 				jobLogSummaryRepoDownloadJobModel := new(schematicsv1.JobLogSummaryRepoDownloadJob)
 
 				// Construct an instance of the JobLogSummaryActionJobRecap model
 				jobLogSummaryActionJobRecapModel := new(schematicsv1.JobLogSummaryActionJobRecap)
-				jobLogSummaryActionJobRecapModel.Target = []string{"testString"}
+				jobLogSummaryActionJobRecapModel.Hosts = []string{"testString"}
 				jobLogSummaryActionJobRecapModel.Ok = core.Float64Ptr(float64(72.5))
 				jobLogSummaryActionJobRecapModel.Changed = core.Float64Ptr(float64(72.5))
 				jobLogSummaryActionJobRecapModel.Failed = core.Float64Ptr(float64(72.5))
@@ -8380,7 +6872,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				createJobOptionsModel.Location = core.StringPtr("us_south")
 				createJobOptionsModel.Status = jobStatusModel
 				createJobOptionsModel.Data = jobDataModel
-				createJobOptionsModel.Bastion = targetResourcesetModel
+				createJobOptionsModel.Bastion = bastionResourceDefinitionModel
 				createJobOptionsModel.LogSummary = jobLogSummaryModel
 				createJobOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
@@ -8389,31 +6881,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.CreateJobWithContext(ctx, createJobOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.CreateJob(createJobOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.CreateJobWithContext(ctx, createJobOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke CreateJob with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -8455,13 +6922,21 @@ var _ = Describe(`SchematicsV1`, func() {
 				jobStatusActionModel.StatusMessage = core.StringPtr("testString")
 				jobStatusActionModel.BastionStatusCode = core.StringPtr("none")
 				jobStatusActionModel.BastionStatusMessage = core.StringPtr("testString")
-				jobStatusActionModel.TargetsStatusCode = core.StringPtr("none")
-				jobStatusActionModel.TargetsStatusMessage = core.StringPtr("testString")
+				jobStatusActionModel.InventoryStatusCode = core.StringPtr("none")
+				jobStatusActionModel.InventoryStatusMessage = core.StringPtr("testString")
 				jobStatusActionModel.UpdatedAt = CreateMockDateTime()
 
 				// Construct an instance of the JobStatus model
 				jobStatusModel := new(schematicsv1.JobStatus)
 				jobStatusModel.ActionJobStatus = jobStatusActionModel
+
+				// Construct an instance of the InventoryResourceRecord model
+				inventoryResourceRecordModel := new(schematicsv1.InventoryResourceRecord)
+				inventoryResourceRecordModel.Name = core.StringPtr("testString")
+				inventoryResourceRecordModel.Location = core.StringPtr("us_south")
+				inventoryResourceRecordModel.ResourceGroup = core.StringPtr("testString")
+				inventoryResourceRecordModel.InventoriesIni = core.StringPtr("testString")
+				inventoryResourceRecordModel.ResourceQueries = []string{"testString"}
 
 				// Construct an instance of the JobDataAction model
 				jobDataActionModel := new(schematicsv1.JobDataAction)
@@ -8470,33 +6945,25 @@ var _ = Describe(`SchematicsV1`, func() {
 				jobDataActionModel.Outputs = []schematicsv1.VariableData{*variableDataModel}
 				jobDataActionModel.Settings = []schematicsv1.VariableData{*variableDataModel}
 				jobDataActionModel.UpdatedAt = CreateMockDateTime()
+				jobDataActionModel.InventoryRecord = inventoryResourceRecordModel
+				jobDataActionModel.MaterializedInventory = core.StringPtr("testString")
 
 				// Construct an instance of the JobData model
 				jobDataModel := new(schematicsv1.JobData)
 				jobDataModel.JobType = core.StringPtr("repo_download_job")
 				jobDataModel.ActionJobData = jobDataActionModel
 
-				// Construct an instance of the SystemLock model
-				systemLockModel := new(schematicsv1.SystemLock)
-				systemLockModel.SysLocked = core.BoolPtr(true)
-				systemLockModel.SysLockedBy = core.StringPtr("testString")
-				systemLockModel.SysLockedAt = CreateMockDateTime()
-
-				// Construct an instance of the TargetResourceset model
-				targetResourcesetModel := new(schematicsv1.TargetResourceset)
-				targetResourcesetModel.Name = core.StringPtr("testString")
-				targetResourcesetModel.Type = core.StringPtr("testString")
-				targetResourcesetModel.Description = core.StringPtr("testString")
-				targetResourcesetModel.ResourceQuery = core.StringPtr("testString")
-				targetResourcesetModel.CredentialRef = core.StringPtr("testString")
-				targetResourcesetModel.SysLock = systemLockModel
+				// Construct an instance of the BastionResourceDefinition model
+				bastionResourceDefinitionModel := new(schematicsv1.BastionResourceDefinition)
+				bastionResourceDefinitionModel.Name = core.StringPtr("testString")
+				bastionResourceDefinitionModel.Host = core.StringPtr("testString")
 
 				// Construct an instance of the JobLogSummaryRepoDownloadJob model
 				jobLogSummaryRepoDownloadJobModel := new(schematicsv1.JobLogSummaryRepoDownloadJob)
 
 				// Construct an instance of the JobLogSummaryActionJobRecap model
 				jobLogSummaryActionJobRecapModel := new(schematicsv1.JobLogSummaryActionJobRecap)
-				jobLogSummaryActionJobRecapModel.Target = []string{"testString"}
+				jobLogSummaryActionJobRecapModel.Hosts = []string{"testString"}
 				jobLogSummaryActionJobRecapModel.Ok = core.Float64Ptr(float64(72.5))
 				jobLogSummaryActionJobRecapModel.Changed = core.Float64Ptr(float64(72.5))
 				jobLogSummaryActionJobRecapModel.Failed = core.Float64Ptr(float64(72.5))
@@ -8527,7 +6994,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				createJobOptionsModel.Location = core.StringPtr("us_south")
 				createJobOptionsModel.Status = jobStatusModel
 				createJobOptionsModel.Data = jobDataModel
-				createJobOptionsModel.Bastion = targetResourcesetModel
+				createJobOptionsModel.Bastion = bastionResourceDefinitionModel
 				createJobOptionsModel.LogSummary = jobLogSummaryModel
 				createJobOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
@@ -8603,13 +7070,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.ListJobs(listJobsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -8619,17 +7079,14 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`ListJobs(listJobsOptions *ListJobsOptions)`, func() {
 		listJobsPath := "/v2/jobs"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(listJobsPath))
 					Expect(req.Method).To(Equal("GET"))
-
 					Expect(req.URL.Query()["offset"]).To(Equal([]string{fmt.Sprint(int64(0))}))
 
 					Expect(req.URL.Query()["limit"]).To(Equal([]string{fmt.Sprint(int64(1))}))
@@ -8644,13 +7101,9 @@ var _ = Describe(`SchematicsV1`, func() {
 
 					Expect(req.URL.Query()["list"]).To(Equal([]string{"all"}))
 
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"total_count": 10, "limit": 5, "offset": 6, "jobs": [{"id": "ID", "name": "Name", "description": "Description", "command_object": "workspace", "command_object_id": "CommandObjectID", "command_name": "workspace_init_flow", "tags": ["Tags"], "location": "us_south", "resource_group": "ResourceGroup", "targets_ini": "TargetsIni", "submitted_at": "2019-01-01T12:00:00", "submitted_by": "SubmittedBy", "duration": "Duration", "start_at": "2019-01-01T12:00:00", "end_at": "2019-01-01T12:00:00", "status": {"action_job_status": {"action_name": "ActionName", "status_code": "job_pending", "status_message": "StatusMessage", "bastion_status_code": "none", "bastion_status_message": "BastionStatusMessage", "targets_status_code": "none", "targets_status_message": "TargetsStatusMessage", "updated_at": "2019-01-01T12:00:00"}}, "log_summary": {"job_id": "JobID", "job_type": "repo_download_job", "log_start_at": "2019-01-01T12:00:00", "log_analyzed_till": "2019-01-01T12:00:00", "elapsed_time": 11, "log_errors": [{"error_code": "ErrorCode", "error_msg": "ErrorMsg", "error_count": 10}], "repo_download_job": {"scanned_file_count": 16, "quarantined_file_count": 20, "detected_filetype": "DetectedFiletype", "inputs_count": "InputsCount", "outputs_count": "OutputsCount"}, "action_job": {"target_count": 11, "task_count": 9, "play_count": 9, "recap": {"target": ["Target"], "ok": 2, "changed": 7, "failed": 6, "skipped": 7, "unreachable": 11}}}, "updated_at": "2019-01-01T12:00:00"}]}`)
+					fmt.Fprintf(res, "%s", `{"total_count": 10, "limit": 5, "offset": 6, "jobs": [{"id": "ID", "name": "Name", "description": "Description", "command_object": "workspace", "command_object_id": "CommandObjectID", "command_name": "workspace_init_flow", "tags": ["Tags"], "location": "us_south", "resource_group": "ResourceGroup", "submitted_at": "2019-01-01T12:00:00", "submitted_by": "SubmittedBy", "duration": "Duration", "start_at": "2019-01-01T12:00:00", "end_at": "2019-01-01T12:00:00", "status": {"action_job_status": {"action_name": "ActionName", "status_code": "job_pending", "status_message": "StatusMessage", "bastion_status_code": "none", "bastion_status_message": "BastionStatusMessage", "inventory_status_code": "none", "inventory_status_message": "InventoryStatusMessage", "updated_at": "2019-01-01T12:00:00"}}, "log_summary": {"job_id": "JobID", "job_type": "repo_download_job", "log_start_at": "2019-01-01T12:00:00", "log_analyzed_till": "2019-01-01T12:00:00", "elapsed_time": 11, "log_errors": [{"error_code": "ErrorCode", "error_msg": "ErrorMsg", "error_count": 10}], "repo_download_job": {"scanned_file_count": 16, "quarantined_file_count": 20, "detected_filetype": "DetectedFiletype", "inputs_count": "InputsCount", "outputs_count": "OutputsCount"}, "action_job": {"host_count": 9, "task_count": 9, "play_count": 9, "recap": {"hosts": ["Hosts"], "ok": 2, "changed": 7, "failed": 6, "skipped": 7, "unreachable": 11}}}, "updated_at": "2019-01-01T12:00:00"}]}`)
 				}))
 			})
 			It(`Invoke ListJobs successfully`, func() {
@@ -8660,7 +7113,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.ListJobs(nil)
@@ -8684,31 +7136,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.ListJobsWithContext(ctx, listJobsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.ListJobs(listJobsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.ListJobsWithContext(ctx, listJobsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListJobs with error: Operation request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -8799,13 +7226,21 @@ var _ = Describe(`SchematicsV1`, func() {
 				jobStatusActionModel.StatusMessage = core.StringPtr("testString")
 				jobStatusActionModel.BastionStatusCode = core.StringPtr("none")
 				jobStatusActionModel.BastionStatusMessage = core.StringPtr("testString")
-				jobStatusActionModel.TargetsStatusCode = core.StringPtr("none")
-				jobStatusActionModel.TargetsStatusMessage = core.StringPtr("testString")
+				jobStatusActionModel.InventoryStatusCode = core.StringPtr("none")
+				jobStatusActionModel.InventoryStatusMessage = core.StringPtr("testString")
 				jobStatusActionModel.UpdatedAt = CreateMockDateTime()
 
 				// Construct an instance of the JobStatus model
 				jobStatusModel := new(schematicsv1.JobStatus)
 				jobStatusModel.ActionJobStatus = jobStatusActionModel
+
+				// Construct an instance of the InventoryResourceRecord model
+				inventoryResourceRecordModel := new(schematicsv1.InventoryResourceRecord)
+				inventoryResourceRecordModel.Name = core.StringPtr("testString")
+				inventoryResourceRecordModel.Location = core.StringPtr("us_south")
+				inventoryResourceRecordModel.ResourceGroup = core.StringPtr("testString")
+				inventoryResourceRecordModel.InventoriesIni = core.StringPtr("testString")
+				inventoryResourceRecordModel.ResourceQueries = []string{"testString"}
 
 				// Construct an instance of the JobDataAction model
 				jobDataActionModel := new(schematicsv1.JobDataAction)
@@ -8814,33 +7249,25 @@ var _ = Describe(`SchematicsV1`, func() {
 				jobDataActionModel.Outputs = []schematicsv1.VariableData{*variableDataModel}
 				jobDataActionModel.Settings = []schematicsv1.VariableData{*variableDataModel}
 				jobDataActionModel.UpdatedAt = CreateMockDateTime()
+				jobDataActionModel.InventoryRecord = inventoryResourceRecordModel
+				jobDataActionModel.MaterializedInventory = core.StringPtr("testString")
 
 				// Construct an instance of the JobData model
 				jobDataModel := new(schematicsv1.JobData)
 				jobDataModel.JobType = core.StringPtr("repo_download_job")
 				jobDataModel.ActionJobData = jobDataActionModel
 
-				// Construct an instance of the SystemLock model
-				systemLockModel := new(schematicsv1.SystemLock)
-				systemLockModel.SysLocked = core.BoolPtr(true)
-				systemLockModel.SysLockedBy = core.StringPtr("testString")
-				systemLockModel.SysLockedAt = CreateMockDateTime()
-
-				// Construct an instance of the TargetResourceset model
-				targetResourcesetModel := new(schematicsv1.TargetResourceset)
-				targetResourcesetModel.Name = core.StringPtr("testString")
-				targetResourcesetModel.Type = core.StringPtr("testString")
-				targetResourcesetModel.Description = core.StringPtr("testString")
-				targetResourcesetModel.ResourceQuery = core.StringPtr("testString")
-				targetResourcesetModel.CredentialRef = core.StringPtr("testString")
-				targetResourcesetModel.SysLock = systemLockModel
+				// Construct an instance of the BastionResourceDefinition model
+				bastionResourceDefinitionModel := new(schematicsv1.BastionResourceDefinition)
+				bastionResourceDefinitionModel.Name = core.StringPtr("testString")
+				bastionResourceDefinitionModel.Host = core.StringPtr("testString")
 
 				// Construct an instance of the JobLogSummaryRepoDownloadJob model
 				jobLogSummaryRepoDownloadJobModel := new(schematicsv1.JobLogSummaryRepoDownloadJob)
 
 				// Construct an instance of the JobLogSummaryActionJobRecap model
 				jobLogSummaryActionJobRecapModel := new(schematicsv1.JobLogSummaryActionJobRecap)
-				jobLogSummaryActionJobRecapModel.Target = []string{"testString"}
+				jobLogSummaryActionJobRecapModel.Hosts = []string{"testString"}
 				jobLogSummaryActionJobRecapModel.Ok = core.Float64Ptr(float64(72.5))
 				jobLogSummaryActionJobRecapModel.Changed = core.Float64Ptr(float64(72.5))
 				jobLogSummaryActionJobRecapModel.Failed = core.Float64Ptr(float64(72.5))
@@ -8872,18 +7299,11 @@ var _ = Describe(`SchematicsV1`, func() {
 				replaceJobOptionsModel.Location = core.StringPtr("us_south")
 				replaceJobOptionsModel.Status = jobStatusModel
 				replaceJobOptionsModel.Data = jobDataModel
-				replaceJobOptionsModel.Bastion = targetResourcesetModel
+				replaceJobOptionsModel.Bastion = bastionResourceDefinitionModel
 				replaceJobOptionsModel.LogSummary = jobLogSummaryModel
 				replaceJobOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Expect response parsing to fail since we are receiving a text/plain response
 				result, response, operationErr := schematicsService.ReplaceJob(replaceJobOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.ReplaceJob(replaceJobOptionsModel)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
@@ -8896,42 +7316,19 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`ReplaceJob(replaceJobOptions *ReplaceJobOptions)`, func() {
 		replaceJobPath := "/v2/jobs/testString"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(replaceJobPath))
 					Expect(req.Method).To(Equal("PUT"))
-
-					// For gzip-disabled operation, verify Content-Encoding is not set.
-					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
-
-					// If there is a body, then make sure we can read it
-					bodyBuf := new(bytes.Buffer)
-					if req.Header.Get("Content-Encoding") == "gzip" {
-						body, err := core.NewGzipDecompressionReader(req.Body)
-						Expect(err).To(BeNil())
-						_, err = bodyBuf.ReadFrom(body)
-						Expect(err).To(BeNil())
-					} else {
-						_, err := bodyBuf.ReadFrom(req.Body)
-						Expect(err).To(BeNil())
-					}
-					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
-
 					Expect(req.Header["Refresh_token"]).ToNot(BeNil())
 					Expect(req.Header["Refresh_token"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(202)
-					fmt.Fprintf(res, "%s", `{"command_object": "workspace", "command_object_id": "CommandObjectID", "command_name": "workspace_init_flow", "command_parameter": "CommandParameter", "command_options": ["CommandOptions"], "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "tags": ["Tags"], "id": "ID", "name": "Name", "description": "Description", "location": "us_south", "resource_group": "ResourceGroup", "submitted_at": "2019-01-01T12:00:00", "submitted_by": "SubmittedBy", "start_at": "2019-01-01T12:00:00", "end_at": "2019-01-01T12:00:00", "duration": "Duration", "status": {"action_job_status": {"action_name": "ActionName", "status_code": "job_pending", "status_message": "StatusMessage", "bastion_status_code": "none", "bastion_status_message": "BastionStatusMessage", "targets_status_code": "none", "targets_status_message": "TargetsStatusMessage", "updated_at": "2019-01-01T12:00:00"}}, "data": {"job_type": "repo_download_job", "action_job_data": {"action_name": "ActionName", "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "outputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "updated_at": "2019-01-01T12:00:00"}}, "targets_ini": "TargetsIni", "bastion": {"name": "Name", "type": "Type", "description": "Description", "resource_query": "ResourceQuery", "credential_ref": "CredentialRef", "id": "ID", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}, "resource_ids": ["ResourceIds"]}, "log_summary": {"job_id": "JobID", "job_type": "repo_download_job", "log_start_at": "2019-01-01T12:00:00", "log_analyzed_till": "2019-01-01T12:00:00", "elapsed_time": 11, "log_errors": [{"error_code": "ErrorCode", "error_msg": "ErrorMsg", "error_count": 10}], "repo_download_job": {"scanned_file_count": 16, "quarantined_file_count": 20, "detected_filetype": "DetectedFiletype", "inputs_count": "InputsCount", "outputs_count": "OutputsCount"}, "action_job": {"target_count": 11, "task_count": 9, "play_count": 9, "recap": {"target": ["Target"], "ok": 2, "changed": 7, "failed": 6, "skipped": 7, "unreachable": 11}}}, "log_store_url": "LogStoreURL", "state_store_url": "StateStoreURL", "results_url": "ResultsURL", "updated_at": "2019-01-01T12:00:00"}`)
+					fmt.Fprintf(res, "%s", `{"command_object": "workspace", "command_object_id": "CommandObjectID", "command_name": "workspace_init_flow", "command_parameter": "CommandParameter", "command_options": ["CommandOptions"], "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "tags": ["Tags"], "id": "ID", "name": "Name", "description": "Description", "location": "us_south", "resource_group": "ResourceGroup", "submitted_at": "2019-01-01T12:00:00", "submitted_by": "SubmittedBy", "start_at": "2019-01-01T12:00:00", "end_at": "2019-01-01T12:00:00", "duration": "Duration", "status": {"action_job_status": {"action_name": "ActionName", "status_code": "job_pending", "status_message": "StatusMessage", "bastion_status_code": "none", "bastion_status_message": "BastionStatusMessage", "inventory_status_code": "none", "inventory_status_message": "InventoryStatusMessage", "updated_at": "2019-01-01T12:00:00"}}, "data": {"job_type": "repo_download_job", "action_job_data": {"action_name": "ActionName", "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "outputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "updated_at": "2019-01-01T12:00:00", "inventory_record": {"name": "Name", "id": "ID", "location": "us_south", "resource_group": "ResourceGroup", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "inventories_ini": "InventoriesIni", "resource_queries": ["ResourceQueries"]}, "materialized_inventory": "MaterializedInventory"}}, "bastion": {"name": "Name", "host": "Host"}, "log_summary": {"job_id": "JobID", "job_type": "repo_download_job", "log_start_at": "2019-01-01T12:00:00", "log_analyzed_till": "2019-01-01T12:00:00", "elapsed_time": 11, "log_errors": [{"error_code": "ErrorCode", "error_msg": "ErrorMsg", "error_count": 10}], "repo_download_job": {"scanned_file_count": 16, "quarantined_file_count": 20, "detected_filetype": "DetectedFiletype", "inputs_count": "InputsCount", "outputs_count": "OutputsCount"}, "action_job": {"host_count": 9, "task_count": 9, "play_count": 9, "recap": {"hosts": ["Hosts"], "ok": 2, "changed": 7, "failed": 6, "skipped": 7, "unreachable": 11}}}, "log_store_url": "LogStoreURL", "state_store_url": "StateStoreURL", "results_url": "ResultsURL", "updated_at": "2019-01-01T12:00:00"}`)
 				}))
 			})
 			It(`Invoke ReplaceJob successfully`, func() {
@@ -8941,7 +7338,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.ReplaceJob(nil)
@@ -8981,13 +7377,21 @@ var _ = Describe(`SchematicsV1`, func() {
 				jobStatusActionModel.StatusMessage = core.StringPtr("testString")
 				jobStatusActionModel.BastionStatusCode = core.StringPtr("none")
 				jobStatusActionModel.BastionStatusMessage = core.StringPtr("testString")
-				jobStatusActionModel.TargetsStatusCode = core.StringPtr("none")
-				jobStatusActionModel.TargetsStatusMessage = core.StringPtr("testString")
+				jobStatusActionModel.InventoryStatusCode = core.StringPtr("none")
+				jobStatusActionModel.InventoryStatusMessage = core.StringPtr("testString")
 				jobStatusActionModel.UpdatedAt = CreateMockDateTime()
 
 				// Construct an instance of the JobStatus model
 				jobStatusModel := new(schematicsv1.JobStatus)
 				jobStatusModel.ActionJobStatus = jobStatusActionModel
+
+				// Construct an instance of the InventoryResourceRecord model
+				inventoryResourceRecordModel := new(schematicsv1.InventoryResourceRecord)
+				inventoryResourceRecordModel.Name = core.StringPtr("testString")
+				inventoryResourceRecordModel.Location = core.StringPtr("us_south")
+				inventoryResourceRecordModel.ResourceGroup = core.StringPtr("testString")
+				inventoryResourceRecordModel.InventoriesIni = core.StringPtr("testString")
+				inventoryResourceRecordModel.ResourceQueries = []string{"testString"}
 
 				// Construct an instance of the JobDataAction model
 				jobDataActionModel := new(schematicsv1.JobDataAction)
@@ -8996,33 +7400,25 @@ var _ = Describe(`SchematicsV1`, func() {
 				jobDataActionModel.Outputs = []schematicsv1.VariableData{*variableDataModel}
 				jobDataActionModel.Settings = []schematicsv1.VariableData{*variableDataModel}
 				jobDataActionModel.UpdatedAt = CreateMockDateTime()
+				jobDataActionModel.InventoryRecord = inventoryResourceRecordModel
+				jobDataActionModel.MaterializedInventory = core.StringPtr("testString")
 
 				// Construct an instance of the JobData model
 				jobDataModel := new(schematicsv1.JobData)
 				jobDataModel.JobType = core.StringPtr("repo_download_job")
 				jobDataModel.ActionJobData = jobDataActionModel
 
-				// Construct an instance of the SystemLock model
-				systemLockModel := new(schematicsv1.SystemLock)
-				systemLockModel.SysLocked = core.BoolPtr(true)
-				systemLockModel.SysLockedBy = core.StringPtr("testString")
-				systemLockModel.SysLockedAt = CreateMockDateTime()
-
-				// Construct an instance of the TargetResourceset model
-				targetResourcesetModel := new(schematicsv1.TargetResourceset)
-				targetResourcesetModel.Name = core.StringPtr("testString")
-				targetResourcesetModel.Type = core.StringPtr("testString")
-				targetResourcesetModel.Description = core.StringPtr("testString")
-				targetResourcesetModel.ResourceQuery = core.StringPtr("testString")
-				targetResourcesetModel.CredentialRef = core.StringPtr("testString")
-				targetResourcesetModel.SysLock = systemLockModel
+				// Construct an instance of the BastionResourceDefinition model
+				bastionResourceDefinitionModel := new(schematicsv1.BastionResourceDefinition)
+				bastionResourceDefinitionModel.Name = core.StringPtr("testString")
+				bastionResourceDefinitionModel.Host = core.StringPtr("testString")
 
 				// Construct an instance of the JobLogSummaryRepoDownloadJob model
 				jobLogSummaryRepoDownloadJobModel := new(schematicsv1.JobLogSummaryRepoDownloadJob)
 
 				// Construct an instance of the JobLogSummaryActionJobRecap model
 				jobLogSummaryActionJobRecapModel := new(schematicsv1.JobLogSummaryActionJobRecap)
-				jobLogSummaryActionJobRecapModel.Target = []string{"testString"}
+				jobLogSummaryActionJobRecapModel.Hosts = []string{"testString"}
 				jobLogSummaryActionJobRecapModel.Ok = core.Float64Ptr(float64(72.5))
 				jobLogSummaryActionJobRecapModel.Changed = core.Float64Ptr(float64(72.5))
 				jobLogSummaryActionJobRecapModel.Failed = core.Float64Ptr(float64(72.5))
@@ -9054,7 +7450,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				replaceJobOptionsModel.Location = core.StringPtr("us_south")
 				replaceJobOptionsModel.Status = jobStatusModel
 				replaceJobOptionsModel.Data = jobDataModel
-				replaceJobOptionsModel.Bastion = targetResourcesetModel
+				replaceJobOptionsModel.Bastion = bastionResourceDefinitionModel
 				replaceJobOptionsModel.LogSummary = jobLogSummaryModel
 				replaceJobOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
@@ -9063,31 +7459,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.ReplaceJobWithContext(ctx, replaceJobOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.ReplaceJob(replaceJobOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.ReplaceJobWithContext(ctx, replaceJobOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ReplaceJob with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -9129,13 +7500,21 @@ var _ = Describe(`SchematicsV1`, func() {
 				jobStatusActionModel.StatusMessage = core.StringPtr("testString")
 				jobStatusActionModel.BastionStatusCode = core.StringPtr("none")
 				jobStatusActionModel.BastionStatusMessage = core.StringPtr("testString")
-				jobStatusActionModel.TargetsStatusCode = core.StringPtr("none")
-				jobStatusActionModel.TargetsStatusMessage = core.StringPtr("testString")
+				jobStatusActionModel.InventoryStatusCode = core.StringPtr("none")
+				jobStatusActionModel.InventoryStatusMessage = core.StringPtr("testString")
 				jobStatusActionModel.UpdatedAt = CreateMockDateTime()
 
 				// Construct an instance of the JobStatus model
 				jobStatusModel := new(schematicsv1.JobStatus)
 				jobStatusModel.ActionJobStatus = jobStatusActionModel
+
+				// Construct an instance of the InventoryResourceRecord model
+				inventoryResourceRecordModel := new(schematicsv1.InventoryResourceRecord)
+				inventoryResourceRecordModel.Name = core.StringPtr("testString")
+				inventoryResourceRecordModel.Location = core.StringPtr("us_south")
+				inventoryResourceRecordModel.ResourceGroup = core.StringPtr("testString")
+				inventoryResourceRecordModel.InventoriesIni = core.StringPtr("testString")
+				inventoryResourceRecordModel.ResourceQueries = []string{"testString"}
 
 				// Construct an instance of the JobDataAction model
 				jobDataActionModel := new(schematicsv1.JobDataAction)
@@ -9144,33 +7523,25 @@ var _ = Describe(`SchematicsV1`, func() {
 				jobDataActionModel.Outputs = []schematicsv1.VariableData{*variableDataModel}
 				jobDataActionModel.Settings = []schematicsv1.VariableData{*variableDataModel}
 				jobDataActionModel.UpdatedAt = CreateMockDateTime()
+				jobDataActionModel.InventoryRecord = inventoryResourceRecordModel
+				jobDataActionModel.MaterializedInventory = core.StringPtr("testString")
 
 				// Construct an instance of the JobData model
 				jobDataModel := new(schematicsv1.JobData)
 				jobDataModel.JobType = core.StringPtr("repo_download_job")
 				jobDataModel.ActionJobData = jobDataActionModel
 
-				// Construct an instance of the SystemLock model
-				systemLockModel := new(schematicsv1.SystemLock)
-				systemLockModel.SysLocked = core.BoolPtr(true)
-				systemLockModel.SysLockedBy = core.StringPtr("testString")
-				systemLockModel.SysLockedAt = CreateMockDateTime()
-
-				// Construct an instance of the TargetResourceset model
-				targetResourcesetModel := new(schematicsv1.TargetResourceset)
-				targetResourcesetModel.Name = core.StringPtr("testString")
-				targetResourcesetModel.Type = core.StringPtr("testString")
-				targetResourcesetModel.Description = core.StringPtr("testString")
-				targetResourcesetModel.ResourceQuery = core.StringPtr("testString")
-				targetResourcesetModel.CredentialRef = core.StringPtr("testString")
-				targetResourcesetModel.SysLock = systemLockModel
+				// Construct an instance of the BastionResourceDefinition model
+				bastionResourceDefinitionModel := new(schematicsv1.BastionResourceDefinition)
+				bastionResourceDefinitionModel.Name = core.StringPtr("testString")
+				bastionResourceDefinitionModel.Host = core.StringPtr("testString")
 
 				// Construct an instance of the JobLogSummaryRepoDownloadJob model
 				jobLogSummaryRepoDownloadJobModel := new(schematicsv1.JobLogSummaryRepoDownloadJob)
 
 				// Construct an instance of the JobLogSummaryActionJobRecap model
 				jobLogSummaryActionJobRecapModel := new(schematicsv1.JobLogSummaryActionJobRecap)
-				jobLogSummaryActionJobRecapModel.Target = []string{"testString"}
+				jobLogSummaryActionJobRecapModel.Hosts = []string{"testString"}
 				jobLogSummaryActionJobRecapModel.Ok = core.Float64Ptr(float64(72.5))
 				jobLogSummaryActionJobRecapModel.Changed = core.Float64Ptr(float64(72.5))
 				jobLogSummaryActionJobRecapModel.Failed = core.Float64Ptr(float64(72.5))
@@ -9202,7 +7573,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				replaceJobOptionsModel.Location = core.StringPtr("us_south")
 				replaceJobOptionsModel.Status = jobStatusModel
 				replaceJobOptionsModel.Data = jobDataModel
-				replaceJobOptionsModel.Bastion = targetResourcesetModel
+				replaceJobOptionsModel.Bastion = bastionResourceDefinitionModel
 				replaceJobOptionsModel.LogSummary = jobLogSummaryModel
 				replaceJobOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 				// Invoke operation with empty URL (negative test)
@@ -9237,7 +7608,6 @@ var _ = Describe(`SchematicsV1`, func() {
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(deleteJobPath))
 					Expect(req.Method).To(Equal("DELETE"))
-
 					Expect(req.Header["Refresh_token"]).ToNot(BeNil())
 					Expect(req.Header["Refresh_token"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
 					Expect(req.Header["Force"]).ToNot(BeNil())
@@ -9254,7 +7624,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				response, operationErr := schematicsService.DeleteJob(nil)
@@ -9270,12 +7639,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				deleteJobOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
 
 				// Invoke operation with valid options model (positive test)
-				response, operationErr = schematicsService.DeleteJob(deleteJobOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
 				response, operationErr = schematicsService.DeleteJob(deleteJobOptionsModel)
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
@@ -9349,13 +7712,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.GetJob(getJobOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -9365,26 +7721,19 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`GetJob(getJobOptions *GetJobOptions)`, func() {
 		getJobPath := "/v2/jobs/testString"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(getJobPath))
 					Expect(req.Method).To(Equal("GET"))
-
 					Expect(req.URL.Query()["profile"]).To(Equal([]string{"summary"}))
 
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"command_object": "workspace", "command_object_id": "CommandObjectID", "command_name": "workspace_init_flow", "command_parameter": "CommandParameter", "command_options": ["CommandOptions"], "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "tags": ["Tags"], "id": "ID", "name": "Name", "description": "Description", "location": "us_south", "resource_group": "ResourceGroup", "submitted_at": "2019-01-01T12:00:00", "submitted_by": "SubmittedBy", "start_at": "2019-01-01T12:00:00", "end_at": "2019-01-01T12:00:00", "duration": "Duration", "status": {"action_job_status": {"action_name": "ActionName", "status_code": "job_pending", "status_message": "StatusMessage", "bastion_status_code": "none", "bastion_status_message": "BastionStatusMessage", "targets_status_code": "none", "targets_status_message": "TargetsStatusMessage", "updated_at": "2019-01-01T12:00:00"}}, "data": {"job_type": "repo_download_job", "action_job_data": {"action_name": "ActionName", "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "outputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "updated_at": "2019-01-01T12:00:00"}}, "targets_ini": "TargetsIni", "bastion": {"name": "Name", "type": "Type", "description": "Description", "resource_query": "ResourceQuery", "credential_ref": "CredentialRef", "id": "ID", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}, "resource_ids": ["ResourceIds"]}, "log_summary": {"job_id": "JobID", "job_type": "repo_download_job", "log_start_at": "2019-01-01T12:00:00", "log_analyzed_till": "2019-01-01T12:00:00", "elapsed_time": 11, "log_errors": [{"error_code": "ErrorCode", "error_msg": "ErrorMsg", "error_count": 10}], "repo_download_job": {"scanned_file_count": 16, "quarantined_file_count": 20, "detected_filetype": "DetectedFiletype", "inputs_count": "InputsCount", "outputs_count": "OutputsCount"}, "action_job": {"target_count": 11, "task_count": 9, "play_count": 9, "recap": {"target": ["Target"], "ok": 2, "changed": 7, "failed": 6, "skipped": 7, "unreachable": 11}}}, "log_store_url": "LogStoreURL", "state_store_url": "StateStoreURL", "results_url": "ResultsURL", "updated_at": "2019-01-01T12:00:00"}`)
+					fmt.Fprintf(res, "%s", `{"command_object": "workspace", "command_object_id": "CommandObjectID", "command_name": "workspace_init_flow", "command_parameter": "CommandParameter", "command_options": ["CommandOptions"], "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "tags": ["Tags"], "id": "ID", "name": "Name", "description": "Description", "location": "us_south", "resource_group": "ResourceGroup", "submitted_at": "2019-01-01T12:00:00", "submitted_by": "SubmittedBy", "start_at": "2019-01-01T12:00:00", "end_at": "2019-01-01T12:00:00", "duration": "Duration", "status": {"action_job_status": {"action_name": "ActionName", "status_code": "job_pending", "status_message": "StatusMessage", "bastion_status_code": "none", "bastion_status_message": "BastionStatusMessage", "inventory_status_code": "none", "inventory_status_message": "InventoryStatusMessage", "updated_at": "2019-01-01T12:00:00"}}, "data": {"job_type": "repo_download_job", "action_job_data": {"action_name": "ActionName", "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "outputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "updated_at": "2019-01-01T12:00:00", "inventory_record": {"name": "Name", "id": "ID", "location": "us_south", "resource_group": "ResourceGroup", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "inventories_ini": "InventoriesIni", "resource_queries": ["ResourceQueries"]}, "materialized_inventory": "MaterializedInventory"}}, "bastion": {"name": "Name", "host": "Host"}, "log_summary": {"job_id": "JobID", "job_type": "repo_download_job", "log_start_at": "2019-01-01T12:00:00", "log_analyzed_till": "2019-01-01T12:00:00", "elapsed_time": 11, "log_errors": [{"error_code": "ErrorCode", "error_msg": "ErrorMsg", "error_count": 10}], "repo_download_job": {"scanned_file_count": 16, "quarantined_file_count": 20, "detected_filetype": "DetectedFiletype", "inputs_count": "InputsCount", "outputs_count": "OutputsCount"}, "action_job": {"host_count": 9, "task_count": 9, "play_count": 9, "recap": {"hosts": ["Hosts"], "ok": 2, "changed": 7, "failed": 6, "skipped": 7, "unreachable": 11}}}, "log_store_url": "LogStoreURL", "state_store_url": "StateStoreURL", "results_url": "ResultsURL", "updated_at": "2019-01-01T12:00:00"}`)
 				}))
 			})
 			It(`Invoke GetJob successfully`, func() {
@@ -9394,7 +7743,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.GetJob(nil)
@@ -9413,31 +7761,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetJobWithContext(ctx, getJobOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.GetJob(getJobOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetJobWithContext(ctx, getJobOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetJob with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -9505,13 +7828,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.ListJobLogs(listJobLogsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -9521,24 +7837,17 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`ListJobLogs(listJobLogsOptions *ListJobLogsOptions)`, func() {
 		listJobLogsPath := "/v2/jobs/testString/logs"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(listJobLogsPath))
 					Expect(req.Method).To(Equal("GET"))
-
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(202)
-					fmt.Fprintf(res, "%s", `{"job_id": "JobID", "job_name": "JobName", "log_summary": {"job_id": "JobID", "job_type": "repo_download_job", "log_start_at": "2019-01-01T12:00:00", "log_analyzed_till": "2019-01-01T12:00:00", "elapsed_time": 11, "log_errors": [{"error_code": "ErrorCode", "error_msg": "ErrorMsg", "error_count": 10}], "repo_download_job": {"scanned_file_count": 16, "quarantined_file_count": 20, "detected_filetype": "DetectedFiletype", "inputs_count": "InputsCount", "outputs_count": "OutputsCount"}, "action_job": {"target_count": 11, "task_count": 9, "play_count": 9, "recap": {"target": ["Target"], "ok": 2, "changed": 7, "failed": 6, "skipped": 7, "unreachable": 11}}}, "format": "json", "details": "VGhpcyBpcyBhbiBlbmNvZGVkIGJ5dGUgYXJyYXku", "updated_at": "2019-01-01T12:00:00"}`)
+					fmt.Fprintf(res, "%s", `{"job_id": "JobID", "job_name": "JobName", "log_summary": {"job_id": "JobID", "job_type": "repo_download_job", "log_start_at": "2019-01-01T12:00:00", "log_analyzed_till": "2019-01-01T12:00:00", "elapsed_time": 11, "log_errors": [{"error_code": "ErrorCode", "error_msg": "ErrorMsg", "error_count": 10}], "repo_download_job": {"scanned_file_count": 16, "quarantined_file_count": 20, "detected_filetype": "DetectedFiletype", "inputs_count": "InputsCount", "outputs_count": "OutputsCount"}, "action_job": {"host_count": 9, "task_count": 9, "play_count": 9, "recap": {"hosts": ["Hosts"], "ok": 2, "changed": 7, "failed": 6, "skipped": 7, "unreachable": 11}}}, "format": "json", "details": "VGhpcyBpcyBhbiBlbmNvZGVkIGJ5dGUgYXJyYXku", "updated_at": "2019-01-01T12:00:00"}`)
 				}))
 			})
 			It(`Invoke ListJobLogs successfully`, func() {
@@ -9548,7 +7857,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.ListJobLogs(nil)
@@ -9566,31 +7874,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.ListJobLogsWithContext(ctx, listJobLogsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.ListJobLogs(listJobLogsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.ListJobLogsWithContext(ctx, listJobLogsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListJobLogs with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -9657,13 +7940,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.ListJobStates(listJobStatesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -9673,21 +7949,14 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`ListJobStates(listJobStatesOptions *ListJobStatesOptions)`, func() {
 		listJobStatesPath := "/v2/jobs/testString/states"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(listJobStatesPath))
 					Expect(req.Method).To(Equal("GET"))
-
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(202)
 					fmt.Fprintf(res, "%s", `{"job_id": "JobID", "job_name": "JobName", "summary": [{"name": "Name", "type": "number", "value": "Value"}], "format": "Format", "details": "VGhpcyBpcyBhbiBlbmNvZGVkIGJ5dGUgYXJyYXku", "updated_at": "2019-01-01T12:00:00"}`)
@@ -9700,7 +7969,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.ListJobStates(nil)
@@ -9718,31 +7986,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.ListJobStatesWithContext(ctx, listJobStatesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.ListJobStates(listJobStatesOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.ListJobStatesWithContext(ctx, listJobStatesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListJobStates with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -9808,13 +8051,14 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL":       "https://schematicsv1/api",
+				"SCHEMATICS_URL": "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "noauth",
 			}
 
 			It(`Create service client using external config successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+				})
 				Expect(schematicsService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
 				ClearTestEnvironment(testEnvironment)
@@ -9831,7 +8075,8 @@ var _ = Describe(`SchematicsV1`, func() {
 			})
 			It(`Create service client using external config and set url programatically successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+				})
 				err := schematicsService.SetServiceURL("https://testService/api")
 				Expect(err).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
@@ -9843,12 +8088,13 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL":       "https://schematicsv1/api",
+				"SCHEMATICS_URL": "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "someOtherAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
-			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
+			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+			})
 
 			It(`Instantiate service client with error`, func() {
 				Expect(schematicsService).To(BeNil())
@@ -9859,7 +8105,7 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_AUTH_TYPE": "NOAuth",
+				"SCHEMATICS_AUTH_TYPE":   "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
@@ -9905,13 +8151,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.ListSharedDatasets(listSharedDatasetsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -9921,21 +8160,14 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`ListSharedDatasets(listSharedDatasetsOptions *ListSharedDatasetsOptions)`, func() {
 		listSharedDatasetsPath := "/v2/shared_datasets"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(listSharedDatasetsPath))
 					Expect(req.Method).To(Equal("GET"))
-
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, "%s", `{"count": 5, "shared_datasets": [{"account": "Account", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "description": "Description", "effected_workspace_ids": ["EffectedWorkspaceIds"], "resource_group": "ResourceGroup", "shared_dataset_data": [{"default_value": "DefaultValue", "description": "Description", "hidden": true, "immutable": false, "matches": "Matches", "max_value": "MaxValue", "max_value_len": "MaxValueLen", "min_value": "MinValue", "min_value_len": "MinValueLen", "options": ["Options"], "override_value": "OverrideValue", "secure": true, "var_aliases": ["VarAliases"], "var_name": "VarName", "var_ref": "VarRef", "var_type": "VarType"}], "shared_dataset_id": "SharedDatasetID", "shared_dataset_name": "SharedDatasetName", "shared_dataset_type": ["SharedDatasetType"], "state": "State", "tags": ["Tags"], "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "version": "Version"}]}`)
@@ -9948,7 +8180,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.ListSharedDatasets(nil)
@@ -9965,31 +8196,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.ListSharedDatasetsWithContext(ctx, listSharedDatasetsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.ListSharedDatasets(listSharedDatasetsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.ListSharedDatasetsWithContext(ctx, listSharedDatasetsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ListSharedDatasets with error: Operation request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -10076,13 +8282,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.CreateSharedDataset(createSharedDatasetOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -10092,37 +8291,14 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`CreateSharedDataset(createSharedDatasetOptions *CreateSharedDatasetOptions)`, func() {
 		createSharedDatasetPath := "/v2/shared_datasets"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(createSharedDatasetPath))
 					Expect(req.Method).To(Equal("POST"))
-
-					// For gzip-disabled operation, verify Content-Encoding is not set.
-					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
-
-					// If there is a body, then make sure we can read it
-					bodyBuf := new(bytes.Buffer)
-					if req.Header.Get("Content-Encoding") == "gzip" {
-						body, err := core.NewGzipDecompressionReader(req.Body)
-						Expect(err).To(BeNil())
-						_, err = bodyBuf.ReadFrom(body)
-						Expect(err).To(BeNil())
-					} else {
-						_, err := bodyBuf.ReadFrom(req.Body)
-						Expect(err).To(BeNil())
-					}
-					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
-
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
 					fmt.Fprintf(res, "%s", `{"account": "Account", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "description": "Description", "effected_workspace_ids": ["EffectedWorkspaceIds"], "resource_group": "ResourceGroup", "shared_dataset_data": [{"default_value": "DefaultValue", "description": "Description", "hidden": true, "immutable": false, "matches": "Matches", "max_value": "MaxValue", "max_value_len": "MaxValueLen", "min_value": "MinValue", "min_value_len": "MinValueLen", "options": ["Options"], "override_value": "OverrideValue", "secure": true, "var_aliases": ["VarAliases"], "var_name": "VarName", "var_ref": "VarRef", "var_type": "VarType"}], "shared_dataset_id": "SharedDatasetID", "shared_dataset_name": "SharedDatasetName", "shared_dataset_type": ["SharedDatasetType"], "state": "State", "tags": ["Tags"], "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "version": "Version"}`)
@@ -10135,7 +8311,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.CreateSharedDataset(nil)
@@ -10181,31 +8356,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.CreateSharedDatasetWithContext(ctx, createSharedDatasetOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.CreateSharedDataset(createSharedDatasetOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.CreateSharedDatasetWithContext(ctx, createSharedDatasetOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke CreateSharedDataset with error: Operation request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -10293,13 +8443,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.GetSharedDataset(getSharedDatasetOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -10309,21 +8452,14 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`GetSharedDataset(getSharedDatasetOptions *GetSharedDatasetOptions)`, func() {
 		getSharedDatasetPath := "/v2/shared_datasets/testString"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(getSharedDatasetPath))
 					Expect(req.Method).To(Equal("GET"))
-
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, "%s", `{"account": "Account", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "description": "Description", "effected_workspace_ids": ["EffectedWorkspaceIds"], "resource_group": "ResourceGroup", "shared_dataset_data": [{"default_value": "DefaultValue", "description": "Description", "hidden": true, "immutable": false, "matches": "Matches", "max_value": "MaxValue", "max_value_len": "MaxValueLen", "min_value": "MinValue", "min_value_len": "MinValueLen", "options": ["Options"], "override_value": "OverrideValue", "secure": true, "var_aliases": ["VarAliases"], "var_name": "VarName", "var_ref": "VarRef", "var_type": "VarType"}], "shared_dataset_id": "SharedDatasetID", "shared_dataset_name": "SharedDatasetName", "shared_dataset_type": ["SharedDatasetType"], "state": "State", "tags": ["Tags"], "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "version": "Version"}`)
@@ -10336,7 +8472,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.GetSharedDataset(nil)
@@ -10354,31 +8489,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetSharedDatasetWithContext(ctx, getSharedDatasetOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.GetSharedDataset(getSharedDatasetOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetSharedDatasetWithContext(ctx, getSharedDatasetOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetSharedDataset with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -10474,13 +8584,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.ReplaceSharedDataset(replaceSharedDatasetOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -10490,37 +8593,14 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`ReplaceSharedDataset(replaceSharedDatasetOptions *ReplaceSharedDatasetOptions)`, func() {
 		replaceSharedDatasetPath := "/v2/shared_datasets/testString"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(replaceSharedDatasetPath))
 					Expect(req.Method).To(Equal("PUT"))
-
-					// For gzip-disabled operation, verify Content-Encoding is not set.
-					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
-
-					// If there is a body, then make sure we can read it
-					bodyBuf := new(bytes.Buffer)
-					if req.Header.Get("Content-Encoding") == "gzip" {
-						body, err := core.NewGzipDecompressionReader(req.Body)
-						Expect(err).To(BeNil())
-						_, err = bodyBuf.ReadFrom(body)
-						Expect(err).To(BeNil())
-					} else {
-						_, err := bodyBuf.ReadFrom(req.Body)
-						Expect(err).To(BeNil())
-					}
-					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
-
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, "%s", `{"account": "Account", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "description": "Description", "effected_workspace_ids": ["EffectedWorkspaceIds"], "resource_group": "ResourceGroup", "shared_dataset_data": [{"default_value": "DefaultValue", "description": "Description", "hidden": true, "immutable": false, "matches": "Matches", "max_value": "MaxValue", "max_value_len": "MaxValueLen", "min_value": "MinValue", "min_value_len": "MinValueLen", "options": ["Options"], "override_value": "OverrideValue", "secure": true, "var_aliases": ["VarAliases"], "var_name": "VarName", "var_ref": "VarRef", "var_type": "VarType"}], "shared_dataset_id": "SharedDatasetID", "shared_dataset_name": "SharedDatasetName", "shared_dataset_type": ["SharedDatasetType"], "state": "State", "tags": ["Tags"], "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "version": "Version"}`)
@@ -10533,7 +8613,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.ReplaceSharedDataset(nil)
@@ -10580,31 +8659,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.ReplaceSharedDatasetWithContext(ctx, replaceSharedDatasetOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.ReplaceSharedDataset(replaceSharedDatasetOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.ReplaceSharedDatasetWithContext(ctx, replaceSharedDatasetOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ReplaceSharedDataset with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -10700,13 +8754,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.DeleteSharedDataset(deleteSharedDatasetOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -10716,21 +8763,14 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`DeleteSharedDataset(deleteSharedDatasetOptions *DeleteSharedDatasetOptions)`, func() {
 		deleteSharedDatasetPath := "/v2/shared_datasets/testString"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(deleteSharedDatasetPath))
 					Expect(req.Method).To(Equal("DELETE"))
-
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, "%s", `{"account": "Account", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "description": "Description", "effected_workspace_ids": ["EffectedWorkspaceIds"], "resource_group": "ResourceGroup", "shared_dataset_data": [{"default_value": "DefaultValue", "description": "Description", "hidden": true, "immutable": false, "matches": "Matches", "max_value": "MaxValue", "max_value_len": "MaxValueLen", "min_value": "MinValue", "min_value_len": "MinValueLen", "options": ["Options"], "override_value": "OverrideValue", "secure": true, "var_aliases": ["VarAliases"], "var_name": "VarName", "var_ref": "VarRef", "var_type": "VarType"}], "shared_dataset_id": "SharedDatasetID", "shared_dataset_name": "SharedDatasetName", "shared_dataset_type": ["SharedDatasetType"], "state": "State", "tags": ["Tags"], "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "version": "Version"}`)
@@ -10743,7 +8783,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.DeleteSharedDataset(nil)
@@ -10761,31 +8800,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.DeleteSharedDatasetWithContext(ctx, deleteSharedDatasetOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.DeleteSharedDataset(deleteSharedDatasetOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.DeleteSharedDatasetWithContext(ctx, deleteSharedDatasetOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke DeleteSharedDataset with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -10851,13 +8865,14 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL":       "https://schematicsv1/api",
+				"SCHEMATICS_URL": "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "noauth",
 			}
 
 			It(`Create service client using external config successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+				})
 				Expect(schematicsService).ToNot(BeNil())
 				Expect(serviceErr).To(BeNil())
 				ClearTestEnvironment(testEnvironment)
@@ -10874,7 +8889,8 @@ var _ = Describe(`SchematicsV1`, func() {
 			})
 			It(`Create service client using external config and set url programatically successfully`, func() {
 				SetTestEnvironment(testEnvironment)
-				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+				})
 				err := schematicsService.SetServiceURL("https://testService/api")
 				Expect(err).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
@@ -10886,12 +8902,13 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_URL":       "https://schematicsv1/api",
+				"SCHEMATICS_URL": "https://schematicsv1/api",
 				"SCHEMATICS_AUTH_TYPE": "someOtherAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
-			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{})
+			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+			})
 
 			It(`Instantiate service client with error`, func() {
 				Expect(schematicsService).To(BeNil())
@@ -10902,7 +8919,7 @@ var _ = Describe(`SchematicsV1`, func() {
 		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
 			// Map containing environment variables used in testing.
 			var testEnvironment = map[string]string{
-				"SCHEMATICS_AUTH_TYPE": "NOAuth",
+				"SCHEMATICS_AUTH_TYPE":   "NOAuth",
 			}
 
 			SetTestEnvironment(testEnvironment)
@@ -10951,13 +8968,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.GetKmsSettings(getKmsSettingsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -10967,23 +8977,16 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`GetKmsSettings(getKmsSettingsOptions *GetKmsSettingsOptions)`, func() {
 		getKmsSettingsPath := "/v2/settings/kms"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(getKmsSettingsPath))
 					Expect(req.Method).To(Equal("GET"))
-
 					Expect(req.URL.Query()["location"]).To(Equal([]string{"testString"}))
 
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, "%s", `{"location": "Location", "encryption_scheme": "EncryptionScheme", "resource_group": "ResourceGroup", "primary_crk": {"kms_name": "KmsName", "kms_private_endpoint": "KmsPrivateEndpoint", "key_crn": "KeyCrn"}, "secondary_crk": {"kms_name": "KmsName", "kms_private_endpoint": "KmsPrivateEndpoint", "key_crn": "KeyCrn"}}`)
@@ -10996,7 +8999,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.GetKmsSettings(nil)
@@ -11014,31 +9016,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetKmsSettingsWithContext(ctx, getKmsSettingsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.GetKmsSettings(getKmsSettingsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetKmsSettingsWithContext(ctx, getKmsSettingsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetKmsSettings with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -11121,13 +9098,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.ReplaceKmsSettings(replaceKmsSettingsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -11137,37 +9107,14 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`ReplaceKmsSettings(replaceKmsSettingsOptions *ReplaceKmsSettingsOptions)`, func() {
 		replaceKmsSettingsPath := "/v2/settings/kms"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(replaceKmsSettingsPath))
 					Expect(req.Method).To(Equal("PUT"))
-
-					// For gzip-disabled operation, verify Content-Encoding is not set.
-					Expect(req.Header.Get("Content-Encoding")).To(BeEmpty())
-
-					// If there is a body, then make sure we can read it
-					bodyBuf := new(bytes.Buffer)
-					if req.Header.Get("Content-Encoding") == "gzip" {
-						body, err := core.NewGzipDecompressionReader(req.Body)
-						Expect(err).To(BeNil())
-						_, err = bodyBuf.ReadFrom(body)
-						Expect(err).To(BeNil())
-					} else {
-						_, err := bodyBuf.ReadFrom(req.Body)
-						Expect(err).To(BeNil())
-					}
-					fmt.Fprintf(GinkgoWriter, "  Request body: %s", bodyBuf.String())
-
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, "%s", `{"location": "Location", "encryption_scheme": "EncryptionScheme", "resource_group": "ResourceGroup", "primary_crk": {"kms_name": "KmsName", "kms_private_endpoint": "KmsPrivateEndpoint", "key_crn": "KeyCrn"}, "secondary_crk": {"kms_name": "KmsName", "kms_private_endpoint": "KmsPrivateEndpoint", "key_crn": "KeyCrn"}}`)
@@ -11180,7 +9127,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.ReplaceKmsSettings(nil)
@@ -11214,31 +9160,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.ReplaceKmsSettingsWithContext(ctx, replaceKmsSettingsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.ReplaceKmsSettings(replaceKmsSettingsOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.ReplaceKmsSettingsWithContext(ctx, replaceKmsSettingsOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke ReplaceKmsSettings with error: Operation request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -11328,13 +9249,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).To(BeNil())
-
-				// Enable retries and test again
-				schematicsService.EnableRetries(0, 0)
-				result, response, operationErr = schematicsService.GetDiscoveredKmsInstances(getDiscoveredKmsInstancesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).To(BeNil())
 			})
 			AfterEach(func() {
 				testServer.Close()
@@ -11344,17 +9258,14 @@ var _ = Describe(`SchematicsV1`, func() {
 
 	Describe(`GetDiscoveredKmsInstances(getDiscoveredKmsInstancesOptions *GetDiscoveredKmsInstancesOptions)`, func() {
 		getDiscoveredKmsInstancesPath := "/v2/settings/kms_instances"
-		var serverSleepTime time.Duration
 		Context(`Using mock server endpoint`, func() {
 			BeforeEach(func() {
-				serverSleepTime = 0
 				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 					defer GinkgoRecover()
 
 					// Verify the contents of the request
 					Expect(req.URL.EscapedPath()).To(Equal(getDiscoveredKmsInstancesPath))
 					Expect(req.Method).To(Equal("GET"))
-
 					Expect(req.URL.Query()["encryption_scheme"]).To(Equal([]string{"testString"}))
 
 					Expect(req.URL.Query()["location"]).To(Equal([]string{"testString"}))
@@ -11365,10 +9276,6 @@ var _ = Describe(`SchematicsV1`, func() {
 
 					Expect(req.URL.Query()["sort"]).To(Equal([]string{"testString"}))
 
-					// Sleep a short time to support a timeout test
-					time.Sleep(serverSleepTime)
-
-					// Set mock response
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
 					fmt.Fprintf(res, "%s", `{"total_count": 10, "limit": 5, "offset": 6, "kms_instances": [{"location": "Location", "encryption_scheme": "EncryptionScheme", "resource_group": "ResourceGroup", "kms_crn": "KmsCrn", "kms_name": "KmsName", "kms_private_endpoint": "KmsPrivateEndpoint", "kms_public_endpoint": "KmsPublicEndpoint", "keys": [{"name": "Name", "crn": "Crn", "error": "Error"}]}]}`)
@@ -11381,7 +9288,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				})
 				Expect(serviceErr).To(BeNil())
 				Expect(schematicsService).ToNot(BeNil())
-				schematicsService.EnableRetries(0, 0)
 
 				// Invoke operation with nil options model (negative test)
 				result, response, operationErr := schematicsService.GetDiscoveredKmsInstances(nil)
@@ -11403,31 +9309,6 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(operationErr).To(BeNil())
 				Expect(response).ToNot(BeNil())
 				Expect(result).ToNot(BeNil())
-
-				// Invoke operation with a Context to test a timeout error
-				ctx, cancelFunc := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetDiscoveredKmsInstancesWithContext(ctx, getDiscoveredKmsInstancesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
-
-				// Disable retries and test again
-				schematicsService.DisableRetries()
-				result, response, operationErr = schematicsService.GetDiscoveredKmsInstances(getDiscoveredKmsInstancesOptionsModel)
-				Expect(operationErr).To(BeNil())
-				Expect(response).ToNot(BeNil())
-				Expect(result).ToNot(BeNil())
-
-				// Re-test the timeout error with retries disabled
-				ctx, cancelFunc2 := context.WithTimeout(context.Background(), 80*time.Millisecond)
-				defer cancelFunc2()
-				serverSleepTime = 100 * time.Millisecond
-				_, _, operationErr = schematicsService.GetDiscoveredKmsInstancesWithContext(ctx, getDiscoveredKmsInstancesOptionsModel)
-				Expect(operationErr).ToNot(BeNil())
-				Expect(operationErr.Error()).To(ContainSubstring("deadline exceeded"))
-				serverSleepTime = time.Duration(0)
 			})
 			It(`Invoke GetDiscoveredKmsInstances with error: Operation validation and request error`, func() {
 				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
@@ -11457,6 +9338,1865 @@ var _ = Describe(`SchematicsV1`, func() {
 				getDiscoveredKmsInstancesOptionsModelNew := new(schematicsv1.GetDiscoveredKmsInstancesOptions)
 				// Invoke operation with invalid model (negative test)
 				result, response, operationErr = schematicsService.GetDiscoveredKmsInstances(getDiscoveredKmsInstancesOptionsModelNew)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`Service constructor tests`, func() {
+		It(`Instantiate service client`, func() {
+			schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+				Authenticator: &core.NoAuthAuthenticator{},
+			})
+			Expect(schematicsService).ToNot(BeNil())
+			Expect(serviceErr).To(BeNil())
+		})
+		It(`Instantiate service client with error: Invalid URL`, func() {
+			schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+				URL: "{BAD_URL_STRING",
+			})
+			Expect(schematicsService).To(BeNil())
+			Expect(serviceErr).ToNot(BeNil())
+		})
+		It(`Instantiate service client with error: Invalid Auth`, func() {
+			schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+				URL: "https://schematicsv1/api",
+				Authenticator: &core.BasicAuthenticator{
+					Username: "",
+					Password: "",
+				},
+			})
+			Expect(schematicsService).To(BeNil())
+			Expect(serviceErr).ToNot(BeNil())
+		})
+	})
+	Describe(`Service constructor tests using external config`, func() {
+		Context(`Using external config, construct service client instances`, func() {
+			// Map containing environment variables used in testing.
+			var testEnvironment = map[string]string{
+				"SCHEMATICS_URL": "https://schematicsv1/api",
+				"SCHEMATICS_AUTH_TYPE": "noauth",
+			}
+
+			It(`Create service client using external config successfully`, func() {
+				SetTestEnvironment(testEnvironment)
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+				})
+				Expect(schematicsService).ToNot(BeNil())
+				Expect(serviceErr).To(BeNil())
+				ClearTestEnvironment(testEnvironment)
+			})
+			It(`Create service client using external config and set url from constructor successfully`, func() {
+				SetTestEnvironment(testEnvironment)
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+					URL: "https://testService/api",
+				})
+				Expect(schematicsService).ToNot(BeNil())
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService.Service.GetServiceURL()).To(Equal("https://testService/api"))
+				ClearTestEnvironment(testEnvironment)
+			})
+			It(`Create service client using external config and set url programatically successfully`, func() {
+				SetTestEnvironment(testEnvironment)
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+				})
+				err := schematicsService.SetServiceURL("https://testService/api")
+				Expect(err).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService.Service.GetServiceURL()).To(Equal("https://testService/api"))
+				ClearTestEnvironment(testEnvironment)
+			})
+		})
+		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
+			// Map containing environment variables used in testing.
+			var testEnvironment = map[string]string{
+				"SCHEMATICS_URL": "https://schematicsv1/api",
+				"SCHEMATICS_AUTH_TYPE": "someOtherAuth",
+			}
+
+			SetTestEnvironment(testEnvironment)
+			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+			})
+
+			It(`Instantiate service client with error`, func() {
+				Expect(schematicsService).To(BeNil())
+				Expect(serviceErr).ToNot(BeNil())
+				ClearTestEnvironment(testEnvironment)
+			})
+		})
+		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
+			// Map containing environment variables used in testing.
+			var testEnvironment = map[string]string{
+				"SCHEMATICS_AUTH_TYPE":   "NOAuth",
+			}
+
+			SetTestEnvironment(testEnvironment)
+			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+				URL: "{BAD_URL_STRING",
+			})
+
+			It(`Instantiate service client with error`, func() {
+				Expect(schematicsService).To(BeNil())
+				Expect(serviceErr).ToNot(BeNil())
+				ClearTestEnvironment(testEnvironment)
+			})
+		})
+	})
+	Describe(`CreateInventory(createInventoryOptions *CreateInventoryOptions) - Operation response error`, func() {
+		createInventoryPath := "/v2/inventories"
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(createInventoryPath))
+					Expect(req.Method).To(Equal("POST"))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, `} this is not valid json {`)
+				}))
+			})
+			It(`Invoke CreateInventory with error: Operation response processing error`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Construct an instance of the CreateInventoryOptions model
+				createInventoryOptionsModel := new(schematicsv1.CreateInventoryOptions)
+				createInventoryOptionsModel.Name = core.StringPtr("testString")
+				createInventoryOptionsModel.Description = core.StringPtr("testString")
+				createInventoryOptionsModel.Location = core.StringPtr("us_south")
+				createInventoryOptionsModel.ResourceGroup = core.StringPtr("testString")
+				createInventoryOptionsModel.InventoriesIni = core.StringPtr("testString")
+				createInventoryOptionsModel.ResourceQueries = []string{"testString"}
+				createInventoryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Expect response parsing to fail since we are receiving a text/plain response
+				result, response, operationErr := schematicsService.CreateInventory(createInventoryOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+
+	Describe(`CreateInventory(createInventoryOptions *CreateInventoryOptions)`, func() {
+		createInventoryPath := "/v2/inventories"
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(createInventoryPath))
+					Expect(req.Method).To(Equal("POST"))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"name": "Name", "id": "ID", "location": "us_south", "resource_group": "ResourceGroup", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "inventories_ini": "InventoriesIni", "resource_queries": ["ResourceQueries"]}`)
+				}))
+			})
+			It(`Invoke CreateInventory successfully`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Invoke operation with nil options model (negative test)
+				result, response, operationErr := schematicsService.CreateInventory(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				// Construct an instance of the CreateInventoryOptions model
+				createInventoryOptionsModel := new(schematicsv1.CreateInventoryOptions)
+				createInventoryOptionsModel.Name = core.StringPtr("testString")
+				createInventoryOptionsModel.Description = core.StringPtr("testString")
+				createInventoryOptionsModel.Location = core.StringPtr("us_south")
+				createInventoryOptionsModel.ResourceGroup = core.StringPtr("testString")
+				createInventoryOptionsModel.InventoriesIni = core.StringPtr("testString")
+				createInventoryOptionsModel.ResourceQueries = []string{"testString"}
+				createInventoryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				result, response, operationErr = schematicsService.CreateInventory(createInventoryOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+			})
+			It(`Invoke CreateInventory with error: Operation request error`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Construct an instance of the CreateInventoryOptions model
+				createInventoryOptionsModel := new(schematicsv1.CreateInventoryOptions)
+				createInventoryOptionsModel.Name = core.StringPtr("testString")
+				createInventoryOptionsModel.Description = core.StringPtr("testString")
+				createInventoryOptionsModel.Location = core.StringPtr("us_south")
+				createInventoryOptionsModel.ResourceGroup = core.StringPtr("testString")
+				createInventoryOptionsModel.InventoriesIni = core.StringPtr("testString")
+				createInventoryOptionsModel.ResourceQueries = []string{"testString"}
+				createInventoryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := schematicsService.SetServiceURL("")
+				Expect(err).To(BeNil())
+				result, response, operationErr := schematicsService.CreateInventory(createInventoryOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`ListInventories(listInventoriesOptions *ListInventoriesOptions) - Operation response error`, func() {
+		listInventoriesPath := "/v2/inventories"
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listInventoriesPath))
+					Expect(req.Method).To(Equal("GET"))
+					Expect(req.URL.Query()["offset"]).To(Equal([]string{fmt.Sprint(int64(0))}))
+
+					Expect(req.URL.Query()["limit"]).To(Equal([]string{fmt.Sprint(int64(1))}))
+
+					Expect(req.URL.Query()["sort"]).To(Equal([]string{"testString"}))
+
+					Expect(req.URL.Query()["profile"]).To(Equal([]string{"ids"}))
+
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, `} this is not valid json {`)
+				}))
+			})
+			It(`Invoke ListInventories with error: Operation response processing error`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Construct an instance of the ListInventoriesOptions model
+				listInventoriesOptionsModel := new(schematicsv1.ListInventoriesOptions)
+				listInventoriesOptionsModel.Offset = core.Int64Ptr(int64(0))
+				listInventoriesOptionsModel.Limit = core.Int64Ptr(int64(1))
+				listInventoriesOptionsModel.Sort = core.StringPtr("testString")
+				listInventoriesOptionsModel.Profile = core.StringPtr("ids")
+				listInventoriesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Expect response parsing to fail since we are receiving a text/plain response
+				result, response, operationErr := schematicsService.ListInventories(listInventoriesOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+
+	Describe(`ListInventories(listInventoriesOptions *ListInventoriesOptions)`, func() {
+		listInventoriesPath := "/v2/inventories"
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listInventoriesPath))
+					Expect(req.Method).To(Equal("GET"))
+					Expect(req.URL.Query()["offset"]).To(Equal([]string{fmt.Sprint(int64(0))}))
+
+					Expect(req.URL.Query()["limit"]).To(Equal([]string{fmt.Sprint(int64(1))}))
+
+					Expect(req.URL.Query()["sort"]).To(Equal([]string{"testString"}))
+
+					Expect(req.URL.Query()["profile"]).To(Equal([]string{"ids"}))
+
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"total_count": 10, "limit": 5, "offset": 6, "inventories": [{"name": "Name", "id": "ID", "location": "us_south", "resource_group": "ResourceGroup", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "inventories_ini": "InventoriesIni", "resource_queries": ["ResourceQueries"]}]}`)
+				}))
+			})
+			It(`Invoke ListInventories successfully`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Invoke operation with nil options model (negative test)
+				result, response, operationErr := schematicsService.ListInventories(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				// Construct an instance of the ListInventoriesOptions model
+				listInventoriesOptionsModel := new(schematicsv1.ListInventoriesOptions)
+				listInventoriesOptionsModel.Offset = core.Int64Ptr(int64(0))
+				listInventoriesOptionsModel.Limit = core.Int64Ptr(int64(1))
+				listInventoriesOptionsModel.Sort = core.StringPtr("testString")
+				listInventoriesOptionsModel.Profile = core.StringPtr("ids")
+				listInventoriesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				result, response, operationErr = schematicsService.ListInventories(listInventoriesOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+			})
+			It(`Invoke ListInventories with error: Operation request error`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Construct an instance of the ListInventoriesOptions model
+				listInventoriesOptionsModel := new(schematicsv1.ListInventoriesOptions)
+				listInventoriesOptionsModel.Offset = core.Int64Ptr(int64(0))
+				listInventoriesOptionsModel.Limit = core.Int64Ptr(int64(1))
+				listInventoriesOptionsModel.Sort = core.StringPtr("testString")
+				listInventoriesOptionsModel.Profile = core.StringPtr("ids")
+				listInventoriesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := schematicsService.SetServiceURL("")
+				Expect(err).To(BeNil())
+				result, response, operationErr := schematicsService.ListInventories(listInventoriesOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`ReplaceInventory(replaceInventoryOptions *ReplaceInventoryOptions) - Operation response error`, func() {
+		replaceInventoryPath := "/v2/inventories/testString"
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(replaceInventoryPath))
+					Expect(req.Method).To(Equal("PUT"))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, `} this is not valid json {`)
+				}))
+			})
+			It(`Invoke ReplaceInventory with error: Operation response processing error`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Construct an instance of the ReplaceInventoryOptions model
+				replaceInventoryOptionsModel := new(schematicsv1.ReplaceInventoryOptions)
+				replaceInventoryOptionsModel.InventoryID = core.StringPtr("testString")
+				replaceInventoryOptionsModel.Name = core.StringPtr("testString")
+				replaceInventoryOptionsModel.Description = core.StringPtr("testString")
+				replaceInventoryOptionsModel.Location = core.StringPtr("us_south")
+				replaceInventoryOptionsModel.ResourceGroup = core.StringPtr("testString")
+				replaceInventoryOptionsModel.InventoriesIni = core.StringPtr("testString")
+				replaceInventoryOptionsModel.ResourceQueries = []string{"testString"}
+				replaceInventoryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Expect response parsing to fail since we are receiving a text/plain response
+				result, response, operationErr := schematicsService.ReplaceInventory(replaceInventoryOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+
+	Describe(`ReplaceInventory(replaceInventoryOptions *ReplaceInventoryOptions)`, func() {
+		replaceInventoryPath := "/v2/inventories/testString"
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(replaceInventoryPath))
+					Expect(req.Method).To(Equal("PUT"))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"name": "Name", "id": "ID", "location": "us_south", "resource_group": "ResourceGroup", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "inventories_ini": "InventoriesIni", "resource_queries": ["ResourceQueries"]}`)
+				}))
+			})
+			It(`Invoke ReplaceInventory successfully`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Invoke operation with nil options model (negative test)
+				result, response, operationErr := schematicsService.ReplaceInventory(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				// Construct an instance of the ReplaceInventoryOptions model
+				replaceInventoryOptionsModel := new(schematicsv1.ReplaceInventoryOptions)
+				replaceInventoryOptionsModel.InventoryID = core.StringPtr("testString")
+				replaceInventoryOptionsModel.Name = core.StringPtr("testString")
+				replaceInventoryOptionsModel.Description = core.StringPtr("testString")
+				replaceInventoryOptionsModel.Location = core.StringPtr("us_south")
+				replaceInventoryOptionsModel.ResourceGroup = core.StringPtr("testString")
+				replaceInventoryOptionsModel.InventoriesIni = core.StringPtr("testString")
+				replaceInventoryOptionsModel.ResourceQueries = []string{"testString"}
+				replaceInventoryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				result, response, operationErr = schematicsService.ReplaceInventory(replaceInventoryOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+			})
+			It(`Invoke ReplaceInventory with error: Operation validation and request error`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Construct an instance of the ReplaceInventoryOptions model
+				replaceInventoryOptionsModel := new(schematicsv1.ReplaceInventoryOptions)
+				replaceInventoryOptionsModel.InventoryID = core.StringPtr("testString")
+				replaceInventoryOptionsModel.Name = core.StringPtr("testString")
+				replaceInventoryOptionsModel.Description = core.StringPtr("testString")
+				replaceInventoryOptionsModel.Location = core.StringPtr("us_south")
+				replaceInventoryOptionsModel.ResourceGroup = core.StringPtr("testString")
+				replaceInventoryOptionsModel.InventoriesIni = core.StringPtr("testString")
+				replaceInventoryOptionsModel.ResourceQueries = []string{"testString"}
+				replaceInventoryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := schematicsService.SetServiceURL("")
+				Expect(err).To(BeNil())
+				result, response, operationErr := schematicsService.ReplaceInventory(replaceInventoryOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+				// Construct a second instance of the ReplaceInventoryOptions model with no property values
+				replaceInventoryOptionsModelNew := new(schematicsv1.ReplaceInventoryOptions)
+				// Invoke operation with invalid model (negative test)
+				result, response, operationErr = schematicsService.ReplaceInventory(replaceInventoryOptionsModelNew)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`UpdateInventory(updateInventoryOptions *UpdateInventoryOptions) - Operation response error`, func() {
+		updateInventoryPath := "/v2/inventories/testString"
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(updateInventoryPath))
+					Expect(req.Method).To(Equal("PATCH"))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, `} this is not valid json {`)
+				}))
+			})
+			It(`Invoke UpdateInventory with error: Operation response processing error`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Construct an instance of the UpdateInventoryOptions model
+				updateInventoryOptionsModel := new(schematicsv1.UpdateInventoryOptions)
+				updateInventoryOptionsModel.InventoryID = core.StringPtr("testString")
+				updateInventoryOptionsModel.Name = core.StringPtr("testString")
+				updateInventoryOptionsModel.Description = core.StringPtr("testString")
+				updateInventoryOptionsModel.Location = core.StringPtr("us_south")
+				updateInventoryOptionsModel.ResourceGroup = core.StringPtr("testString")
+				updateInventoryOptionsModel.InventoriesIni = core.StringPtr("testString")
+				updateInventoryOptionsModel.ResourceQueries = []string{"testString"}
+				updateInventoryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Expect response parsing to fail since we are receiving a text/plain response
+				result, response, operationErr := schematicsService.UpdateInventory(updateInventoryOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+
+	Describe(`UpdateInventory(updateInventoryOptions *UpdateInventoryOptions)`, func() {
+		updateInventoryPath := "/v2/inventories/testString"
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(updateInventoryPath))
+					Expect(req.Method).To(Equal("PATCH"))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"name": "Name", "id": "ID", "location": "us_south", "resource_group": "ResourceGroup", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "inventories_ini": "InventoriesIni", "resource_queries": ["ResourceQueries"]}`)
+				}))
+			})
+			It(`Invoke UpdateInventory successfully`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Invoke operation with nil options model (negative test)
+				result, response, operationErr := schematicsService.UpdateInventory(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				// Construct an instance of the UpdateInventoryOptions model
+				updateInventoryOptionsModel := new(schematicsv1.UpdateInventoryOptions)
+				updateInventoryOptionsModel.InventoryID = core.StringPtr("testString")
+				updateInventoryOptionsModel.Name = core.StringPtr("testString")
+				updateInventoryOptionsModel.Description = core.StringPtr("testString")
+				updateInventoryOptionsModel.Location = core.StringPtr("us_south")
+				updateInventoryOptionsModel.ResourceGroup = core.StringPtr("testString")
+				updateInventoryOptionsModel.InventoriesIni = core.StringPtr("testString")
+				updateInventoryOptionsModel.ResourceQueries = []string{"testString"}
+				updateInventoryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				result, response, operationErr = schematicsService.UpdateInventory(updateInventoryOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+			})
+			It(`Invoke UpdateInventory with error: Operation validation and request error`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Construct an instance of the UpdateInventoryOptions model
+				updateInventoryOptionsModel := new(schematicsv1.UpdateInventoryOptions)
+				updateInventoryOptionsModel.InventoryID = core.StringPtr("testString")
+				updateInventoryOptionsModel.Name = core.StringPtr("testString")
+				updateInventoryOptionsModel.Description = core.StringPtr("testString")
+				updateInventoryOptionsModel.Location = core.StringPtr("us_south")
+				updateInventoryOptionsModel.ResourceGroup = core.StringPtr("testString")
+				updateInventoryOptionsModel.InventoriesIni = core.StringPtr("testString")
+				updateInventoryOptionsModel.ResourceQueries = []string{"testString"}
+				updateInventoryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := schematicsService.SetServiceURL("")
+				Expect(err).To(BeNil())
+				result, response, operationErr := schematicsService.UpdateInventory(updateInventoryOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+				// Construct a second instance of the UpdateInventoryOptions model with no property values
+				updateInventoryOptionsModelNew := new(schematicsv1.UpdateInventoryOptions)
+				// Invoke operation with invalid model (negative test)
+				result, response, operationErr = schematicsService.UpdateInventory(updateInventoryOptionsModelNew)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+
+	Describe(`DeleteInventory(deleteInventoryOptions *DeleteInventoryOptions)`, func() {
+		deleteInventoryPath := "/v2/inventories/testString"
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(deleteInventoryPath))
+					Expect(req.Method).To(Equal("DELETE"))
+					Expect(req.Header["Force"]).ToNot(BeNil())
+					Expect(req.Header["Force"][0]).To(Equal(fmt.Sprintf("%v", true)))
+					Expect(req.Header["Propagate"]).ToNot(BeNil())
+					Expect(req.Header["Propagate"][0]).To(Equal(fmt.Sprintf("%v", true)))
+					res.WriteHeader(204)
+				}))
+			})
+			It(`Invoke DeleteInventory successfully`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Invoke operation with nil options model (negative test)
+				response, operationErr := schematicsService.DeleteInventory(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+
+				// Construct an instance of the DeleteInventoryOptions model
+				deleteInventoryOptionsModel := new(schematicsv1.DeleteInventoryOptions)
+				deleteInventoryOptionsModel.InventoryID = core.StringPtr("testString")
+				deleteInventoryOptionsModel.Force = core.BoolPtr(true)
+				deleteInventoryOptionsModel.Propagate = core.BoolPtr(true)
+				deleteInventoryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				response, operationErr = schematicsService.DeleteInventory(deleteInventoryOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+			})
+			It(`Invoke DeleteInventory with error: Operation validation and request error`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Construct an instance of the DeleteInventoryOptions model
+				deleteInventoryOptionsModel := new(schematicsv1.DeleteInventoryOptions)
+				deleteInventoryOptionsModel.InventoryID = core.StringPtr("testString")
+				deleteInventoryOptionsModel.Force = core.BoolPtr(true)
+				deleteInventoryOptionsModel.Propagate = core.BoolPtr(true)
+				deleteInventoryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := schematicsService.SetServiceURL("")
+				Expect(err).To(BeNil())
+				response, operationErr := schematicsService.DeleteInventory(deleteInventoryOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				// Construct a second instance of the DeleteInventoryOptions model with no property values
+				deleteInventoryOptionsModelNew := new(schematicsv1.DeleteInventoryOptions)
+				// Invoke operation with invalid model (negative test)
+				response, operationErr = schematicsService.DeleteInventory(deleteInventoryOptionsModelNew)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`GetInventory(getInventoryOptions *GetInventoryOptions) - Operation response error`, func() {
+		getInventoryPath := "/v2/inventories/testString"
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getInventoryPath))
+					Expect(req.Method).To(Equal("GET"))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, `} this is not valid json {`)
+				}))
+			})
+			It(`Invoke GetInventory with error: Operation response processing error`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Construct an instance of the GetInventoryOptions model
+				getInventoryOptionsModel := new(schematicsv1.GetInventoryOptions)
+				getInventoryOptionsModel.InventoryID = core.StringPtr("testString")
+				getInventoryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Expect response parsing to fail since we are receiving a text/plain response
+				result, response, operationErr := schematicsService.GetInventory(getInventoryOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+
+	Describe(`GetInventory(getInventoryOptions *GetInventoryOptions)`, func() {
+		getInventoryPath := "/v2/inventories/testString"
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getInventoryPath))
+					Expect(req.Method).To(Equal("GET"))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"name": "Name", "id": "ID", "location": "us_south", "resource_group": "ResourceGroup", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "inventories_ini": "InventoriesIni", "resource_queries": ["ResourceQueries"]}`)
+				}))
+			})
+			It(`Invoke GetInventory successfully`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Invoke operation with nil options model (negative test)
+				result, response, operationErr := schematicsService.GetInventory(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				// Construct an instance of the GetInventoryOptions model
+				getInventoryOptionsModel := new(schematicsv1.GetInventoryOptions)
+				getInventoryOptionsModel.InventoryID = core.StringPtr("testString")
+				getInventoryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				result, response, operationErr = schematicsService.GetInventory(getInventoryOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+			})
+			It(`Invoke GetInventory with error: Operation validation and request error`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Construct an instance of the GetInventoryOptions model
+				getInventoryOptionsModel := new(schematicsv1.GetInventoryOptions)
+				getInventoryOptionsModel.InventoryID = core.StringPtr("testString")
+				getInventoryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := schematicsService.SetServiceURL("")
+				Expect(err).To(BeNil())
+				result, response, operationErr := schematicsService.GetInventory(getInventoryOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+				// Construct a second instance of the GetInventoryOptions model with no property values
+				getInventoryOptionsModelNew := new(schematicsv1.GetInventoryOptions)
+				// Invoke operation with invalid model (negative test)
+				result, response, operationErr = schematicsService.GetInventory(getInventoryOptionsModelNew)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`ListInventoryValues(listInventoryValuesOptions *ListInventoryValuesOptions) - Operation response error`, func() {
+		listInventoryValuesPath := "/v2/inventories/testString/variables"
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listInventoryValuesPath))
+					Expect(req.Method).To(Equal("GET"))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, `} this is not valid json {`)
+				}))
+			})
+			It(`Invoke ListInventoryValues with error: Operation response processing error`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Construct an instance of the ListInventoryValuesOptions model
+				listInventoryValuesOptionsModel := new(schematicsv1.ListInventoryValuesOptions)
+				listInventoryValuesOptionsModel.InventoryID = core.StringPtr("testString")
+				listInventoryValuesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Expect response parsing to fail since we are receiving a text/plain response
+				result, response, operationErr := schematicsService.ListInventoryValues(listInventoryValuesOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+
+	Describe(`ListInventoryValues(listInventoryValuesOptions *ListInventoryValuesOptions)`, func() {
+		listInventoryValuesPath := "/v2/inventories/testString/variables"
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listInventoryValuesPath))
+					Expect(req.Method).To(Equal("GET"))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"total_count": 10, "limit": 5, "offset": 6, "inventories": [{"name": "Name", "id": "ID", "location": "us_south", "resource_group": "ResourceGroup", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "inventories_ini": "InventoriesIni", "resource_queries": ["ResourceQueries"]}]}`)
+				}))
+			})
+			It(`Invoke ListInventoryValues successfully`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Invoke operation with nil options model (negative test)
+				result, response, operationErr := schematicsService.ListInventoryValues(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				// Construct an instance of the ListInventoryValuesOptions model
+				listInventoryValuesOptionsModel := new(schematicsv1.ListInventoryValuesOptions)
+				listInventoryValuesOptionsModel.InventoryID = core.StringPtr("testString")
+				listInventoryValuesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				result, response, operationErr = schematicsService.ListInventoryValues(listInventoryValuesOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+			})
+			It(`Invoke ListInventoryValues with error: Operation validation and request error`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Construct an instance of the ListInventoryValuesOptions model
+				listInventoryValuesOptionsModel := new(schematicsv1.ListInventoryValuesOptions)
+				listInventoryValuesOptionsModel.InventoryID = core.StringPtr("testString")
+				listInventoryValuesOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := schematicsService.SetServiceURL("")
+				Expect(err).To(BeNil())
+				result, response, operationErr := schematicsService.ListInventoryValues(listInventoryValuesOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+				// Construct a second instance of the ListInventoryValuesOptions model with no property values
+				listInventoryValuesOptionsModelNew := new(schematicsv1.ListInventoryValuesOptions)
+				// Invoke operation with invalid model (negative test)
+				result, response, operationErr = schematicsService.ListInventoryValues(listInventoryValuesOptionsModelNew)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`GetInventoryValue(getInventoryValueOptions *GetInventoryValueOptions) - Operation response error`, func() {
+		getInventoryValuePath := "/v2/inventories/testString/variables/testString"
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getInventoryValuePath))
+					Expect(req.Method).To(Equal("GET"))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, `} this is not valid json {`)
+				}))
+			})
+			It(`Invoke GetInventoryValue with error: Operation response processing error`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Construct an instance of the GetInventoryValueOptions model
+				getInventoryValueOptionsModel := new(schematicsv1.GetInventoryValueOptions)
+				getInventoryValueOptionsModel.InventoryID = core.StringPtr("testString")
+				getInventoryValueOptionsModel.VarName = core.StringPtr("testString")
+				getInventoryValueOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Expect response parsing to fail since we are receiving a text/plain response
+				result, response, operationErr := schematicsService.GetInventoryValue(getInventoryValueOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+
+	Describe(`GetInventoryValue(getInventoryValueOptions *GetInventoryValueOptions)`, func() {
+		getInventoryValuePath := "/v2/inventories/testString/variables/testString"
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getInventoryValuePath))
+					Expect(req.Method).To(Equal("GET"))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"name": "Name", "id": "ID", "location": "us_south", "resource_group": "ResourceGroup", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "inventories_ini": "InventoriesIni", "resource_queries": ["ResourceQueries"]}`)
+				}))
+			})
+			It(`Invoke GetInventoryValue successfully`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Invoke operation with nil options model (negative test)
+				result, response, operationErr := schematicsService.GetInventoryValue(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				// Construct an instance of the GetInventoryValueOptions model
+				getInventoryValueOptionsModel := new(schematicsv1.GetInventoryValueOptions)
+				getInventoryValueOptionsModel.InventoryID = core.StringPtr("testString")
+				getInventoryValueOptionsModel.VarName = core.StringPtr("testString")
+				getInventoryValueOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				result, response, operationErr = schematicsService.GetInventoryValue(getInventoryValueOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+			})
+			It(`Invoke GetInventoryValue with error: Operation validation and request error`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Construct an instance of the GetInventoryValueOptions model
+				getInventoryValueOptionsModel := new(schematicsv1.GetInventoryValueOptions)
+				getInventoryValueOptionsModel.InventoryID = core.StringPtr("testString")
+				getInventoryValueOptionsModel.VarName = core.StringPtr("testString")
+				getInventoryValueOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := schematicsService.SetServiceURL("")
+				Expect(err).To(BeNil())
+				result, response, operationErr := schematicsService.GetInventoryValue(getInventoryValueOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+				// Construct a second instance of the GetInventoryValueOptions model with no property values
+				getInventoryValueOptionsModelNew := new(schematicsv1.GetInventoryValueOptions)
+				// Invoke operation with invalid model (negative test)
+				result, response, operationErr = schematicsService.GetInventoryValue(getInventoryValueOptionsModelNew)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`Service constructor tests`, func() {
+		It(`Instantiate service client`, func() {
+			schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+				Authenticator: &core.NoAuthAuthenticator{},
+			})
+			Expect(schematicsService).ToNot(BeNil())
+			Expect(serviceErr).To(BeNil())
+		})
+		It(`Instantiate service client with error: Invalid URL`, func() {
+			schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+				URL: "{BAD_URL_STRING",
+			})
+			Expect(schematicsService).To(BeNil())
+			Expect(serviceErr).ToNot(BeNil())
+		})
+		It(`Instantiate service client with error: Invalid Auth`, func() {
+			schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+				URL: "https://schematicsv1/api",
+				Authenticator: &core.BasicAuthenticator{
+					Username: "",
+					Password: "",
+				},
+			})
+			Expect(schematicsService).To(BeNil())
+			Expect(serviceErr).ToNot(BeNil())
+		})
+	})
+	Describe(`Service constructor tests using external config`, func() {
+		Context(`Using external config, construct service client instances`, func() {
+			// Map containing environment variables used in testing.
+			var testEnvironment = map[string]string{
+				"SCHEMATICS_URL": "https://schematicsv1/api",
+				"SCHEMATICS_AUTH_TYPE": "noauth",
+			}
+
+			It(`Create service client using external config successfully`, func() {
+				SetTestEnvironment(testEnvironment)
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+				})
+				Expect(schematicsService).ToNot(BeNil())
+				Expect(serviceErr).To(BeNil())
+				ClearTestEnvironment(testEnvironment)
+			})
+			It(`Create service client using external config and set url from constructor successfully`, func() {
+				SetTestEnvironment(testEnvironment)
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+					URL: "https://testService/api",
+				})
+				Expect(schematicsService).ToNot(BeNil())
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService.Service.GetServiceURL()).To(Equal("https://testService/api"))
+				ClearTestEnvironment(testEnvironment)
+			})
+			It(`Create service client using external config and set url programatically successfully`, func() {
+				SetTestEnvironment(testEnvironment)
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+				})
+				err := schematicsService.SetServiceURL("https://testService/api")
+				Expect(err).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService.Service.GetServiceURL()).To(Equal("https://testService/api"))
+				ClearTestEnvironment(testEnvironment)
+			})
+		})
+		Context(`Using external config, construct service client instances with error: Invalid Auth`, func() {
+			// Map containing environment variables used in testing.
+			var testEnvironment = map[string]string{
+				"SCHEMATICS_URL": "https://schematicsv1/api",
+				"SCHEMATICS_AUTH_TYPE": "someOtherAuth",
+			}
+
+			SetTestEnvironment(testEnvironment)
+			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+			})
+
+			It(`Instantiate service client with error`, func() {
+				Expect(schematicsService).To(BeNil())
+				Expect(serviceErr).ToNot(BeNil())
+				ClearTestEnvironment(testEnvironment)
+			})
+		})
+		Context(`Using external config, construct service client instances with error: Invalid URL`, func() {
+			// Map containing environment variables used in testing.
+			var testEnvironment = map[string]string{
+				"SCHEMATICS_AUTH_TYPE":   "NOAuth",
+			}
+
+			SetTestEnvironment(testEnvironment)
+			schematicsService, serviceErr := schematicsv1.NewSchematicsV1UsingExternalConfig(&schematicsv1.SchematicsV1Options{
+				URL: "{BAD_URL_STRING",
+			})
+
+			It(`Instantiate service client with error`, func() {
+				Expect(schematicsService).To(BeNil())
+				Expect(serviceErr).ToNot(BeNil())
+				ClearTestEnvironment(testEnvironment)
+			})
+		})
+	})
+	Describe(`CreateResourceQuery(createResourceQueryOptions *CreateResourceQueryOptions) - Operation response error`, func() {
+		createResourceQueryPath := "/v2/resources_query"
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(createResourceQueryPath))
+					Expect(req.Method).To(Equal("POST"))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, `} this is not valid json {`)
+				}))
+			})
+			It(`Invoke CreateResourceQuery with error: Operation response processing error`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Construct an instance of the ResourceQueryParam model
+				resourceQueryParamModel := new(schematicsv1.ResourceQueryParam)
+				resourceQueryParamModel.Name = core.StringPtr("testString")
+				resourceQueryParamModel.Value = core.StringPtr("testString")
+				resourceQueryParamModel.Description = core.StringPtr("testString")
+
+				// Construct an instance of the ResourceQuery model
+				resourceQueryModel := new(schematicsv1.ResourceQuery)
+				resourceQueryModel.QueryType = core.StringPtr("workspaces")
+				resourceQueryModel.QueryCondition = []schematicsv1.ResourceQueryParam{*resourceQueryParamModel}
+				resourceQueryModel.QuerySelect = []string{"testString"}
+
+				// Construct an instance of the CreateResourceQueryOptions model
+				createResourceQueryOptionsModel := new(schematicsv1.CreateResourceQueryOptions)
+				createResourceQueryOptionsModel.Type = core.StringPtr("vsi")
+				createResourceQueryOptionsModel.Name = core.StringPtr("testString")
+				createResourceQueryOptionsModel.Queries = []schematicsv1.ResourceQuery{*resourceQueryModel}
+				createResourceQueryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Expect response parsing to fail since we are receiving a text/plain response
+				result, response, operationErr := schematicsService.CreateResourceQuery(createResourceQueryOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+
+	Describe(`CreateResourceQuery(createResourceQueryOptions *CreateResourceQueryOptions)`, func() {
+		createResourceQueryPath := "/v2/resources_query"
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(createResourceQueryPath))
+					Expect(req.Method).To(Equal("POST"))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"type": "vsi", "name": "Name", "id": "ID", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "queries": [{"query_type": "workspaces", "query_condition": [{"name": "Name", "value": "Value", "description": "Description"}], "query_select": ["QuerySelect"]}]}`)
+				}))
+			})
+			It(`Invoke CreateResourceQuery successfully`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Invoke operation with nil options model (negative test)
+				result, response, operationErr := schematicsService.CreateResourceQuery(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				// Construct an instance of the ResourceQueryParam model
+				resourceQueryParamModel := new(schematicsv1.ResourceQueryParam)
+				resourceQueryParamModel.Name = core.StringPtr("testString")
+				resourceQueryParamModel.Value = core.StringPtr("testString")
+				resourceQueryParamModel.Description = core.StringPtr("testString")
+
+				// Construct an instance of the ResourceQuery model
+				resourceQueryModel := new(schematicsv1.ResourceQuery)
+				resourceQueryModel.QueryType = core.StringPtr("workspaces")
+				resourceQueryModel.QueryCondition = []schematicsv1.ResourceQueryParam{*resourceQueryParamModel}
+				resourceQueryModel.QuerySelect = []string{"testString"}
+
+				// Construct an instance of the CreateResourceQueryOptions model
+				createResourceQueryOptionsModel := new(schematicsv1.CreateResourceQueryOptions)
+				createResourceQueryOptionsModel.Type = core.StringPtr("vsi")
+				createResourceQueryOptionsModel.Name = core.StringPtr("testString")
+				createResourceQueryOptionsModel.Queries = []schematicsv1.ResourceQuery{*resourceQueryModel}
+				createResourceQueryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				result, response, operationErr = schematicsService.CreateResourceQuery(createResourceQueryOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+			})
+			It(`Invoke CreateResourceQuery with error: Operation request error`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Construct an instance of the ResourceQueryParam model
+				resourceQueryParamModel := new(schematicsv1.ResourceQueryParam)
+				resourceQueryParamModel.Name = core.StringPtr("testString")
+				resourceQueryParamModel.Value = core.StringPtr("testString")
+				resourceQueryParamModel.Description = core.StringPtr("testString")
+
+				// Construct an instance of the ResourceQuery model
+				resourceQueryModel := new(schematicsv1.ResourceQuery)
+				resourceQueryModel.QueryType = core.StringPtr("workspaces")
+				resourceQueryModel.QueryCondition = []schematicsv1.ResourceQueryParam{*resourceQueryParamModel}
+				resourceQueryModel.QuerySelect = []string{"testString"}
+
+				// Construct an instance of the CreateResourceQueryOptions model
+				createResourceQueryOptionsModel := new(schematicsv1.CreateResourceQueryOptions)
+				createResourceQueryOptionsModel.Type = core.StringPtr("vsi")
+				createResourceQueryOptionsModel.Name = core.StringPtr("testString")
+				createResourceQueryOptionsModel.Queries = []schematicsv1.ResourceQuery{*resourceQueryModel}
+				createResourceQueryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := schematicsService.SetServiceURL("")
+				Expect(err).To(BeNil())
+				result, response, operationErr := schematicsService.CreateResourceQuery(createResourceQueryOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`ListResourceQuery(listResourceQueryOptions *ListResourceQueryOptions) - Operation response error`, func() {
+		listResourceQueryPath := "/v2/resources_query"
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listResourceQueryPath))
+					Expect(req.Method).To(Equal("GET"))
+					Expect(req.URL.Query()["offset"]).To(Equal([]string{fmt.Sprint(int64(0))}))
+
+					Expect(req.URL.Query()["limit"]).To(Equal([]string{fmt.Sprint(int64(1))}))
+
+					Expect(req.URL.Query()["sort"]).To(Equal([]string{"testString"}))
+
+					Expect(req.URL.Query()["profile"]).To(Equal([]string{"ids"}))
+
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, `} this is not valid json {`)
+				}))
+			})
+			It(`Invoke ListResourceQuery with error: Operation response processing error`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Construct an instance of the ListResourceQueryOptions model
+				listResourceQueryOptionsModel := new(schematicsv1.ListResourceQueryOptions)
+				listResourceQueryOptionsModel.Offset = core.Int64Ptr(int64(0))
+				listResourceQueryOptionsModel.Limit = core.Int64Ptr(int64(1))
+				listResourceQueryOptionsModel.Sort = core.StringPtr("testString")
+				listResourceQueryOptionsModel.Profile = core.StringPtr("ids")
+				listResourceQueryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Expect response parsing to fail since we are receiving a text/plain response
+				result, response, operationErr := schematicsService.ListResourceQuery(listResourceQueryOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+
+	Describe(`ListResourceQuery(listResourceQueryOptions *ListResourceQueryOptions)`, func() {
+		listResourceQueryPath := "/v2/resources_query"
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(listResourceQueryPath))
+					Expect(req.Method).To(Equal("GET"))
+					Expect(req.URL.Query()["offset"]).To(Equal([]string{fmt.Sprint(int64(0))}))
+
+					Expect(req.URL.Query()["limit"]).To(Equal([]string{fmt.Sprint(int64(1))}))
+
+					Expect(req.URL.Query()["sort"]).To(Equal([]string{"testString"}))
+
+					Expect(req.URL.Query()["profile"]).To(Equal([]string{"ids"}))
+
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"total_count": 10, "limit": 5, "offset": 6, "ResourceQueries": [{"type": "vsi", "name": "Name", "id": "ID", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "queries": [{"query_type": "workspaces", "query_condition": [{"name": "Name", "value": "Value", "description": "Description"}], "query_select": ["QuerySelect"]}]}]}`)
+				}))
+			})
+			It(`Invoke ListResourceQuery successfully`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Invoke operation with nil options model (negative test)
+				result, response, operationErr := schematicsService.ListResourceQuery(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				// Construct an instance of the ListResourceQueryOptions model
+				listResourceQueryOptionsModel := new(schematicsv1.ListResourceQueryOptions)
+				listResourceQueryOptionsModel.Offset = core.Int64Ptr(int64(0))
+				listResourceQueryOptionsModel.Limit = core.Int64Ptr(int64(1))
+				listResourceQueryOptionsModel.Sort = core.StringPtr("testString")
+				listResourceQueryOptionsModel.Profile = core.StringPtr("ids")
+				listResourceQueryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				result, response, operationErr = schematicsService.ListResourceQuery(listResourceQueryOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+			})
+			It(`Invoke ListResourceQuery with error: Operation request error`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Construct an instance of the ListResourceQueryOptions model
+				listResourceQueryOptionsModel := new(schematicsv1.ListResourceQueryOptions)
+				listResourceQueryOptionsModel.Offset = core.Int64Ptr(int64(0))
+				listResourceQueryOptionsModel.Limit = core.Int64Ptr(int64(1))
+				listResourceQueryOptionsModel.Sort = core.StringPtr("testString")
+				listResourceQueryOptionsModel.Profile = core.StringPtr("ids")
+				listResourceQueryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := schematicsService.SetServiceURL("")
+				Expect(err).To(BeNil())
+				result, response, operationErr := schematicsService.ListResourceQuery(listResourceQueryOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`ExecuteResourceQuery(executeResourceQueryOptions *ExecuteResourceQueryOptions) - Operation response error`, func() {
+		executeResourceQueryPath := "/v2/resources_query/testString"
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(executeResourceQueryPath))
+					Expect(req.Method).To(Equal("POST"))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, `} this is not valid json {`)
+				}))
+			})
+			It(`Invoke ExecuteResourceQuery with error: Operation response processing error`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Construct an instance of the ExecuteResourceQueryOptions model
+				executeResourceQueryOptionsModel := new(schematicsv1.ExecuteResourceQueryOptions)
+				executeResourceQueryOptionsModel.QueryID = core.StringPtr("testString")
+				executeResourceQueryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Expect response parsing to fail since we are receiving a text/plain response
+				result, response, operationErr := schematicsService.ExecuteResourceQuery(executeResourceQueryOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+
+	Describe(`ExecuteResourceQuery(executeResourceQueryOptions *ExecuteResourceQueryOptions)`, func() {
+		executeResourceQueryPath := "/v2/resources_query/testString"
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(executeResourceQueryPath))
+					Expect(req.Method).To(Equal("POST"))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"response": [{"query_type": "workspaces", "query_condition": [{"name": "Name", "value": "Value", "description": "Description"}], "query_select": ["QuerySelect"], "query_output": [{"name": "Name", "value": "Value"}]}]}`)
+				}))
+			})
+			It(`Invoke ExecuteResourceQuery successfully`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Invoke operation with nil options model (negative test)
+				result, response, operationErr := schematicsService.ExecuteResourceQuery(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				// Construct an instance of the ExecuteResourceQueryOptions model
+				executeResourceQueryOptionsModel := new(schematicsv1.ExecuteResourceQueryOptions)
+				executeResourceQueryOptionsModel.QueryID = core.StringPtr("testString")
+				executeResourceQueryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				result, response, operationErr = schematicsService.ExecuteResourceQuery(executeResourceQueryOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+			})
+			It(`Invoke ExecuteResourceQuery with error: Operation validation and request error`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Construct an instance of the ExecuteResourceQueryOptions model
+				executeResourceQueryOptionsModel := new(schematicsv1.ExecuteResourceQueryOptions)
+				executeResourceQueryOptionsModel.QueryID = core.StringPtr("testString")
+				executeResourceQueryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := schematicsService.SetServiceURL("")
+				Expect(err).To(BeNil())
+				result, response, operationErr := schematicsService.ExecuteResourceQuery(executeResourceQueryOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+				// Construct a second instance of the ExecuteResourceQueryOptions model with no property values
+				executeResourceQueryOptionsModelNew := new(schematicsv1.ExecuteResourceQueryOptions)
+				// Invoke operation with invalid model (negative test)
+				result, response, operationErr = schematicsService.ExecuteResourceQuery(executeResourceQueryOptionsModelNew)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`ReplaceResourcesQuery(replaceResourcesQueryOptions *ReplaceResourcesQueryOptions) - Operation response error`, func() {
+		replaceResourcesQueryPath := "/v2/resources_query/testString"
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(replaceResourcesQueryPath))
+					Expect(req.Method).To(Equal("PUT"))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, `} this is not valid json {`)
+				}))
+			})
+			It(`Invoke ReplaceResourcesQuery with error: Operation response processing error`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Construct an instance of the ResourceQueryParam model
+				resourceQueryParamModel := new(schematicsv1.ResourceQueryParam)
+				resourceQueryParamModel.Name = core.StringPtr("testString")
+				resourceQueryParamModel.Value = core.StringPtr("testString")
+				resourceQueryParamModel.Description = core.StringPtr("testString")
+
+				// Construct an instance of the ResourceQuery model
+				resourceQueryModel := new(schematicsv1.ResourceQuery)
+				resourceQueryModel.QueryType = core.StringPtr("workspaces")
+				resourceQueryModel.QueryCondition = []schematicsv1.ResourceQueryParam{*resourceQueryParamModel}
+				resourceQueryModel.QuerySelect = []string{"testString"}
+
+				// Construct an instance of the ReplaceResourcesQueryOptions model
+				replaceResourcesQueryOptionsModel := new(schematicsv1.ReplaceResourcesQueryOptions)
+				replaceResourcesQueryOptionsModel.QueryID = core.StringPtr("testString")
+				replaceResourcesQueryOptionsModel.Type = core.StringPtr("vsi")
+				replaceResourcesQueryOptionsModel.Name = core.StringPtr("testString")
+				replaceResourcesQueryOptionsModel.Queries = []schematicsv1.ResourceQuery{*resourceQueryModel}
+				replaceResourcesQueryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Expect response parsing to fail since we are receiving a text/plain response
+				result, response, operationErr := schematicsService.ReplaceResourcesQuery(replaceResourcesQueryOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+
+	Describe(`ReplaceResourcesQuery(replaceResourcesQueryOptions *ReplaceResourcesQueryOptions)`, func() {
+		replaceResourcesQueryPath := "/v2/resources_query/testString"
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(replaceResourcesQueryPath))
+					Expect(req.Method).To(Equal("PUT"))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"type": "vsi", "name": "Name", "id": "ID", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "queries": [{"query_type": "workspaces", "query_condition": [{"name": "Name", "value": "Value", "description": "Description"}], "query_select": ["QuerySelect"]}]}`)
+				}))
+			})
+			It(`Invoke ReplaceResourcesQuery successfully`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Invoke operation with nil options model (negative test)
+				result, response, operationErr := schematicsService.ReplaceResourcesQuery(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				// Construct an instance of the ResourceQueryParam model
+				resourceQueryParamModel := new(schematicsv1.ResourceQueryParam)
+				resourceQueryParamModel.Name = core.StringPtr("testString")
+				resourceQueryParamModel.Value = core.StringPtr("testString")
+				resourceQueryParamModel.Description = core.StringPtr("testString")
+
+				// Construct an instance of the ResourceQuery model
+				resourceQueryModel := new(schematicsv1.ResourceQuery)
+				resourceQueryModel.QueryType = core.StringPtr("workspaces")
+				resourceQueryModel.QueryCondition = []schematicsv1.ResourceQueryParam{*resourceQueryParamModel}
+				resourceQueryModel.QuerySelect = []string{"testString"}
+
+				// Construct an instance of the ReplaceResourcesQueryOptions model
+				replaceResourcesQueryOptionsModel := new(schematicsv1.ReplaceResourcesQueryOptions)
+				replaceResourcesQueryOptionsModel.QueryID = core.StringPtr("testString")
+				replaceResourcesQueryOptionsModel.Type = core.StringPtr("vsi")
+				replaceResourcesQueryOptionsModel.Name = core.StringPtr("testString")
+				replaceResourcesQueryOptionsModel.Queries = []schematicsv1.ResourceQuery{*resourceQueryModel}
+				replaceResourcesQueryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				result, response, operationErr = schematicsService.ReplaceResourcesQuery(replaceResourcesQueryOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+			})
+			It(`Invoke ReplaceResourcesQuery with error: Operation validation and request error`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Construct an instance of the ResourceQueryParam model
+				resourceQueryParamModel := new(schematicsv1.ResourceQueryParam)
+				resourceQueryParamModel.Name = core.StringPtr("testString")
+				resourceQueryParamModel.Value = core.StringPtr("testString")
+				resourceQueryParamModel.Description = core.StringPtr("testString")
+
+				// Construct an instance of the ResourceQuery model
+				resourceQueryModel := new(schematicsv1.ResourceQuery)
+				resourceQueryModel.QueryType = core.StringPtr("workspaces")
+				resourceQueryModel.QueryCondition = []schematicsv1.ResourceQueryParam{*resourceQueryParamModel}
+				resourceQueryModel.QuerySelect = []string{"testString"}
+
+				// Construct an instance of the ReplaceResourcesQueryOptions model
+				replaceResourcesQueryOptionsModel := new(schematicsv1.ReplaceResourcesQueryOptions)
+				replaceResourcesQueryOptionsModel.QueryID = core.StringPtr("testString")
+				replaceResourcesQueryOptionsModel.Type = core.StringPtr("vsi")
+				replaceResourcesQueryOptionsModel.Name = core.StringPtr("testString")
+				replaceResourcesQueryOptionsModel.Queries = []schematicsv1.ResourceQuery{*resourceQueryModel}
+				replaceResourcesQueryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := schematicsService.SetServiceURL("")
+				Expect(err).To(BeNil())
+				result, response, operationErr := schematicsService.ReplaceResourcesQuery(replaceResourcesQueryOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+				// Construct a second instance of the ReplaceResourcesQueryOptions model with no property values
+				replaceResourcesQueryOptionsModelNew := new(schematicsv1.ReplaceResourcesQueryOptions)
+				// Invoke operation with invalid model (negative test)
+				result, response, operationErr = schematicsService.ReplaceResourcesQuery(replaceResourcesQueryOptionsModelNew)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+
+	Describe(`DeleteResourcesQuery(deleteResourcesQueryOptions *DeleteResourcesQueryOptions)`, func() {
+		deleteResourcesQueryPath := "/v2/resources_query/testString"
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(deleteResourcesQueryPath))
+					Expect(req.Method).To(Equal("DELETE"))
+					Expect(req.Header["Force"]).ToNot(BeNil())
+					Expect(req.Header["Force"][0]).To(Equal(fmt.Sprintf("%v", true)))
+					Expect(req.Header["Propagate"]).ToNot(BeNil())
+					Expect(req.Header["Propagate"][0]).To(Equal(fmt.Sprintf("%v", true)))
+					res.WriteHeader(204)
+				}))
+			})
+			It(`Invoke DeleteResourcesQuery successfully`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Invoke operation with nil options model (negative test)
+				response, operationErr := schematicsService.DeleteResourcesQuery(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+
+				// Construct an instance of the DeleteResourcesQueryOptions model
+				deleteResourcesQueryOptionsModel := new(schematicsv1.DeleteResourcesQueryOptions)
+				deleteResourcesQueryOptionsModel.QueryID = core.StringPtr("testString")
+				deleteResourcesQueryOptionsModel.Force = core.BoolPtr(true)
+				deleteResourcesQueryOptionsModel.Propagate = core.BoolPtr(true)
+				deleteResourcesQueryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				response, operationErr = schematicsService.DeleteResourcesQuery(deleteResourcesQueryOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+			})
+			It(`Invoke DeleteResourcesQuery with error: Operation validation and request error`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Construct an instance of the DeleteResourcesQueryOptions model
+				deleteResourcesQueryOptionsModel := new(schematicsv1.DeleteResourcesQueryOptions)
+				deleteResourcesQueryOptionsModel.QueryID = core.StringPtr("testString")
+				deleteResourcesQueryOptionsModel.Force = core.BoolPtr(true)
+				deleteResourcesQueryOptionsModel.Propagate = core.BoolPtr(true)
+				deleteResourcesQueryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := schematicsService.SetServiceURL("")
+				Expect(err).To(BeNil())
+				response, operationErr := schematicsService.DeleteResourcesQuery(deleteResourcesQueryOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				// Construct a second instance of the DeleteResourcesQueryOptions model with no property values
+				deleteResourcesQueryOptionsModelNew := new(schematicsv1.DeleteResourcesQueryOptions)
+				// Invoke operation with invalid model (negative test)
+				response, operationErr = schematicsService.DeleteResourcesQuery(deleteResourcesQueryOptionsModelNew)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+	Describe(`GetResourcesQuery(getResourcesQueryOptions *GetResourcesQueryOptions) - Operation response error`, func() {
+		getResourcesQueryPath := "/v2/resources_query/testString"
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getResourcesQueryPath))
+					Expect(req.Method).To(Equal("GET"))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, `} this is not valid json {`)
+				}))
+			})
+			It(`Invoke GetResourcesQuery with error: Operation response processing error`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Construct an instance of the GetResourcesQueryOptions model
+				getResourcesQueryOptionsModel := new(schematicsv1.GetResourcesQueryOptions)
+				getResourcesQueryOptionsModel.QueryID = core.StringPtr("testString")
+				getResourcesQueryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Expect response parsing to fail since we are receiving a text/plain response
+				result, response, operationErr := schematicsService.GetResourcesQuery(getResourcesQueryOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).To(BeNil())
+			})
+			AfterEach(func() {
+				testServer.Close()
+			})
+		})
+	})
+
+	Describe(`GetResourcesQuery(getResourcesQueryOptions *GetResourcesQueryOptions)`, func() {
+		getResourcesQueryPath := "/v2/resources_query/testString"
+		Context(`Using mock server endpoint`, func() {
+			BeforeEach(func() {
+				testServer = httptest.NewServer(http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
+					defer GinkgoRecover()
+
+					// Verify the contents of the request
+					Expect(req.URL.EscapedPath()).To(Equal(getResourcesQueryPath))
+					Expect(req.Method).To(Equal("GET"))
+					res.Header().Set("Content-type", "application/json")
+					res.WriteHeader(200)
+					fmt.Fprintf(res, "%s", `{"type": "vsi", "name": "Name", "id": "ID", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "queries": [{"query_type": "workspaces", "query_condition": [{"name": "Name", "value": "Value", "description": "Description"}], "query_select": ["QuerySelect"]}]}`)
+				}))
+			})
+			It(`Invoke GetResourcesQuery successfully`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Invoke operation with nil options model (negative test)
+				result, response, operationErr := schematicsService.GetResourcesQuery(nil)
+				Expect(operationErr).NotTo(BeNil())
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+
+				// Construct an instance of the GetResourcesQueryOptions model
+				getResourcesQueryOptionsModel := new(schematicsv1.GetResourcesQueryOptions)
+				getResourcesQueryOptionsModel.QueryID = core.StringPtr("testString")
+				getResourcesQueryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+
+				// Invoke operation with valid options model (positive test)
+				result, response, operationErr = schematicsService.GetResourcesQuery(getResourcesQueryOptionsModel)
+				Expect(operationErr).To(BeNil())
+				Expect(response).ToNot(BeNil())
+				Expect(result).ToNot(BeNil())
+			})
+			It(`Invoke GetResourcesQuery with error: Operation validation and request error`, func() {
+				schematicsService, serviceErr := schematicsv1.NewSchematicsV1(&schematicsv1.SchematicsV1Options{
+					URL:           testServer.URL,
+					Authenticator: &core.NoAuthAuthenticator{},
+				})
+				Expect(serviceErr).To(BeNil())
+				Expect(schematicsService).ToNot(BeNil())
+
+				// Construct an instance of the GetResourcesQueryOptions model
+				getResourcesQueryOptionsModel := new(schematicsv1.GetResourcesQueryOptions)
+				getResourcesQueryOptionsModel.QueryID = core.StringPtr("testString")
+				getResourcesQueryOptionsModel.Headers = map[string]string{"x-custom-header": "x-custom-value"}
+				// Invoke operation with empty URL (negative test)
+				err := schematicsService.SetServiceURL("")
+				Expect(err).To(BeNil())
+				result, response, operationErr := schematicsService.GetResourcesQuery(getResourcesQueryOptionsModel)
+				Expect(operationErr).ToNot(BeNil())
+				Expect(operationErr.Error()).To(ContainSubstring(core.ERRORMSG_SERVICE_URL_MISSING))
+				Expect(response).To(BeNil())
+				Expect(result).To(BeNil())
+				// Construct a second instance of the GetResourcesQueryOptions model with no property values
+				getResourcesQueryOptionsModelNew := new(schematicsv1.GetResourcesQueryOptions)
+				// Invoke operation with invalid model (negative test)
+				result, response, operationErr = schematicsService.GetResourcesQuery(getResourcesQueryOptionsModelNew)
 				Expect(operationErr).ToNot(BeNil())
 				Expect(response).To(BeNil())
 				Expect(result).To(BeNil())
@@ -11528,31 +11268,13 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(externalSourceModel.SourceType).To(Equal(core.StringPtr("local")))
 				Expect(externalSourceModel.Git).To(Equal(externalSourceGitModel))
 
-				// Construct an instance of the SystemLock model
-				systemLockModel := new(schematicsv1.SystemLock)
-				Expect(systemLockModel).ToNot(BeNil())
-				systemLockModel.SysLocked = core.BoolPtr(true)
-				systemLockModel.SysLockedBy = core.StringPtr("testString")
-				systemLockModel.SysLockedAt = CreateMockDateTime()
-				Expect(systemLockModel.SysLocked).To(Equal(core.BoolPtr(true)))
-				Expect(systemLockModel.SysLockedBy).To(Equal(core.StringPtr("testString")))
-				Expect(systemLockModel.SysLockedAt).To(Equal(CreateMockDateTime()))
-
-				// Construct an instance of the TargetResourceset model
-				targetResourcesetModel := new(schematicsv1.TargetResourceset)
-				Expect(targetResourcesetModel).ToNot(BeNil())
-				targetResourcesetModel.Name = core.StringPtr("testString")
-				targetResourcesetModel.Type = core.StringPtr("testString")
-				targetResourcesetModel.Description = core.StringPtr("testString")
-				targetResourcesetModel.ResourceQuery = core.StringPtr("testString")
-				targetResourcesetModel.CredentialRef = core.StringPtr("testString")
-				targetResourcesetModel.SysLock = systemLockModel
-				Expect(targetResourcesetModel.Name).To(Equal(core.StringPtr("testString")))
-				Expect(targetResourcesetModel.Type).To(Equal(core.StringPtr("testString")))
-				Expect(targetResourcesetModel.Description).To(Equal(core.StringPtr("testString")))
-				Expect(targetResourcesetModel.ResourceQuery).To(Equal(core.StringPtr("testString")))
-				Expect(targetResourcesetModel.CredentialRef).To(Equal(core.StringPtr("testString")))
-				Expect(targetResourcesetModel.SysLock).To(Equal(systemLockModel))
+				// Construct an instance of the BastionResourceDefinition model
+				bastionResourceDefinitionModel := new(schematicsv1.BastionResourceDefinition)
+				Expect(bastionResourceDefinitionModel).ToNot(BeNil())
+				bastionResourceDefinitionModel.Name = core.StringPtr("testString")
+				bastionResourceDefinitionModel.Host = core.StringPtr("testString")
+				Expect(bastionResourceDefinitionModel.Name).To(Equal(core.StringPtr("testString")))
+				Expect(bastionResourceDefinitionModel.Host).To(Equal(core.StringPtr("testString")))
 
 				// Construct an instance of the VariableMetadata model
 				variableMetadataModel := new(schematicsv1.VariableMetadata)
@@ -11610,10 +11332,20 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(actionStateModel.StatusJobID).To(Equal(core.StringPtr("testString")))
 				Expect(actionStateModel.StatusMessage).To(Equal(core.StringPtr("testString")))
 
+				// Construct an instance of the SystemLock model
+				systemLockModel := new(schematicsv1.SystemLock)
+				Expect(systemLockModel).ToNot(BeNil())
+				systemLockModel.SysLocked = core.BoolPtr(true)
+				systemLockModel.SysLockedBy = core.StringPtr("testString")
+				systemLockModel.SysLockedAt = CreateMockDateTime()
+				Expect(systemLockModel.SysLocked).To(Equal(core.BoolPtr(true)))
+				Expect(systemLockModel.SysLockedBy).To(Equal(core.StringPtr("testString")))
+				Expect(systemLockModel.SysLockedAt).To(Equal(CreateMockDateTime()))
+
 				// Construct an instance of the CreateActionOptions model
 				createActionOptionsModel := schematicsService.NewCreateActionOptions()
 				createActionOptionsModel.SetName("Stop Action")
-				createActionOptionsModel.SetDescription("This Action can be used to Stop the targets")
+				createActionOptionsModel.SetDescription("This Action can be used to Stop the VSIs")
 				createActionOptionsModel.SetLocation("us_south")
 				createActionOptionsModel.SetResourceGroup("testString")
 				createActionOptionsModel.SetTags([]string{"testString"})
@@ -11622,8 +11354,8 @@ var _ = Describe(`SchematicsV1`, func() {
 				createActionOptionsModel.SetSource(externalSourceModel)
 				createActionOptionsModel.SetSourceType("local")
 				createActionOptionsModel.SetCommandParameter("testString")
-				createActionOptionsModel.SetBastion(targetResourcesetModel)
-				createActionOptionsModel.SetTargetsIni("testString")
+				createActionOptionsModel.SetBastion(bastionResourceDefinitionModel)
+				createActionOptionsModel.SetInventory("testString")
 				createActionOptionsModel.SetCredentials([]schematicsv1.VariableData{*variableDataModel})
 				createActionOptionsModel.SetInputs([]schematicsv1.VariableData{*variableDataModel})
 				createActionOptionsModel.SetOutputs([]schematicsv1.VariableData{*variableDataModel})
@@ -11635,7 +11367,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				createActionOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(createActionOptionsModel).ToNot(BeNil())
 				Expect(createActionOptionsModel.Name).To(Equal(core.StringPtr("Stop Action")))
-				Expect(createActionOptionsModel.Description).To(Equal(core.StringPtr("This Action can be used to Stop the targets")))
+				Expect(createActionOptionsModel.Description).To(Equal(core.StringPtr("This Action can be used to Stop the VSIs")))
 				Expect(createActionOptionsModel.Location).To(Equal(core.StringPtr("us_south")))
 				Expect(createActionOptionsModel.ResourceGroup).To(Equal(core.StringPtr("testString")))
 				Expect(createActionOptionsModel.Tags).To(Equal([]string{"testString"}))
@@ -11644,8 +11376,8 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(createActionOptionsModel.Source).To(Equal(externalSourceModel))
 				Expect(createActionOptionsModel.SourceType).To(Equal(core.StringPtr("local")))
 				Expect(createActionOptionsModel.CommandParameter).To(Equal(core.StringPtr("testString")))
-				Expect(createActionOptionsModel.Bastion).To(Equal(targetResourcesetModel))
-				Expect(createActionOptionsModel.TargetsIni).To(Equal(core.StringPtr("testString")))
+				Expect(createActionOptionsModel.Bastion).To(Equal(bastionResourceDefinitionModel))
+				Expect(createActionOptionsModel.Inventory).To(Equal(core.StringPtr("testString")))
 				Expect(createActionOptionsModel.Credentials).To(Equal([]schematicsv1.VariableData{*variableDataModel}))
 				Expect(createActionOptionsModel.Inputs).To(Equal([]schematicsv1.VariableData{*variableDataModel}))
 				Expect(createActionOptionsModel.Outputs).To(Equal([]schematicsv1.VariableData{*variableDataModel}))
@@ -11655,6 +11387,25 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(createActionOptionsModel.SysLock).To(Equal(systemLockModel))
 				Expect(createActionOptionsModel.XGithubToken).To(Equal(core.StringPtr("testString")))
 				Expect(createActionOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
+			It(`Invoke NewCreateInventoryOptions successfully`, func() {
+				// Construct an instance of the CreateInventoryOptions model
+				createInventoryOptionsModel := schematicsService.NewCreateInventoryOptions()
+				createInventoryOptionsModel.SetName("testString")
+				createInventoryOptionsModel.SetDescription("testString")
+				createInventoryOptionsModel.SetLocation("us_south")
+				createInventoryOptionsModel.SetResourceGroup("testString")
+				createInventoryOptionsModel.SetInventoriesIni("testString")
+				createInventoryOptionsModel.SetResourceQueries([]string{"testString"})
+				createInventoryOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(createInventoryOptionsModel).ToNot(BeNil())
+				Expect(createInventoryOptionsModel.Name).To(Equal(core.StringPtr("testString")))
+				Expect(createInventoryOptionsModel.Description).To(Equal(core.StringPtr("testString")))
+				Expect(createInventoryOptionsModel.Location).To(Equal(core.StringPtr("us_south")))
+				Expect(createInventoryOptionsModel.ResourceGroup).To(Equal(core.StringPtr("testString")))
+				Expect(createInventoryOptionsModel.InventoriesIni).To(Equal(core.StringPtr("testString")))
+				Expect(createInventoryOptionsModel.ResourceQueries).To(Equal([]string{"testString"}))
+				Expect(createInventoryOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewCreateJobOptions successfully`, func() {
 				// Construct an instance of the VariableMetadata model
@@ -11711,16 +11462,16 @@ var _ = Describe(`SchematicsV1`, func() {
 				jobStatusActionModel.StatusMessage = core.StringPtr("testString")
 				jobStatusActionModel.BastionStatusCode = core.StringPtr("none")
 				jobStatusActionModel.BastionStatusMessage = core.StringPtr("testString")
-				jobStatusActionModel.TargetsStatusCode = core.StringPtr("none")
-				jobStatusActionModel.TargetsStatusMessage = core.StringPtr("testString")
+				jobStatusActionModel.InventoryStatusCode = core.StringPtr("none")
+				jobStatusActionModel.InventoryStatusMessage = core.StringPtr("testString")
 				jobStatusActionModel.UpdatedAt = CreateMockDateTime()
 				Expect(jobStatusActionModel.ActionName).To(Equal(core.StringPtr("testString")))
 				Expect(jobStatusActionModel.StatusCode).To(Equal(core.StringPtr("job_pending")))
 				Expect(jobStatusActionModel.StatusMessage).To(Equal(core.StringPtr("testString")))
 				Expect(jobStatusActionModel.BastionStatusCode).To(Equal(core.StringPtr("none")))
 				Expect(jobStatusActionModel.BastionStatusMessage).To(Equal(core.StringPtr("testString")))
-				Expect(jobStatusActionModel.TargetsStatusCode).To(Equal(core.StringPtr("none")))
-				Expect(jobStatusActionModel.TargetsStatusMessage).To(Equal(core.StringPtr("testString")))
+				Expect(jobStatusActionModel.InventoryStatusCode).To(Equal(core.StringPtr("none")))
+				Expect(jobStatusActionModel.InventoryStatusMessage).To(Equal(core.StringPtr("testString")))
 				Expect(jobStatusActionModel.UpdatedAt).To(Equal(CreateMockDateTime()))
 
 				// Construct an instance of the JobStatus model
@@ -11728,6 +11479,20 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(jobStatusModel).ToNot(BeNil())
 				jobStatusModel.ActionJobStatus = jobStatusActionModel
 				Expect(jobStatusModel.ActionJobStatus).To(Equal(jobStatusActionModel))
+
+				// Construct an instance of the InventoryResourceRecord model
+				inventoryResourceRecordModel := new(schematicsv1.InventoryResourceRecord)
+				Expect(inventoryResourceRecordModel).ToNot(BeNil())
+				inventoryResourceRecordModel.Name = core.StringPtr("testString")
+				inventoryResourceRecordModel.Location = core.StringPtr("us_south")
+				inventoryResourceRecordModel.ResourceGroup = core.StringPtr("testString")
+				inventoryResourceRecordModel.InventoriesIni = core.StringPtr("testString")
+				inventoryResourceRecordModel.ResourceQueries = []string{"testString"}
+				Expect(inventoryResourceRecordModel.Name).To(Equal(core.StringPtr("testString")))
+				Expect(inventoryResourceRecordModel.Location).To(Equal(core.StringPtr("us_south")))
+				Expect(inventoryResourceRecordModel.ResourceGroup).To(Equal(core.StringPtr("testString")))
+				Expect(inventoryResourceRecordModel.InventoriesIni).To(Equal(core.StringPtr("testString")))
+				Expect(inventoryResourceRecordModel.ResourceQueries).To(Equal([]string{"testString"}))
 
 				// Construct an instance of the JobDataAction model
 				jobDataActionModel := new(schematicsv1.JobDataAction)
@@ -11737,11 +11502,15 @@ var _ = Describe(`SchematicsV1`, func() {
 				jobDataActionModel.Outputs = []schematicsv1.VariableData{*variableDataModel}
 				jobDataActionModel.Settings = []schematicsv1.VariableData{*variableDataModel}
 				jobDataActionModel.UpdatedAt = CreateMockDateTime()
+				jobDataActionModel.InventoryRecord = inventoryResourceRecordModel
+				jobDataActionModel.MaterializedInventory = core.StringPtr("testString")
 				Expect(jobDataActionModel.ActionName).To(Equal(core.StringPtr("testString")))
 				Expect(jobDataActionModel.Inputs).To(Equal([]schematicsv1.VariableData{*variableDataModel}))
 				Expect(jobDataActionModel.Outputs).To(Equal([]schematicsv1.VariableData{*variableDataModel}))
 				Expect(jobDataActionModel.Settings).To(Equal([]schematicsv1.VariableData{*variableDataModel}))
 				Expect(jobDataActionModel.UpdatedAt).To(Equal(CreateMockDateTime()))
+				Expect(jobDataActionModel.InventoryRecord).To(Equal(inventoryResourceRecordModel))
+				Expect(jobDataActionModel.MaterializedInventory).To(Equal(core.StringPtr("testString")))
 
 				// Construct an instance of the JobData model
 				jobDataModel := new(schematicsv1.JobData)
@@ -11751,31 +11520,13 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(jobDataModel.JobType).To(Equal(core.StringPtr("repo_download_job")))
 				Expect(jobDataModel.ActionJobData).To(Equal(jobDataActionModel))
 
-				// Construct an instance of the SystemLock model
-				systemLockModel := new(schematicsv1.SystemLock)
-				Expect(systemLockModel).ToNot(BeNil())
-				systemLockModel.SysLocked = core.BoolPtr(true)
-				systemLockModel.SysLockedBy = core.StringPtr("testString")
-				systemLockModel.SysLockedAt = CreateMockDateTime()
-				Expect(systemLockModel.SysLocked).To(Equal(core.BoolPtr(true)))
-				Expect(systemLockModel.SysLockedBy).To(Equal(core.StringPtr("testString")))
-				Expect(systemLockModel.SysLockedAt).To(Equal(CreateMockDateTime()))
-
-				// Construct an instance of the TargetResourceset model
-				targetResourcesetModel := new(schematicsv1.TargetResourceset)
-				Expect(targetResourcesetModel).ToNot(BeNil())
-				targetResourcesetModel.Name = core.StringPtr("testString")
-				targetResourcesetModel.Type = core.StringPtr("testString")
-				targetResourcesetModel.Description = core.StringPtr("testString")
-				targetResourcesetModel.ResourceQuery = core.StringPtr("testString")
-				targetResourcesetModel.CredentialRef = core.StringPtr("testString")
-				targetResourcesetModel.SysLock = systemLockModel
-				Expect(targetResourcesetModel.Name).To(Equal(core.StringPtr("testString")))
-				Expect(targetResourcesetModel.Type).To(Equal(core.StringPtr("testString")))
-				Expect(targetResourcesetModel.Description).To(Equal(core.StringPtr("testString")))
-				Expect(targetResourcesetModel.ResourceQuery).To(Equal(core.StringPtr("testString")))
-				Expect(targetResourcesetModel.CredentialRef).To(Equal(core.StringPtr("testString")))
-				Expect(targetResourcesetModel.SysLock).To(Equal(systemLockModel))
+				// Construct an instance of the BastionResourceDefinition model
+				bastionResourceDefinitionModel := new(schematicsv1.BastionResourceDefinition)
+				Expect(bastionResourceDefinitionModel).ToNot(BeNil())
+				bastionResourceDefinitionModel.Name = core.StringPtr("testString")
+				bastionResourceDefinitionModel.Host = core.StringPtr("testString")
+				Expect(bastionResourceDefinitionModel.Name).To(Equal(core.StringPtr("testString")))
+				Expect(bastionResourceDefinitionModel.Host).To(Equal(core.StringPtr("testString")))
 
 				// Construct an instance of the JobLogSummaryRepoDownloadJob model
 				jobLogSummaryRepoDownloadJobModel := new(schematicsv1.JobLogSummaryRepoDownloadJob)
@@ -11784,13 +11535,13 @@ var _ = Describe(`SchematicsV1`, func() {
 				// Construct an instance of the JobLogSummaryActionJobRecap model
 				jobLogSummaryActionJobRecapModel := new(schematicsv1.JobLogSummaryActionJobRecap)
 				Expect(jobLogSummaryActionJobRecapModel).ToNot(BeNil())
-				jobLogSummaryActionJobRecapModel.Target = []string{"testString"}
+				jobLogSummaryActionJobRecapModel.Hosts = []string{"testString"}
 				jobLogSummaryActionJobRecapModel.Ok = core.Float64Ptr(float64(72.5))
 				jobLogSummaryActionJobRecapModel.Changed = core.Float64Ptr(float64(72.5))
 				jobLogSummaryActionJobRecapModel.Failed = core.Float64Ptr(float64(72.5))
 				jobLogSummaryActionJobRecapModel.Skipped = core.Float64Ptr(float64(72.5))
 				jobLogSummaryActionJobRecapModel.Unreachable = core.Float64Ptr(float64(72.5))
-				Expect(jobLogSummaryActionJobRecapModel.Target).To(Equal([]string{"testString"}))
+				Expect(jobLogSummaryActionJobRecapModel.Hosts).To(Equal([]string{"testString"}))
 				Expect(jobLogSummaryActionJobRecapModel.Ok).To(Equal(core.Float64Ptr(float64(72.5))))
 				Expect(jobLogSummaryActionJobRecapModel.Changed).To(Equal(core.Float64Ptr(float64(72.5))))
 				Expect(jobLogSummaryActionJobRecapModel.Failed).To(Equal(core.Float64Ptr(float64(72.5))))
@@ -11828,7 +11579,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				createJobOptionsModel.SetLocation("us_south")
 				createJobOptionsModel.SetStatus(jobStatusModel)
 				createJobOptionsModel.SetData(jobDataModel)
-				createJobOptionsModel.SetBastion(targetResourcesetModel)
+				createJobOptionsModel.SetBastion(bastionResourceDefinitionModel)
 				createJobOptionsModel.SetLogSummary(jobLogSummaryModel)
 				createJobOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(createJobOptionsModel).ToNot(BeNil())
@@ -11844,9 +11595,42 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(createJobOptionsModel.Location).To(Equal(core.StringPtr("us_south")))
 				Expect(createJobOptionsModel.Status).To(Equal(jobStatusModel))
 				Expect(createJobOptionsModel.Data).To(Equal(jobDataModel))
-				Expect(createJobOptionsModel.Bastion).To(Equal(targetResourcesetModel))
+				Expect(createJobOptionsModel.Bastion).To(Equal(bastionResourceDefinitionModel))
 				Expect(createJobOptionsModel.LogSummary).To(Equal(jobLogSummaryModel))
 				Expect(createJobOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
+			It(`Invoke NewCreateResourceQueryOptions successfully`, func() {
+				// Construct an instance of the ResourceQueryParam model
+				resourceQueryParamModel := new(schematicsv1.ResourceQueryParam)
+				Expect(resourceQueryParamModel).ToNot(BeNil())
+				resourceQueryParamModel.Name = core.StringPtr("testString")
+				resourceQueryParamModel.Value = core.StringPtr("testString")
+				resourceQueryParamModel.Description = core.StringPtr("testString")
+				Expect(resourceQueryParamModel.Name).To(Equal(core.StringPtr("testString")))
+				Expect(resourceQueryParamModel.Value).To(Equal(core.StringPtr("testString")))
+				Expect(resourceQueryParamModel.Description).To(Equal(core.StringPtr("testString")))
+
+				// Construct an instance of the ResourceQuery model
+				resourceQueryModel := new(schematicsv1.ResourceQuery)
+				Expect(resourceQueryModel).ToNot(BeNil())
+				resourceQueryModel.QueryType = core.StringPtr("workspaces")
+				resourceQueryModel.QueryCondition = []schematicsv1.ResourceQueryParam{*resourceQueryParamModel}
+				resourceQueryModel.QuerySelect = []string{"testString"}
+				Expect(resourceQueryModel.QueryType).To(Equal(core.StringPtr("workspaces")))
+				Expect(resourceQueryModel.QueryCondition).To(Equal([]schematicsv1.ResourceQueryParam{*resourceQueryParamModel}))
+				Expect(resourceQueryModel.QuerySelect).To(Equal([]string{"testString"}))
+
+				// Construct an instance of the CreateResourceQueryOptions model
+				createResourceQueryOptionsModel := schematicsService.NewCreateResourceQueryOptions()
+				createResourceQueryOptionsModel.SetType("vsi")
+				createResourceQueryOptionsModel.SetName("testString")
+				createResourceQueryOptionsModel.SetQueries([]schematicsv1.ResourceQuery{*resourceQueryModel})
+				createResourceQueryOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(createResourceQueryOptionsModel).ToNot(BeNil())
+				Expect(createResourceQueryOptionsModel.Type).To(Equal(core.StringPtr("vsi")))
+				Expect(createResourceQueryOptionsModel.Name).To(Equal(core.StringPtr("testString")))
+				Expect(createResourceQueryOptionsModel.Queries).To(Equal([]schematicsv1.ResourceQuery{*resourceQueryModel}))
+				Expect(createResourceQueryOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewCreateSharedDatasetOptions successfully`, func() {
 				// Construct an instance of the SharedDatasetData model
@@ -12092,6 +11876,20 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(deleteActionOptionsModel.Propagate).To(Equal(core.BoolPtr(true)))
 				Expect(deleteActionOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
+			It(`Invoke NewDeleteInventoryOptions successfully`, func() {
+				// Construct an instance of the DeleteInventoryOptions model
+				inventoryID := "testString"
+				deleteInventoryOptionsModel := schematicsService.NewDeleteInventoryOptions(inventoryID)
+				deleteInventoryOptionsModel.SetInventoryID("testString")
+				deleteInventoryOptionsModel.SetForce(true)
+				deleteInventoryOptionsModel.SetPropagate(true)
+				deleteInventoryOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(deleteInventoryOptionsModel).ToNot(BeNil())
+				Expect(deleteInventoryOptionsModel.InventoryID).To(Equal(core.StringPtr("testString")))
+				Expect(deleteInventoryOptionsModel.Force).To(Equal(core.BoolPtr(true)))
+				Expect(deleteInventoryOptionsModel.Propagate).To(Equal(core.BoolPtr(true)))
+				Expect(deleteInventoryOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
 			It(`Invoke NewDeleteJobOptions successfully`, func() {
 				// Construct an instance of the DeleteJobOptions model
 				jobID := "testString"
@@ -12108,6 +11906,20 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(deleteJobOptionsModel.Force).To(Equal(core.BoolPtr(true)))
 				Expect(deleteJobOptionsModel.Propagate).To(Equal(core.BoolPtr(true)))
 				Expect(deleteJobOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
+			It(`Invoke NewDeleteResourcesQueryOptions successfully`, func() {
+				// Construct an instance of the DeleteResourcesQueryOptions model
+				queryID := "testString"
+				deleteResourcesQueryOptionsModel := schematicsService.NewDeleteResourcesQueryOptions(queryID)
+				deleteResourcesQueryOptionsModel.SetQueryID("testString")
+				deleteResourcesQueryOptionsModel.SetForce(true)
+				deleteResourcesQueryOptionsModel.SetPropagate(true)
+				deleteResourcesQueryOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(deleteResourcesQueryOptionsModel).ToNot(BeNil())
+				Expect(deleteResourcesQueryOptionsModel.QueryID).To(Equal(core.StringPtr("testString")))
+				Expect(deleteResourcesQueryOptionsModel.Force).To(Equal(core.BoolPtr(true)))
+				Expect(deleteResourcesQueryOptionsModel.Propagate).To(Equal(core.BoolPtr(true)))
+				Expect(deleteResourcesQueryOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewDeleteSharedDatasetOptions successfully`, func() {
 				// Construct an instance of the DeleteSharedDatasetOptions model
@@ -12170,6 +11982,16 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(destroyWorkspaceCommandOptionsModel.ActionOptions).To(Equal(workspaceActivityOptionsTemplateModel))
 				Expect(destroyWorkspaceCommandOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
+			It(`Invoke NewExecuteResourceQueryOptions successfully`, func() {
+				// Construct an instance of the ExecuteResourceQueryOptions model
+				queryID := "testString"
+				executeResourceQueryOptionsModel := schematicsService.NewExecuteResourceQueryOptions(queryID)
+				executeResourceQueryOptionsModel.SetQueryID("testString")
+				executeResourceQueryOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(executeResourceQueryOptionsModel).ToNot(BeNil())
+				Expect(executeResourceQueryOptionsModel.QueryID).To(Equal(core.StringPtr("testString")))
+				Expect(executeResourceQueryOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
 			It(`Invoke NewExternalSource successfully`, func() {
 				sourceType := "local"
 				model, err := schematicsService.NewExternalSource(sourceType)
@@ -12217,6 +12039,29 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(getDiscoveredKmsInstancesOptionsModel.Sort).To(Equal(core.StringPtr("testString")))
 				Expect(getDiscoveredKmsInstancesOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
+			It(`Invoke NewGetInventoryOptions successfully`, func() {
+				// Construct an instance of the GetInventoryOptions model
+				inventoryID := "testString"
+				getInventoryOptionsModel := schematicsService.NewGetInventoryOptions(inventoryID)
+				getInventoryOptionsModel.SetInventoryID("testString")
+				getInventoryOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(getInventoryOptionsModel).ToNot(BeNil())
+				Expect(getInventoryOptionsModel.InventoryID).To(Equal(core.StringPtr("testString")))
+				Expect(getInventoryOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
+			It(`Invoke NewGetInventoryValueOptions successfully`, func() {
+				// Construct an instance of the GetInventoryValueOptions model
+				inventoryID := "testString"
+				varName := "testString"
+				getInventoryValueOptionsModel := schematicsService.NewGetInventoryValueOptions(inventoryID, varName)
+				getInventoryValueOptionsModel.SetInventoryID("testString")
+				getInventoryValueOptionsModel.SetVarName("testString")
+				getInventoryValueOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(getInventoryValueOptionsModel).ToNot(BeNil())
+				Expect(getInventoryValueOptionsModel.InventoryID).To(Equal(core.StringPtr("testString")))
+				Expect(getInventoryValueOptionsModel.VarName).To(Equal(core.StringPtr("testString")))
+				Expect(getInventoryValueOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
 			It(`Invoke NewGetJobOptions successfully`, func() {
 				// Construct an instance of the GetJobOptions model
 				jobID := "testString"
@@ -12238,6 +12083,16 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(getKmsSettingsOptionsModel).ToNot(BeNil())
 				Expect(getKmsSettingsOptionsModel.Location).To(Equal(core.StringPtr("testString")))
 				Expect(getKmsSettingsOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
+			It(`Invoke NewGetResourcesQueryOptions successfully`, func() {
+				// Construct an instance of the GetResourcesQueryOptions model
+				queryID := "testString"
+				getResourcesQueryOptionsModel := schematicsService.NewGetResourcesQueryOptions(queryID)
+				getResourcesQueryOptionsModel.SetQueryID("testString")
+				getResourcesQueryOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(getResourcesQueryOptionsModel).ToNot(BeNil())
+				Expect(getResourcesQueryOptionsModel.QueryID).To(Equal(core.StringPtr("testString")))
+				Expect(getResourcesQueryOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewGetSchematicsVersionOptions successfully`, func() {
 				// Construct an instance of the GetSchematicsVersionOptions model
@@ -12461,6 +12316,31 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(listActionsOptionsModel.Profile).To(Equal(core.StringPtr("ids")))
 				Expect(listActionsOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
+			It(`Invoke NewListInventoriesOptions successfully`, func() {
+				// Construct an instance of the ListInventoriesOptions model
+				listInventoriesOptionsModel := schematicsService.NewListInventoriesOptions()
+				listInventoriesOptionsModel.SetOffset(int64(0))
+				listInventoriesOptionsModel.SetLimit(int64(1))
+				listInventoriesOptionsModel.SetSort("testString")
+				listInventoriesOptionsModel.SetProfile("ids")
+				listInventoriesOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(listInventoriesOptionsModel).ToNot(BeNil())
+				Expect(listInventoriesOptionsModel.Offset).To(Equal(core.Int64Ptr(int64(0))))
+				Expect(listInventoriesOptionsModel.Limit).To(Equal(core.Int64Ptr(int64(1))))
+				Expect(listInventoriesOptionsModel.Sort).To(Equal(core.StringPtr("testString")))
+				Expect(listInventoriesOptionsModel.Profile).To(Equal(core.StringPtr("ids")))
+				Expect(listInventoriesOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
+			It(`Invoke NewListInventoryValuesOptions successfully`, func() {
+				// Construct an instance of the ListInventoryValuesOptions model
+				inventoryID := "testString"
+				listInventoryValuesOptionsModel := schematicsService.NewListInventoryValuesOptions(inventoryID)
+				listInventoryValuesOptionsModel.SetInventoryID("testString")
+				listInventoryValuesOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(listInventoryValuesOptionsModel).ToNot(BeNil())
+				Expect(listInventoryValuesOptionsModel.InventoryID).To(Equal(core.StringPtr("testString")))
+				Expect(listInventoryValuesOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
 			It(`Invoke NewListJobLogsOptions successfully`, func() {
 				// Construct an instance of the ListJobLogsOptions model
 				jobID := "testString"
@@ -12508,6 +12388,21 @@ var _ = Describe(`SchematicsV1`, func() {
 				listResourceGroupOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(listResourceGroupOptionsModel).ToNot(BeNil())
 				Expect(listResourceGroupOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
+			It(`Invoke NewListResourceQueryOptions successfully`, func() {
+				// Construct an instance of the ListResourceQueryOptions model
+				listResourceQueryOptionsModel := schematicsService.NewListResourceQueryOptions()
+				listResourceQueryOptionsModel.SetOffset(int64(0))
+				listResourceQueryOptionsModel.SetLimit(int64(1))
+				listResourceQueryOptionsModel.SetSort("testString")
+				listResourceQueryOptionsModel.SetProfile("ids")
+				listResourceQueryOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(listResourceQueryOptionsModel).ToNot(BeNil())
+				Expect(listResourceQueryOptionsModel.Offset).To(Equal(core.Int64Ptr(int64(0))))
+				Expect(listResourceQueryOptionsModel.Limit).To(Equal(core.Int64Ptr(int64(1))))
+				Expect(listResourceQueryOptionsModel.Sort).To(Equal(core.StringPtr("testString")))
+				Expect(listResourceQueryOptionsModel.Profile).To(Equal(core.StringPtr("ids")))
+				Expect(listResourceQueryOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewListSchematicsLocationOptions successfully`, func() {
 				// Construct an instance of the ListSchematicsLocationOptions model
@@ -12574,6 +12469,28 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(refreshWorkspaceCommandOptionsModel.RefreshToken).To(Equal(core.StringPtr("testString")))
 				Expect(refreshWorkspaceCommandOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
+			It(`Invoke NewReplaceInventoryOptions successfully`, func() {
+				// Construct an instance of the ReplaceInventoryOptions model
+				inventoryID := "testString"
+				replaceInventoryOptionsModel := schematicsService.NewReplaceInventoryOptions(inventoryID)
+				replaceInventoryOptionsModel.SetInventoryID("testString")
+				replaceInventoryOptionsModel.SetName("testString")
+				replaceInventoryOptionsModel.SetDescription("testString")
+				replaceInventoryOptionsModel.SetLocation("us_south")
+				replaceInventoryOptionsModel.SetResourceGroup("testString")
+				replaceInventoryOptionsModel.SetInventoriesIni("testString")
+				replaceInventoryOptionsModel.SetResourceQueries([]string{"testString"})
+				replaceInventoryOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(replaceInventoryOptionsModel).ToNot(BeNil())
+				Expect(replaceInventoryOptionsModel.InventoryID).To(Equal(core.StringPtr("testString")))
+				Expect(replaceInventoryOptionsModel.Name).To(Equal(core.StringPtr("testString")))
+				Expect(replaceInventoryOptionsModel.Description).To(Equal(core.StringPtr("testString")))
+				Expect(replaceInventoryOptionsModel.Location).To(Equal(core.StringPtr("us_south")))
+				Expect(replaceInventoryOptionsModel.ResourceGroup).To(Equal(core.StringPtr("testString")))
+				Expect(replaceInventoryOptionsModel.InventoriesIni).To(Equal(core.StringPtr("testString")))
+				Expect(replaceInventoryOptionsModel.ResourceQueries).To(Equal([]string{"testString"}))
+				Expect(replaceInventoryOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
 			It(`Invoke NewReplaceJobOptions successfully`, func() {
 				// Construct an instance of the VariableMetadata model
 				variableMetadataModel := new(schematicsv1.VariableMetadata)
@@ -12629,16 +12546,16 @@ var _ = Describe(`SchematicsV1`, func() {
 				jobStatusActionModel.StatusMessage = core.StringPtr("testString")
 				jobStatusActionModel.BastionStatusCode = core.StringPtr("none")
 				jobStatusActionModel.BastionStatusMessage = core.StringPtr("testString")
-				jobStatusActionModel.TargetsStatusCode = core.StringPtr("none")
-				jobStatusActionModel.TargetsStatusMessage = core.StringPtr("testString")
+				jobStatusActionModel.InventoryStatusCode = core.StringPtr("none")
+				jobStatusActionModel.InventoryStatusMessage = core.StringPtr("testString")
 				jobStatusActionModel.UpdatedAt = CreateMockDateTime()
 				Expect(jobStatusActionModel.ActionName).To(Equal(core.StringPtr("testString")))
 				Expect(jobStatusActionModel.StatusCode).To(Equal(core.StringPtr("job_pending")))
 				Expect(jobStatusActionModel.StatusMessage).To(Equal(core.StringPtr("testString")))
 				Expect(jobStatusActionModel.BastionStatusCode).To(Equal(core.StringPtr("none")))
 				Expect(jobStatusActionModel.BastionStatusMessage).To(Equal(core.StringPtr("testString")))
-				Expect(jobStatusActionModel.TargetsStatusCode).To(Equal(core.StringPtr("none")))
-				Expect(jobStatusActionModel.TargetsStatusMessage).To(Equal(core.StringPtr("testString")))
+				Expect(jobStatusActionModel.InventoryStatusCode).To(Equal(core.StringPtr("none")))
+				Expect(jobStatusActionModel.InventoryStatusMessage).To(Equal(core.StringPtr("testString")))
 				Expect(jobStatusActionModel.UpdatedAt).To(Equal(CreateMockDateTime()))
 
 				// Construct an instance of the JobStatus model
@@ -12646,6 +12563,20 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(jobStatusModel).ToNot(BeNil())
 				jobStatusModel.ActionJobStatus = jobStatusActionModel
 				Expect(jobStatusModel.ActionJobStatus).To(Equal(jobStatusActionModel))
+
+				// Construct an instance of the InventoryResourceRecord model
+				inventoryResourceRecordModel := new(schematicsv1.InventoryResourceRecord)
+				Expect(inventoryResourceRecordModel).ToNot(BeNil())
+				inventoryResourceRecordModel.Name = core.StringPtr("testString")
+				inventoryResourceRecordModel.Location = core.StringPtr("us_south")
+				inventoryResourceRecordModel.ResourceGroup = core.StringPtr("testString")
+				inventoryResourceRecordModel.InventoriesIni = core.StringPtr("testString")
+				inventoryResourceRecordModel.ResourceQueries = []string{"testString"}
+				Expect(inventoryResourceRecordModel.Name).To(Equal(core.StringPtr("testString")))
+				Expect(inventoryResourceRecordModel.Location).To(Equal(core.StringPtr("us_south")))
+				Expect(inventoryResourceRecordModel.ResourceGroup).To(Equal(core.StringPtr("testString")))
+				Expect(inventoryResourceRecordModel.InventoriesIni).To(Equal(core.StringPtr("testString")))
+				Expect(inventoryResourceRecordModel.ResourceQueries).To(Equal([]string{"testString"}))
 
 				// Construct an instance of the JobDataAction model
 				jobDataActionModel := new(schematicsv1.JobDataAction)
@@ -12655,11 +12586,15 @@ var _ = Describe(`SchematicsV1`, func() {
 				jobDataActionModel.Outputs = []schematicsv1.VariableData{*variableDataModel}
 				jobDataActionModel.Settings = []schematicsv1.VariableData{*variableDataModel}
 				jobDataActionModel.UpdatedAt = CreateMockDateTime()
+				jobDataActionModel.InventoryRecord = inventoryResourceRecordModel
+				jobDataActionModel.MaterializedInventory = core.StringPtr("testString")
 				Expect(jobDataActionModel.ActionName).To(Equal(core.StringPtr("testString")))
 				Expect(jobDataActionModel.Inputs).To(Equal([]schematicsv1.VariableData{*variableDataModel}))
 				Expect(jobDataActionModel.Outputs).To(Equal([]schematicsv1.VariableData{*variableDataModel}))
 				Expect(jobDataActionModel.Settings).To(Equal([]schematicsv1.VariableData{*variableDataModel}))
 				Expect(jobDataActionModel.UpdatedAt).To(Equal(CreateMockDateTime()))
+				Expect(jobDataActionModel.InventoryRecord).To(Equal(inventoryResourceRecordModel))
+				Expect(jobDataActionModel.MaterializedInventory).To(Equal(core.StringPtr("testString")))
 
 				// Construct an instance of the JobData model
 				jobDataModel := new(schematicsv1.JobData)
@@ -12669,31 +12604,13 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(jobDataModel.JobType).To(Equal(core.StringPtr("repo_download_job")))
 				Expect(jobDataModel.ActionJobData).To(Equal(jobDataActionModel))
 
-				// Construct an instance of the SystemLock model
-				systemLockModel := new(schematicsv1.SystemLock)
-				Expect(systemLockModel).ToNot(BeNil())
-				systemLockModel.SysLocked = core.BoolPtr(true)
-				systemLockModel.SysLockedBy = core.StringPtr("testString")
-				systemLockModel.SysLockedAt = CreateMockDateTime()
-				Expect(systemLockModel.SysLocked).To(Equal(core.BoolPtr(true)))
-				Expect(systemLockModel.SysLockedBy).To(Equal(core.StringPtr("testString")))
-				Expect(systemLockModel.SysLockedAt).To(Equal(CreateMockDateTime()))
-
-				// Construct an instance of the TargetResourceset model
-				targetResourcesetModel := new(schematicsv1.TargetResourceset)
-				Expect(targetResourcesetModel).ToNot(BeNil())
-				targetResourcesetModel.Name = core.StringPtr("testString")
-				targetResourcesetModel.Type = core.StringPtr("testString")
-				targetResourcesetModel.Description = core.StringPtr("testString")
-				targetResourcesetModel.ResourceQuery = core.StringPtr("testString")
-				targetResourcesetModel.CredentialRef = core.StringPtr("testString")
-				targetResourcesetModel.SysLock = systemLockModel
-				Expect(targetResourcesetModel.Name).To(Equal(core.StringPtr("testString")))
-				Expect(targetResourcesetModel.Type).To(Equal(core.StringPtr("testString")))
-				Expect(targetResourcesetModel.Description).To(Equal(core.StringPtr("testString")))
-				Expect(targetResourcesetModel.ResourceQuery).To(Equal(core.StringPtr("testString")))
-				Expect(targetResourcesetModel.CredentialRef).To(Equal(core.StringPtr("testString")))
-				Expect(targetResourcesetModel.SysLock).To(Equal(systemLockModel))
+				// Construct an instance of the BastionResourceDefinition model
+				bastionResourceDefinitionModel := new(schematicsv1.BastionResourceDefinition)
+				Expect(bastionResourceDefinitionModel).ToNot(BeNil())
+				bastionResourceDefinitionModel.Name = core.StringPtr("testString")
+				bastionResourceDefinitionModel.Host = core.StringPtr("testString")
+				Expect(bastionResourceDefinitionModel.Name).To(Equal(core.StringPtr("testString")))
+				Expect(bastionResourceDefinitionModel.Host).To(Equal(core.StringPtr("testString")))
 
 				// Construct an instance of the JobLogSummaryRepoDownloadJob model
 				jobLogSummaryRepoDownloadJobModel := new(schematicsv1.JobLogSummaryRepoDownloadJob)
@@ -12702,13 +12619,13 @@ var _ = Describe(`SchematicsV1`, func() {
 				// Construct an instance of the JobLogSummaryActionJobRecap model
 				jobLogSummaryActionJobRecapModel := new(schematicsv1.JobLogSummaryActionJobRecap)
 				Expect(jobLogSummaryActionJobRecapModel).ToNot(BeNil())
-				jobLogSummaryActionJobRecapModel.Target = []string{"testString"}
+				jobLogSummaryActionJobRecapModel.Hosts = []string{"testString"}
 				jobLogSummaryActionJobRecapModel.Ok = core.Float64Ptr(float64(72.5))
 				jobLogSummaryActionJobRecapModel.Changed = core.Float64Ptr(float64(72.5))
 				jobLogSummaryActionJobRecapModel.Failed = core.Float64Ptr(float64(72.5))
 				jobLogSummaryActionJobRecapModel.Skipped = core.Float64Ptr(float64(72.5))
 				jobLogSummaryActionJobRecapModel.Unreachable = core.Float64Ptr(float64(72.5))
-				Expect(jobLogSummaryActionJobRecapModel.Target).To(Equal([]string{"testString"}))
+				Expect(jobLogSummaryActionJobRecapModel.Hosts).To(Equal([]string{"testString"}))
 				Expect(jobLogSummaryActionJobRecapModel.Ok).To(Equal(core.Float64Ptr(float64(72.5))))
 				Expect(jobLogSummaryActionJobRecapModel.Changed).To(Equal(core.Float64Ptr(float64(72.5))))
 				Expect(jobLogSummaryActionJobRecapModel.Failed).To(Equal(core.Float64Ptr(float64(72.5))))
@@ -12748,7 +12665,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				replaceJobOptionsModel.SetLocation("us_south")
 				replaceJobOptionsModel.SetStatus(jobStatusModel)
 				replaceJobOptionsModel.SetData(jobDataModel)
-				replaceJobOptionsModel.SetBastion(targetResourcesetModel)
+				replaceJobOptionsModel.SetBastion(bastionResourceDefinitionModel)
 				replaceJobOptionsModel.SetLogSummary(jobLogSummaryModel)
 				replaceJobOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
 				Expect(replaceJobOptionsModel).ToNot(BeNil())
@@ -12765,7 +12682,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(replaceJobOptionsModel.Location).To(Equal(core.StringPtr("us_south")))
 				Expect(replaceJobOptionsModel.Status).To(Equal(jobStatusModel))
 				Expect(replaceJobOptionsModel.Data).To(Equal(jobDataModel))
-				Expect(replaceJobOptionsModel.Bastion).To(Equal(targetResourcesetModel))
+				Expect(replaceJobOptionsModel.Bastion).To(Equal(bastionResourceDefinitionModel))
 				Expect(replaceJobOptionsModel.LogSummary).To(Equal(jobLogSummaryModel))
 				Expect(replaceJobOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
@@ -12805,6 +12722,42 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(replaceKmsSettingsOptionsModel.PrimaryCrk).To(Equal(kmsSettingsPrimaryCrkModel))
 				Expect(replaceKmsSettingsOptionsModel.SecondaryCrk).To(Equal(kmsSettingsSecondaryCrkModel))
 				Expect(replaceKmsSettingsOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
+			It(`Invoke NewReplaceResourcesQueryOptions successfully`, func() {
+				// Construct an instance of the ResourceQueryParam model
+				resourceQueryParamModel := new(schematicsv1.ResourceQueryParam)
+				Expect(resourceQueryParamModel).ToNot(BeNil())
+				resourceQueryParamModel.Name = core.StringPtr("testString")
+				resourceQueryParamModel.Value = core.StringPtr("testString")
+				resourceQueryParamModel.Description = core.StringPtr("testString")
+				Expect(resourceQueryParamModel.Name).To(Equal(core.StringPtr("testString")))
+				Expect(resourceQueryParamModel.Value).To(Equal(core.StringPtr("testString")))
+				Expect(resourceQueryParamModel.Description).To(Equal(core.StringPtr("testString")))
+
+				// Construct an instance of the ResourceQuery model
+				resourceQueryModel := new(schematicsv1.ResourceQuery)
+				Expect(resourceQueryModel).ToNot(BeNil())
+				resourceQueryModel.QueryType = core.StringPtr("workspaces")
+				resourceQueryModel.QueryCondition = []schematicsv1.ResourceQueryParam{*resourceQueryParamModel}
+				resourceQueryModel.QuerySelect = []string{"testString"}
+				Expect(resourceQueryModel.QueryType).To(Equal(core.StringPtr("workspaces")))
+				Expect(resourceQueryModel.QueryCondition).To(Equal([]schematicsv1.ResourceQueryParam{*resourceQueryParamModel}))
+				Expect(resourceQueryModel.QuerySelect).To(Equal([]string{"testString"}))
+
+				// Construct an instance of the ReplaceResourcesQueryOptions model
+				queryID := "testString"
+				replaceResourcesQueryOptionsModel := schematicsService.NewReplaceResourcesQueryOptions(queryID)
+				replaceResourcesQueryOptionsModel.SetQueryID("testString")
+				replaceResourcesQueryOptionsModel.SetType("vsi")
+				replaceResourcesQueryOptionsModel.SetName("testString")
+				replaceResourcesQueryOptionsModel.SetQueries([]schematicsv1.ResourceQuery{*resourceQueryModel})
+				replaceResourcesQueryOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(replaceResourcesQueryOptionsModel).ToNot(BeNil())
+				Expect(replaceResourcesQueryOptionsModel.QueryID).To(Equal(core.StringPtr("testString")))
+				Expect(replaceResourcesQueryOptionsModel.Type).To(Equal(core.StringPtr("vsi")))
+				Expect(replaceResourcesQueryOptionsModel.Name).To(Equal(core.StringPtr("testString")))
+				Expect(replaceResourcesQueryOptionsModel.Queries).To(Equal([]schematicsv1.ResourceQuery{*resourceQueryModel}))
+				Expect(replaceResourcesQueryOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewReplaceSharedDatasetOptions successfully`, func() {
 				// Construct an instance of the SharedDatasetData model
@@ -13125,31 +13078,13 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(externalSourceModel.SourceType).To(Equal(core.StringPtr("local")))
 				Expect(externalSourceModel.Git).To(Equal(externalSourceGitModel))
 
-				// Construct an instance of the SystemLock model
-				systemLockModel := new(schematicsv1.SystemLock)
-				Expect(systemLockModel).ToNot(BeNil())
-				systemLockModel.SysLocked = core.BoolPtr(true)
-				systemLockModel.SysLockedBy = core.StringPtr("testString")
-				systemLockModel.SysLockedAt = CreateMockDateTime()
-				Expect(systemLockModel.SysLocked).To(Equal(core.BoolPtr(true)))
-				Expect(systemLockModel.SysLockedBy).To(Equal(core.StringPtr("testString")))
-				Expect(systemLockModel.SysLockedAt).To(Equal(CreateMockDateTime()))
-
-				// Construct an instance of the TargetResourceset model
-				targetResourcesetModel := new(schematicsv1.TargetResourceset)
-				Expect(targetResourcesetModel).ToNot(BeNil())
-				targetResourcesetModel.Name = core.StringPtr("testString")
-				targetResourcesetModel.Type = core.StringPtr("testString")
-				targetResourcesetModel.Description = core.StringPtr("testString")
-				targetResourcesetModel.ResourceQuery = core.StringPtr("testString")
-				targetResourcesetModel.CredentialRef = core.StringPtr("testString")
-				targetResourcesetModel.SysLock = systemLockModel
-				Expect(targetResourcesetModel.Name).To(Equal(core.StringPtr("testString")))
-				Expect(targetResourcesetModel.Type).To(Equal(core.StringPtr("testString")))
-				Expect(targetResourcesetModel.Description).To(Equal(core.StringPtr("testString")))
-				Expect(targetResourcesetModel.ResourceQuery).To(Equal(core.StringPtr("testString")))
-				Expect(targetResourcesetModel.CredentialRef).To(Equal(core.StringPtr("testString")))
-				Expect(targetResourcesetModel.SysLock).To(Equal(systemLockModel))
+				// Construct an instance of the BastionResourceDefinition model
+				bastionResourceDefinitionModel := new(schematicsv1.BastionResourceDefinition)
+				Expect(bastionResourceDefinitionModel).ToNot(BeNil())
+				bastionResourceDefinitionModel.Name = core.StringPtr("testString")
+				bastionResourceDefinitionModel.Host = core.StringPtr("testString")
+				Expect(bastionResourceDefinitionModel.Name).To(Equal(core.StringPtr("testString")))
+				Expect(bastionResourceDefinitionModel.Host).To(Equal(core.StringPtr("testString")))
 
 				// Construct an instance of the VariableMetadata model
 				variableMetadataModel := new(schematicsv1.VariableMetadata)
@@ -13207,12 +13142,22 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(actionStateModel.StatusJobID).To(Equal(core.StringPtr("testString")))
 				Expect(actionStateModel.StatusMessage).To(Equal(core.StringPtr("testString")))
 
+				// Construct an instance of the SystemLock model
+				systemLockModel := new(schematicsv1.SystemLock)
+				Expect(systemLockModel).ToNot(BeNil())
+				systemLockModel.SysLocked = core.BoolPtr(true)
+				systemLockModel.SysLockedBy = core.StringPtr("testString")
+				systemLockModel.SysLockedAt = CreateMockDateTime()
+				Expect(systemLockModel.SysLocked).To(Equal(core.BoolPtr(true)))
+				Expect(systemLockModel.SysLockedBy).To(Equal(core.StringPtr("testString")))
+				Expect(systemLockModel.SysLockedAt).To(Equal(CreateMockDateTime()))
+
 				// Construct an instance of the UpdateActionOptions model
 				actionID := "testString"
 				updateActionOptionsModel := schematicsService.NewUpdateActionOptions(actionID)
 				updateActionOptionsModel.SetActionID("testString")
 				updateActionOptionsModel.SetName("Stop Action")
-				updateActionOptionsModel.SetDescription("This Action can be used to Stop the targets")
+				updateActionOptionsModel.SetDescription("This Action can be used to Stop the VSIs")
 				updateActionOptionsModel.SetLocation("us_south")
 				updateActionOptionsModel.SetResourceGroup("testString")
 				updateActionOptionsModel.SetTags([]string{"testString"})
@@ -13221,8 +13166,8 @@ var _ = Describe(`SchematicsV1`, func() {
 				updateActionOptionsModel.SetSource(externalSourceModel)
 				updateActionOptionsModel.SetSourceType("local")
 				updateActionOptionsModel.SetCommandParameter("testString")
-				updateActionOptionsModel.SetBastion(targetResourcesetModel)
-				updateActionOptionsModel.SetTargetsIni("testString")
+				updateActionOptionsModel.SetBastion(bastionResourceDefinitionModel)
+				updateActionOptionsModel.SetInventory("testString")
 				updateActionOptionsModel.SetCredentials([]schematicsv1.VariableData{*variableDataModel})
 				updateActionOptionsModel.SetInputs([]schematicsv1.VariableData{*variableDataModel})
 				updateActionOptionsModel.SetOutputs([]schematicsv1.VariableData{*variableDataModel})
@@ -13235,7 +13180,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(updateActionOptionsModel).ToNot(BeNil())
 				Expect(updateActionOptionsModel.ActionID).To(Equal(core.StringPtr("testString")))
 				Expect(updateActionOptionsModel.Name).To(Equal(core.StringPtr("Stop Action")))
-				Expect(updateActionOptionsModel.Description).To(Equal(core.StringPtr("This Action can be used to Stop the targets")))
+				Expect(updateActionOptionsModel.Description).To(Equal(core.StringPtr("This Action can be used to Stop the VSIs")))
 				Expect(updateActionOptionsModel.Location).To(Equal(core.StringPtr("us_south")))
 				Expect(updateActionOptionsModel.ResourceGroup).To(Equal(core.StringPtr("testString")))
 				Expect(updateActionOptionsModel.Tags).To(Equal([]string{"testString"}))
@@ -13244,8 +13189,8 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(updateActionOptionsModel.Source).To(Equal(externalSourceModel))
 				Expect(updateActionOptionsModel.SourceType).To(Equal(core.StringPtr("local")))
 				Expect(updateActionOptionsModel.CommandParameter).To(Equal(core.StringPtr("testString")))
-				Expect(updateActionOptionsModel.Bastion).To(Equal(targetResourcesetModel))
-				Expect(updateActionOptionsModel.TargetsIni).To(Equal(core.StringPtr("testString")))
+				Expect(updateActionOptionsModel.Bastion).To(Equal(bastionResourceDefinitionModel))
+				Expect(updateActionOptionsModel.Inventory).To(Equal(core.StringPtr("testString")))
 				Expect(updateActionOptionsModel.Credentials).To(Equal([]schematicsv1.VariableData{*variableDataModel}))
 				Expect(updateActionOptionsModel.Inputs).To(Equal([]schematicsv1.VariableData{*variableDataModel}))
 				Expect(updateActionOptionsModel.Outputs).To(Equal([]schematicsv1.VariableData{*variableDataModel}))
@@ -13255,6 +13200,28 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(updateActionOptionsModel.SysLock).To(Equal(systemLockModel))
 				Expect(updateActionOptionsModel.XGithubToken).To(Equal(core.StringPtr("testString")))
 				Expect(updateActionOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
+			It(`Invoke NewUpdateInventoryOptions successfully`, func() {
+				// Construct an instance of the UpdateInventoryOptions model
+				inventoryID := "testString"
+				updateInventoryOptionsModel := schematicsService.NewUpdateInventoryOptions(inventoryID)
+				updateInventoryOptionsModel.SetInventoryID("testString")
+				updateInventoryOptionsModel.SetName("testString")
+				updateInventoryOptionsModel.SetDescription("testString")
+				updateInventoryOptionsModel.SetLocation("us_south")
+				updateInventoryOptionsModel.SetResourceGroup("testString")
+				updateInventoryOptionsModel.SetInventoriesIni("testString")
+				updateInventoryOptionsModel.SetResourceQueries([]string{"testString"})
+				updateInventoryOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(updateInventoryOptionsModel).ToNot(BeNil())
+				Expect(updateInventoryOptionsModel.InventoryID).To(Equal(core.StringPtr("testString")))
+				Expect(updateInventoryOptionsModel.Name).To(Equal(core.StringPtr("testString")))
+				Expect(updateInventoryOptionsModel.Description).To(Equal(core.StringPtr("testString")))
+				Expect(updateInventoryOptionsModel.Location).To(Equal(core.StringPtr("us_south")))
+				Expect(updateInventoryOptionsModel.ResourceGroup).To(Equal(core.StringPtr("testString")))
+				Expect(updateInventoryOptionsModel.InventoriesIni).To(Equal(core.StringPtr("testString")))
+				Expect(updateInventoryOptionsModel.ResourceQueries).To(Equal([]string{"testString"}))
+				Expect(updateInventoryOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewUpdateWorkspaceOptions successfully`, func() {
 				// Construct an instance of the CatalogRef model
@@ -13403,6 +13370,20 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(updateWorkspaceOptionsModel.WorkspaceStatus).To(Equal(workspaceStatusUpdateRequestModel))
 				Expect(updateWorkspaceOptionsModel.WorkspaceStatusMsg).To(Equal(workspaceStatusMessageModel))
 				Expect(updateWorkspaceOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
+			})
+			It(`Invoke NewUploadTemplateTarActionOptions successfully`, func() {
+				// Construct an instance of the UploadTemplateTarActionOptions model
+				actionID := "testString"
+				uploadTemplateTarActionOptionsModel := schematicsService.NewUploadTemplateTarActionOptions(actionID)
+				uploadTemplateTarActionOptionsModel.SetActionID("testString")
+				uploadTemplateTarActionOptionsModel.SetFile(CreateMockReader("This is a mock file."))
+				uploadTemplateTarActionOptionsModel.SetFileContentType("testString")
+				uploadTemplateTarActionOptionsModel.SetHeaders(map[string]string{"foo": "bar"})
+				Expect(uploadTemplateTarActionOptionsModel).ToNot(BeNil())
+				Expect(uploadTemplateTarActionOptionsModel.ActionID).To(Equal(core.StringPtr("testString")))
+				Expect(uploadTemplateTarActionOptionsModel.File).To(Equal(CreateMockReader("This is a mock file.")))
+				Expect(uploadTemplateTarActionOptionsModel.FileContentType).To(Equal(core.StringPtr("testString")))
+				Expect(uploadTemplateTarActionOptionsModel.Headers).To(Equal(map[string]string{"foo": "bar"}))
 			})
 			It(`Invoke NewUploadTemplateTarOptions successfully`, func() {
 				// Construct an instance of the UploadTemplateTarOptions model
