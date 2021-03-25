@@ -26,7 +26,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/IBM/go-sdk-core/v4/core"
-	common "github.com/IBM/schematics-go-sdk/common"
+	common "github.com/Praveengostu/schematics-go-sdk/common"
 	"github.com/go-openapi/strfmt"
 	"io"
 	"reflect"
