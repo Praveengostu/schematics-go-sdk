@@ -1,6 +1,8 @@
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/IBM/go-sdk-core/v4 v4.8.1 h1:gFcQcQGOoHg+8pNILVTgGMh77SG756XkOatv/gs2VTg=
 github.com/IBM/go-sdk-core/v4 v4.8.1/go.mod h1:GECJ/p0r9Hs0XcOnCiGjZrt6M/rQc+gW8YkCsGJ+j5U=
+github.com/IBM/schematics-go-sdk v0.0.2 h1:IFdM73VL3xwf/KaTh1IY99hkiTfFRYg5F1JNj69FOEg=
+github.com/IBM/schematics-go-sdk v0.0.2/go.mod h1:ymN1+3uEaWNT0RthwHzExxMiN0AnTh6W3piSY8canjs=
 github.com/asaskevich/govalidator v0.0.0-20190424111038-f61b66f89f4a h1:idn718Q4B6AGu/h5Sxe66HYVdqdGu2l9Iebqhi/AEoA=
 github.com/asaskevich/govalidator v0.0.0-20190424111038-f61b66f89f4a/go.mod h1:lB+ZfQJz7igIIfQNfa7Ml4HSf2uFQQRzpGGRXenZAgY=
 github.com/aws/aws-sdk-go v1.34.28/go.mod h1:H7NKnBqNVzoTJpGfLrQkkD+ytBA93eiDYi/+8rV9s48=

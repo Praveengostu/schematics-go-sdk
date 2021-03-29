@@ -20,7 +20,7 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/IBM/go-sdk-core/v4/core"
-	"github.com/IBM/schematics-go-sdk/schematicsv1"
+	"github.com/Praveengostu/schematics-go-sdk/schematicsv1"
 	"github.com/go-openapi/strfmt"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
