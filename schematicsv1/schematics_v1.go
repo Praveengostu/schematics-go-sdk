@@ -2090,6 +2090,9 @@ func (schematics *SchematicsV1) CreateAction(createActionOptions *CreateActionOp
 	if createActionOptions.Inventory != nil {
 		body["inventory"] = createActionOptions.Inventory
 	}
+	if createActionOptions.BastionCredential != nil {
+		body["bastion_credential"] = createActionOptions.BastionCredential
+	}
 	if createActionOptions.Credentials != nil {
 		body["credentials"] = createActionOptions.Credentials
 	}
@@ -2101,9 +2104,6 @@ func (schematics *SchematicsV1) CreateAction(createActionOptions *CreateActionOp
 	}
 	if createActionOptions.Settings != nil {
 		body["settings"] = createActionOptions.Settings
-	}
-	if createActionOptions.TriggerRecordID != nil {
-		body["trigger_record_id"] = createActionOptions.TriggerRecordID
 	}
 	if createActionOptions.State != nil {
 		body["state"] = createActionOptions.State
@@ -2366,6 +2366,9 @@ func (schematics *SchematicsV1) UpdateAction(updateActionOptions *UpdateActionOp
 	if updateActionOptions.Inventory != nil {
 		body["inventory"] = updateActionOptions.Inventory
 	}
+	if updateActionOptions.BastionCredential != nil {
+		body["bastion_credential"] = updateActionOptions.BastionCredential
+	}
 	if updateActionOptions.Credentials != nil {
 		body["credentials"] = updateActionOptions.Credentials
 	}
@@ -2377,9 +2380,6 @@ func (schematics *SchematicsV1) UpdateAction(updateActionOptions *UpdateActionOp
 	}
 	if updateActionOptions.Settings != nil {
 		body["settings"] = updateActionOptions.Settings
-	}
-	if updateActionOptions.TriggerRecordID != nil {
-		body["trigger_record_id"] = updateActionOptions.TriggerRecordID
 	}
 	if updateActionOptions.State != nil {
 		body["state"] = updateActionOptions.State
@@ -4279,7 +4279,7 @@ type Action struct {
 	// Type of source for the Template.
 	SourceType *string `json:"source_type,omitempty"`
 
-	// Schematics job command parameter (playbook-name, capsule-name or flow-name).
+	// Schematics job command parameter (playbook-name).
 	CommandParameter *string `json:"command_parameter,omitempty"`
 
 	// Describes a bastion resource.
@@ -4287,6 +4287,9 @@ type Action struct {
 
 	// Inventory ID.
 	Inventory *string `json:"inventory,omitempty"`
+
+	// User editable variable data & system generated reference to value.
+	BastionCredential *VariableData `json:"bastion_credential,omitempty"`
 
 	// credentials of the Action.
 	Credentials []VariableData `json:"credentials,omitempty"`
@@ -4299,9 +4302,6 @@ type Action struct {
 
 	// Environment variables for the Action.
 	Settings []VariableData `json:"settings,omitempty"`
-
-	// Id to the Trigger.
-	TriggerRecordID *string `json:"trigger_record_id,omitempty"`
 
 	// Action Id.
 	ID *string `json:"id,omitempty"`
@@ -4336,9 +4336,6 @@ type Action struct {
 	// Email address of user who updated the action.
 	UpdatedBy *string `json:"updated_by,omitempty"`
 
-	// name of the namespace.
-	Namespace *string `json:"namespace,omitempty"`
-
 	// Computed state of the Action.
 	State *ActionState `json:"state,omitempty"`
 
@@ -4353,10 +4350,10 @@ type Action struct {
 // List of workspace locations supported by IBM Cloud Schematics service.  Note, this does not limit the location of the
 // resources provisioned using Schematics.
 const (
-	Action_Location_EuDe = "eu_de"
-	Action_Location_EuGb = "eu_gb"
-	Action_Location_UsEast = "us_east"
-	Action_Location_UsSouth = "us_south"
+	Action_Location_EuDe = "eu-de"
+	Action_Location_EuGb = "eu-gb"
+	Action_Location_UsEast = "us-east"
+	Action_Location_UsSouth = "us-south"
 )
 
 // Constants associated with the Action.SourceType property.
@@ -4423,6 +4420,10 @@ func UnmarshalAction(m map[string]json.RawMessage, result interface{}) (err erro
 	if err != nil {
 		return
 	}
+	err = core.UnmarshalModel(m, "bastion_credential", &obj.BastionCredential, UnmarshalVariableData)
+	if err != nil {
+		return
+	}
 	err = core.UnmarshalModel(m, "credentials", &obj.Credentials, UnmarshalVariableData)
 	if err != nil {
 		return
@@ -4436,10 +4437,6 @@ func UnmarshalAction(m map[string]json.RawMessage, result interface{}) (err erro
 		return
 	}
 	err = core.UnmarshalModel(m, "settings", &obj.Settings, UnmarshalVariableData)
-	if err != nil {
-		return
-	}
-	err = core.UnmarshalPrimitive(m, "trigger_record_id", &obj.TriggerRecordID)
 	if err != nil {
 		return
 	}
@@ -4484,10 +4481,6 @@ func UnmarshalAction(m map[string]json.RawMessage, result interface{}) (err erro
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "updated_by", &obj.UpdatedBy)
-	if err != nil {
-		return
-	}
-	err = core.UnmarshalPrimitive(m, "namespace", &obj.Namespace)
 	if err != nil {
 		return
 	}
@@ -4602,10 +4595,10 @@ type ActionLite struct {
 // List of workspace locations supported by IBM Cloud Schematics service.  Note, this does not limit the location of the
 // resources provisioned using Schematics.
 const (
-	ActionLite_Location_EuDe = "eu_de"
-	ActionLite_Location_EuGb = "eu_gb"
-	ActionLite_Location_UsEast = "us_east"
-	ActionLite_Location_UsSouth = "us_south"
+	ActionLite_Location_EuDe = "eu-de"
+	ActionLite_Location_EuGb = "eu-gb"
+	ActionLite_Location_UsEast = "us-east"
+	ActionLite_Location_UsSouth = "us-south"
 )
 
 
@@ -4925,7 +4918,7 @@ type CreateActionOptions struct {
 	// Type of source for the Template.
 	SourceType *string `json:"source_type,omitempty"`
 
-	// Schematics job command parameter (playbook-name, capsule-name or flow-name).
+	// Schematics job command parameter (playbook-name).
 	CommandParameter *string `json:"command_parameter,omitempty"`
 
 	// Describes a bastion resource.
@@ -4933,6 +4926,9 @@ type CreateActionOptions struct {
 
 	// Inventory ID.
 	Inventory *string `json:"inventory,omitempty"`
+
+	// User editable variable data & system generated reference to value.
+	BastionCredential *VariableData `json:"bastion_credential,omitempty"`
 
 	// credentials of the Action.
 	Credentials []VariableData `json:"credentials,omitempty"`
@@ -4945,9 +4941,6 @@ type CreateActionOptions struct {
 
 	// Environment variables for the Action.
 	Settings []VariableData `json:"settings,omitempty"`
-
-	// Id to the Trigger.
-	TriggerRecordID *string `json:"trigger_record_id,omitempty"`
 
 	// Computed state of the Action.
 	State *ActionState `json:"state,omitempty"`
@@ -4966,10 +4959,10 @@ type CreateActionOptions struct {
 // List of workspace locations supported by IBM Cloud Schematics service.  Note, this does not limit the location of the
 // resources provisioned using Schematics.
 const (
-	CreateActionOptions_Location_EuDe = "eu_de"
-	CreateActionOptions_Location_EuGb = "eu_gb"
-	CreateActionOptions_Location_UsEast = "us_east"
-	CreateActionOptions_Location_UsSouth = "us_south"
+	CreateActionOptions_Location_EuDe = "eu-de"
+	CreateActionOptions_Location_EuGb = "eu-gb"
+	CreateActionOptions_Location_UsEast = "us-east"
+	CreateActionOptions_Location_UsSouth = "us-south"
 )
 
 // Constants associated with the CreateActionOptions.SourceType property.
@@ -5061,6 +5054,12 @@ func (options *CreateActionOptions) SetInventory(inventory string) *CreateAction
 	return options
 }
 
+// SetBastionCredential : Allow user to set BastionCredential
+func (options *CreateActionOptions) SetBastionCredential(bastionCredential *VariableData) *CreateActionOptions {
+	options.BastionCredential = bastionCredential
+	return options
+}
+
 // SetCredentials : Allow user to set Credentials
 func (options *CreateActionOptions) SetCredentials(credentials []VariableData) *CreateActionOptions {
 	options.Credentials = credentials
@@ -5082,12 +5081,6 @@ func (options *CreateActionOptions) SetOutputs(outputs []VariableData) *CreateAc
 // SetSettings : Allow user to set Settings
 func (options *CreateActionOptions) SetSettings(settings []VariableData) *CreateActionOptions {
 	options.Settings = settings
-	return options
-}
-
-// SetTriggerRecordID : Allow user to set TriggerRecordID
-func (options *CreateActionOptions) SetTriggerRecordID(triggerRecordID string) *CreateActionOptions {
-	options.TriggerRecordID = core.StringPtr(triggerRecordID)
 	return options
 }
 
@@ -5144,10 +5137,10 @@ type CreateInventoryOptions struct {
 // List of workspace locations supported by IBM Cloud Schematics service.  Note, this does not limit the location of the
 // resources provisioned using Schematics.
 const (
-	CreateInventoryOptions_Location_EuDe = "eu_de"
-	CreateInventoryOptions_Location_EuGb = "eu_gb"
-	CreateInventoryOptions_Location_UsEast = "us_east"
-	CreateInventoryOptions_Location_UsSouth = "us_south"
+	CreateInventoryOptions_Location_EuDe = "eu-de"
+	CreateInventoryOptions_Location_EuGb = "eu-gb"
+	CreateInventoryOptions_Location_UsEast = "us-east"
+	CreateInventoryOptions_Location_UsSouth = "us-south"
 )
 
 // NewCreateInventoryOptions : Instantiate CreateInventoryOptions
@@ -5205,7 +5198,7 @@ type CreateJobOptions struct {
 	// Name of the Schematics automation resource.
 	CommandObject *string `json:"command_object,omitempty"`
 
-	// Job command object id (workspace-id, action-id or control-id).
+	// Job command object id (workspace-id, action-id).
 	CommandObjectID *string `json:"command_object_id,omitempty"`
 
 	// Schematics job command name.
@@ -5258,34 +5251,16 @@ const (
 const (
 	CreateJobOptions_CommandName_AnsiblePlaybookCheck = "ansible_playbook_check"
 	CreateJobOptions_CommandName_AnsiblePlaybookRun = "ansible_playbook_run"
-	CreateJobOptions_CommandName_HelmInstall = "helm_install"
-	CreateJobOptions_CommandName_HelmList = "helm_list"
-	CreateJobOptions_CommandName_HelmShow = "helm_show"
-	CreateJobOptions_CommandName_OpaEvaluate = "opa_evaluate"
-	CreateJobOptions_CommandName_TerraformInit = "terraform_init"
-	CreateJobOptions_CommandName_TerrformApply = "terrform_apply"
-	CreateJobOptions_CommandName_TerrformDestroy = "terrform_destroy"
-	CreateJobOptions_CommandName_TerrformPlan = "terrform_plan"
-	CreateJobOptions_CommandName_TerrformRefresh = "terrform_refresh"
-	CreateJobOptions_CommandName_TerrformShow = "terrform_show"
-	CreateJobOptions_CommandName_TerrformTaint = "terrform_taint"
-	CreateJobOptions_CommandName_WorkspaceApplyFlow = "workspace_apply_flow"
-	CreateJobOptions_CommandName_WorkspaceCustomFlow = "workspace_custom_flow"
-	CreateJobOptions_CommandName_WorkspaceDestroyFlow = "workspace_destroy_flow"
-	CreateJobOptions_CommandName_WorkspaceInitFlow = "workspace_init_flow"
-	CreateJobOptions_CommandName_WorkspacePlanFlow = "workspace_plan_flow"
-	CreateJobOptions_CommandName_WorkspaceRefreshFlow = "workspace_refresh_flow"
-	CreateJobOptions_CommandName_WorkspaceShowFlow = "workspace_show_flow"
 )
 
 // Constants associated with the CreateJobOptions.Location property.
 // List of workspace locations supported by IBM Cloud Schematics service.  Note, this does not limit the location of the
 // resources provisioned using Schematics.
 const (
-	CreateJobOptions_Location_EuDe = "eu_de"
-	CreateJobOptions_Location_EuGb = "eu_gb"
-	CreateJobOptions_Location_UsEast = "us_east"
-	CreateJobOptions_Location_UsSouth = "us_south"
+	CreateJobOptions_Location_EuDe = "eu-de"
+	CreateJobOptions_Location_EuGb = "eu-gb"
+	CreateJobOptions_Location_UsEast = "us-east"
+	CreateJobOptions_Location_UsSouth = "us-south"
 )
 
 // NewCreateJobOptions : Instantiate CreateJobOptions
@@ -7235,6 +7210,9 @@ type InventoryResourceRecord struct {
 	// Inventory id.
 	ID *string `json:"id,omitempty"`
 
+	// Inventory description.
+	Description *string `json:"description,omitempty"`
+
 	// List of workspace locations supported by IBM Cloud Schematics service.  Note, this does not limit the location of
 	// the resources provisioned using Schematics.
 	Location *string `json:"location,omitempty"`
@@ -7265,10 +7243,10 @@ type InventoryResourceRecord struct {
 // List of workspace locations supported by IBM Cloud Schematics service.  Note, this does not limit the location of the
 // resources provisioned using Schematics.
 const (
-	InventoryResourceRecord_Location_EuDe = "eu_de"
-	InventoryResourceRecord_Location_EuGb = "eu_gb"
-	InventoryResourceRecord_Location_UsEast = "us_east"
-	InventoryResourceRecord_Location_UsSouth = "us_south"
+	InventoryResourceRecord_Location_EuDe = "eu-de"
+	InventoryResourceRecord_Location_EuGb = "eu-gb"
+	InventoryResourceRecord_Location_UsEast = "us-east"
+	InventoryResourceRecord_Location_UsSouth = "us-south"
 )
 
 
@@ -7280,6 +7258,10 @@ func UnmarshalInventoryResourceRecord(m map[string]json.RawMessage, result inter
 		return
 	}
 	err = core.UnmarshalPrimitive(m, "id", &obj.ID)
+	if err != nil {
+		return
+	}
+	err = core.UnmarshalPrimitive(m, "description", &obj.Description)
 	if err != nil {
 		return
 	}
@@ -7363,7 +7345,7 @@ type Job struct {
 	// Name of the Schematics automation resource.
 	CommandObject *string `json:"command_object,omitempty"`
 
-	// Job command object id (workspace-id, action-id or control-id).
+	// Job command object id (workspace-id, action-id).
 	CommandObjectID *string `json:"command_object_id,omitempty"`
 
 	// Schematics job command name.
@@ -7452,34 +7434,16 @@ const (
 const (
 	Job_CommandName_AnsiblePlaybookCheck = "ansible_playbook_check"
 	Job_CommandName_AnsiblePlaybookRun = "ansible_playbook_run"
-	Job_CommandName_HelmInstall = "helm_install"
-	Job_CommandName_HelmList = "helm_list"
-	Job_CommandName_HelmShow = "helm_show"
-	Job_CommandName_OpaEvaluate = "opa_evaluate"
-	Job_CommandName_TerraformInit = "terraform_init"
-	Job_CommandName_TerrformApply = "terrform_apply"
-	Job_CommandName_TerrformDestroy = "terrform_destroy"
-	Job_CommandName_TerrformPlan = "terrform_plan"
-	Job_CommandName_TerrformRefresh = "terrform_refresh"
-	Job_CommandName_TerrformShow = "terrform_show"
-	Job_CommandName_TerrformTaint = "terrform_taint"
-	Job_CommandName_WorkspaceApplyFlow = "workspace_apply_flow"
-	Job_CommandName_WorkspaceCustomFlow = "workspace_custom_flow"
-	Job_CommandName_WorkspaceDestroyFlow = "workspace_destroy_flow"
-	Job_CommandName_WorkspaceInitFlow = "workspace_init_flow"
-	Job_CommandName_WorkspacePlanFlow = "workspace_plan_flow"
-	Job_CommandName_WorkspaceRefreshFlow = "workspace_refresh_flow"
-	Job_CommandName_WorkspaceShowFlow = "workspace_show_flow"
 )
 
 // Constants associated with the Job.Location property.
 // List of workspace locations supported by IBM Cloud Schematics service.  Note, this does not limit the location of the
 // resources provisioned using Schematics.
 const (
-	Job_Location_EuDe = "eu_de"
-	Job_Location_EuGb = "eu_gb"
-	Job_Location_UsEast = "us_east"
-	Job_Location_UsSouth = "us_south"
+	Job_Location_EuDe = "eu-de"
+	Job_Location_EuGb = "eu-gb"
+	Job_Location_UsEast = "us-east"
+	Job_Location_UsSouth = "us-south"
 )
 
 
@@ -7801,34 +7765,16 @@ const (
 const (
 	JobLite_CommandName_AnsiblePlaybookCheck = "ansible_playbook_check"
 	JobLite_CommandName_AnsiblePlaybookRun = "ansible_playbook_run"
-	JobLite_CommandName_HelmInstall = "helm_install"
-	JobLite_CommandName_HelmList = "helm_list"
-	JobLite_CommandName_HelmShow = "helm_show"
-	JobLite_CommandName_OpaEvaluate = "opa_evaluate"
-	JobLite_CommandName_TerraformInit = "terraform_init"
-	JobLite_CommandName_TerrformApply = "terrform_apply"
-	JobLite_CommandName_TerrformDestroy = "terrform_destroy"
-	JobLite_CommandName_TerrformPlan = "terrform_plan"
-	JobLite_CommandName_TerrformRefresh = "terrform_refresh"
-	JobLite_CommandName_TerrformShow = "terrform_show"
-	JobLite_CommandName_TerrformTaint = "terrform_taint"
-	JobLite_CommandName_WorkspaceApplyFlow = "workspace_apply_flow"
-	JobLite_CommandName_WorkspaceCustomFlow = "workspace_custom_flow"
-	JobLite_CommandName_WorkspaceDestroyFlow = "workspace_destroy_flow"
-	JobLite_CommandName_WorkspaceInitFlow = "workspace_init_flow"
-	JobLite_CommandName_WorkspacePlanFlow = "workspace_plan_flow"
-	JobLite_CommandName_WorkspaceRefreshFlow = "workspace_refresh_flow"
-	JobLite_CommandName_WorkspaceShowFlow = "workspace_show_flow"
 )
 
 // Constants associated with the JobLite.Location property.
 // List of workspace locations supported by IBM Cloud Schematics service.  Note, this does not limit the location of the
 // resources provisioned using Schematics.
 const (
-	JobLite_Location_EuDe = "eu_de"
-	JobLite_Location_EuGb = "eu_gb"
-	JobLite_Location_UsEast = "us_east"
-	JobLite_Location_UsSouth = "us_south"
+	JobLite_Location_EuDe = "eu-de"
+	JobLite_Location_EuGb = "eu-gb"
+	JobLite_Location_UsEast = "us-east"
+	JobLite_Location_UsSouth = "us-south"
 )
 
 
@@ -8000,8 +7946,6 @@ type JobLogSummary struct {
 // Type of Job.
 const (
 	JobLogSummary_JobType_ActionJob = "action_job"
-	JobLogSummary_JobType_CapsuleJob = "capsule_job"
-	JobLogSummary_JobType_ControlsJob = "controls_job"
 	JobLogSummary_JobType_RepoDownloadJob = "repo_download_job"
 	JobLogSummary_JobType_WorkspaceJob = "workspace_job"
 )
@@ -9506,10 +9450,10 @@ type ReplaceInventoryOptions struct {
 // List of workspace locations supported by IBM Cloud Schematics service.  Note, this does not limit the location of the
 // resources provisioned using Schematics.
 const (
-	ReplaceInventoryOptions_Location_EuDe = "eu_de"
-	ReplaceInventoryOptions_Location_EuGb = "eu_gb"
-	ReplaceInventoryOptions_Location_UsEast = "us_east"
-	ReplaceInventoryOptions_Location_UsSouth = "us_south"
+	ReplaceInventoryOptions_Location_EuDe = "eu-de"
+	ReplaceInventoryOptions_Location_EuGb = "eu-gb"
+	ReplaceInventoryOptions_Location_UsEast = "us-east"
+	ReplaceInventoryOptions_Location_UsSouth = "us-south"
 )
 
 // NewReplaceInventoryOptions : Instantiate ReplaceInventoryOptions
@@ -9578,7 +9522,7 @@ type ReplaceJobOptions struct {
 	// Name of the Schematics automation resource.
 	CommandObject *string `json:"command_object,omitempty"`
 
-	// Job command object id (workspace-id, action-id or control-id).
+	// Job command object id (workspace-id, action-id).
 	CommandObjectID *string `json:"command_object_id,omitempty"`
 
 	// Schematics job command name.
@@ -9631,34 +9575,16 @@ const (
 const (
 	ReplaceJobOptions_CommandName_AnsiblePlaybookCheck = "ansible_playbook_check"
 	ReplaceJobOptions_CommandName_AnsiblePlaybookRun = "ansible_playbook_run"
-	ReplaceJobOptions_CommandName_HelmInstall = "helm_install"
-	ReplaceJobOptions_CommandName_HelmList = "helm_list"
-	ReplaceJobOptions_CommandName_HelmShow = "helm_show"
-	ReplaceJobOptions_CommandName_OpaEvaluate = "opa_evaluate"
-	ReplaceJobOptions_CommandName_TerraformInit = "terraform_init"
-	ReplaceJobOptions_CommandName_TerrformApply = "terrform_apply"
-	ReplaceJobOptions_CommandName_TerrformDestroy = "terrform_destroy"
-	ReplaceJobOptions_CommandName_TerrformPlan = "terrform_plan"
-	ReplaceJobOptions_CommandName_TerrformRefresh = "terrform_refresh"
-	ReplaceJobOptions_CommandName_TerrformShow = "terrform_show"
-	ReplaceJobOptions_CommandName_TerrformTaint = "terrform_taint"
-	ReplaceJobOptions_CommandName_WorkspaceApplyFlow = "workspace_apply_flow"
-	ReplaceJobOptions_CommandName_WorkspaceCustomFlow = "workspace_custom_flow"
-	ReplaceJobOptions_CommandName_WorkspaceDestroyFlow = "workspace_destroy_flow"
-	ReplaceJobOptions_CommandName_WorkspaceInitFlow = "workspace_init_flow"
-	ReplaceJobOptions_CommandName_WorkspacePlanFlow = "workspace_plan_flow"
-	ReplaceJobOptions_CommandName_WorkspaceRefreshFlow = "workspace_refresh_flow"
-	ReplaceJobOptions_CommandName_WorkspaceShowFlow = "workspace_show_flow"
 )
 
 // Constants associated with the ReplaceJobOptions.Location property.
 // List of workspace locations supported by IBM Cloud Schematics service.  Note, this does not limit the location of the
 // resources provisioned using Schematics.
 const (
-	ReplaceJobOptions_Location_EuDe = "eu_de"
-	ReplaceJobOptions_Location_EuGb = "eu_gb"
-	ReplaceJobOptions_Location_UsEast = "us_east"
-	ReplaceJobOptions_Location_UsSouth = "us_south"
+	ReplaceJobOptions_Location_EuDe = "eu-de"
+	ReplaceJobOptions_Location_EuGb = "eu-gb"
+	ReplaceJobOptions_Location_UsEast = "us-east"
+	ReplaceJobOptions_Location_UsSouth = "us-south"
 )
 
 // NewReplaceJobOptions : Instantiate ReplaceJobOptions
@@ -11751,7 +11677,7 @@ type UpdateActionOptions struct {
 	// Type of source for the Template.
 	SourceType *string `json:"source_type,omitempty"`
 
-	// Schematics job command parameter (playbook-name, capsule-name or flow-name).
+	// Schematics job command parameter (playbook-name).
 	CommandParameter *string `json:"command_parameter,omitempty"`
 
 	// Describes a bastion resource.
@@ -11759,6 +11685,9 @@ type UpdateActionOptions struct {
 
 	// Inventory ID.
 	Inventory *string `json:"inventory,omitempty"`
+
+	// User editable variable data & system generated reference to value.
+	BastionCredential *VariableData `json:"bastion_credential,omitempty"`
 
 	// credentials of the Action.
 	Credentials []VariableData `json:"credentials,omitempty"`
@@ -11771,9 +11700,6 @@ type UpdateActionOptions struct {
 
 	// Environment variables for the Action.
 	Settings []VariableData `json:"settings,omitempty"`
-
-	// Id to the Trigger.
-	TriggerRecordID *string `json:"trigger_record_id,omitempty"`
 
 	// Computed state of the Action.
 	State *ActionState `json:"state,omitempty"`
@@ -11792,10 +11718,10 @@ type UpdateActionOptions struct {
 // List of workspace locations supported by IBM Cloud Schematics service.  Note, this does not limit the location of the
 // resources provisioned using Schematics.
 const (
-	UpdateActionOptions_Location_EuDe = "eu_de"
-	UpdateActionOptions_Location_EuGb = "eu_gb"
-	UpdateActionOptions_Location_UsEast = "us_east"
-	UpdateActionOptions_Location_UsSouth = "us_south"
+	UpdateActionOptions_Location_EuDe = "eu-de"
+	UpdateActionOptions_Location_EuGb = "eu-gb"
+	UpdateActionOptions_Location_UsEast = "us-east"
+	UpdateActionOptions_Location_UsSouth = "us-south"
 )
 
 // Constants associated with the UpdateActionOptions.SourceType property.
@@ -11895,6 +11821,12 @@ func (options *UpdateActionOptions) SetInventory(inventory string) *UpdateAction
 	return options
 }
 
+// SetBastionCredential : Allow user to set BastionCredential
+func (options *UpdateActionOptions) SetBastionCredential(bastionCredential *VariableData) *UpdateActionOptions {
+	options.BastionCredential = bastionCredential
+	return options
+}
+
 // SetCredentials : Allow user to set Credentials
 func (options *UpdateActionOptions) SetCredentials(credentials []VariableData) *UpdateActionOptions {
 	options.Credentials = credentials
@@ -11916,12 +11848,6 @@ func (options *UpdateActionOptions) SetOutputs(outputs []VariableData) *UpdateAc
 // SetSettings : Allow user to set Settings
 func (options *UpdateActionOptions) SetSettings(settings []VariableData) *UpdateActionOptions {
 	options.Settings = settings
-	return options
-}
-
-// SetTriggerRecordID : Allow user to set TriggerRecordID
-func (options *UpdateActionOptions) SetTriggerRecordID(triggerRecordID string) *UpdateActionOptions {
-	options.TriggerRecordID = core.StringPtr(triggerRecordID)
 	return options
 }
 
@@ -11982,10 +11908,10 @@ type UpdateInventoryOptions struct {
 // List of workspace locations supported by IBM Cloud Schematics service.  Note, this does not limit the location of the
 // resources provisioned using Schematics.
 const (
-	UpdateInventoryOptions_Location_EuDe = "eu_de"
-	UpdateInventoryOptions_Location_EuGb = "eu_gb"
-	UpdateInventoryOptions_Location_UsEast = "us_east"
-	UpdateInventoryOptions_Location_UsSouth = "us_south"
+	UpdateInventoryOptions_Location_EuDe = "eu-de"
+	UpdateInventoryOptions_Location_EuGb = "eu-gb"
+	UpdateInventoryOptions_Location_UsEast = "us-east"
+	UpdateInventoryOptions_Location_UsSouth = "us-south"
 )
 
 // NewUpdateInventoryOptions : Instantiate UpdateInventoryOptions

@@ -5416,7 +5416,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				createActionOptionsModel := new(schematicsv1.CreateActionOptions)
 				createActionOptionsModel.Name = core.StringPtr("Stop Action")
 				createActionOptionsModel.Description = core.StringPtr("This Action can be used to Stop the VSIs")
-				createActionOptionsModel.Location = core.StringPtr("us_south")
+				createActionOptionsModel.Location = core.StringPtr("us-south")
 				createActionOptionsModel.ResourceGroup = core.StringPtr("testString")
 				createActionOptionsModel.Tags = []string{"testString"}
 				createActionOptionsModel.UserState = userStateModel
@@ -5426,11 +5426,11 @@ var _ = Describe(`SchematicsV1`, func() {
 				createActionOptionsModel.CommandParameter = core.StringPtr("testString")
 				createActionOptionsModel.Bastion = bastionResourceDefinitionModel
 				createActionOptionsModel.Inventory = core.StringPtr("testString")
+				createActionOptionsModel.BastionCredential = variableDataModel
 				createActionOptionsModel.Credentials = []schematicsv1.VariableData{*variableDataModel}
 				createActionOptionsModel.Inputs = []schematicsv1.VariableData{*variableDataModel}
 				createActionOptionsModel.Outputs = []schematicsv1.VariableData{*variableDataModel}
 				createActionOptionsModel.Settings = []schematicsv1.VariableData{*variableDataModel}
-				createActionOptionsModel.TriggerRecordID = core.StringPtr("testString")
 				createActionOptionsModel.State = actionStateModel
 				createActionOptionsModel.SysLock = systemLockModel
 				createActionOptionsModel.XGithubToken = core.StringPtr("testString")
@@ -5461,7 +5461,7 @@ var _ = Describe(`SchematicsV1`, func() {
 					Expect(req.Header["X-Github-Token"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(201)
-					fmt.Fprintf(res, "%s", `{"name": "Stop Action", "description": "This Action can be used to Stop the VSIs", "location": "us_south", "resource_group": "ResourceGroup", "tags": ["Tags"], "user_state": {"state": "draft", "set_by": "SetBy", "set_at": "2019-01-01T12:00:00"}, "source_readme_url": "SourceReadmeURL", "source": {"source_type": "local", "git": {"git_repo_url": "GitRepoURL", "git_token": "GitToken", "git_repo_folder": "GitRepoFolder", "git_release": "GitRelease", "git_branch": "GitBranch"}}, "source_type": "local", "command_parameter": "CommandParameter", "bastion": {"name": "Name", "host": "Host"}, "inventory": "Inventory", "credentials": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "outputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "trigger_record_id": "TriggerRecordID", "id": "ID", "crn": "Crn", "account": "Account", "source_created_at": "2019-01-01T12:00:00", "source_created_by": "SourceCreatedBy", "source_updated_at": "2019-01-01T12:00:00", "source_updated_by": "SourceUpdatedBy", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "namespace": "Namespace", "state": {"status_code": "normal", "status_job_id": "StatusJobID", "status_message": "StatusMessage"}, "playbook_names": ["PlaybookNames"], "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}}`)
+					fmt.Fprintf(res, "%s", `{"name": "Stop Action", "description": "This Action can be used to Stop the VSIs", "location": "us-south", "resource_group": "ResourceGroup", "tags": ["Tags"], "user_state": {"state": "draft", "set_by": "SetBy", "set_at": "2019-01-01T12:00:00"}, "source_readme_url": "SourceReadmeURL", "source": {"source_type": "local", "git": {"git_repo_url": "GitRepoURL", "git_token": "GitToken", "git_repo_folder": "GitRepoFolder", "git_release": "GitRelease", "git_branch": "GitBranch"}}, "source_type": "local", "command_parameter": "CommandParameter", "bastion": {"name": "Name", "host": "Host"}, "inventory": "Inventory", "bastion_credential": {"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}, "credentials": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "outputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "id": "ID", "crn": "Crn", "account": "Account", "source_created_at": "2019-01-01T12:00:00", "source_created_by": "SourceCreatedBy", "source_updated_at": "2019-01-01T12:00:00", "source_updated_by": "SourceUpdatedBy", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "state": {"status_code": "normal", "status_job_id": "StatusJobID", "status_message": "StatusMessage"}, "playbook_names": ["PlaybookNames"], "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}}`)
 				}))
 			})
 			It(`Invoke CreateAction successfully`, func() {
@@ -5543,7 +5543,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				createActionOptionsModel := new(schematicsv1.CreateActionOptions)
 				createActionOptionsModel.Name = core.StringPtr("Stop Action")
 				createActionOptionsModel.Description = core.StringPtr("This Action can be used to Stop the VSIs")
-				createActionOptionsModel.Location = core.StringPtr("us_south")
+				createActionOptionsModel.Location = core.StringPtr("us-south")
 				createActionOptionsModel.ResourceGroup = core.StringPtr("testString")
 				createActionOptionsModel.Tags = []string{"testString"}
 				createActionOptionsModel.UserState = userStateModel
@@ -5553,11 +5553,11 @@ var _ = Describe(`SchematicsV1`, func() {
 				createActionOptionsModel.CommandParameter = core.StringPtr("testString")
 				createActionOptionsModel.Bastion = bastionResourceDefinitionModel
 				createActionOptionsModel.Inventory = core.StringPtr("testString")
+				createActionOptionsModel.BastionCredential = variableDataModel
 				createActionOptionsModel.Credentials = []schematicsv1.VariableData{*variableDataModel}
 				createActionOptionsModel.Inputs = []schematicsv1.VariableData{*variableDataModel}
 				createActionOptionsModel.Outputs = []schematicsv1.VariableData{*variableDataModel}
 				createActionOptionsModel.Settings = []schematicsv1.VariableData{*variableDataModel}
-				createActionOptionsModel.TriggerRecordID = core.StringPtr("testString")
 				createActionOptionsModel.State = actionStateModel
 				createActionOptionsModel.SysLock = systemLockModel
 				createActionOptionsModel.XGithubToken = core.StringPtr("testString")
@@ -5642,7 +5642,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				createActionOptionsModel := new(schematicsv1.CreateActionOptions)
 				createActionOptionsModel.Name = core.StringPtr("Stop Action")
 				createActionOptionsModel.Description = core.StringPtr("This Action can be used to Stop the VSIs")
-				createActionOptionsModel.Location = core.StringPtr("us_south")
+				createActionOptionsModel.Location = core.StringPtr("us-south")
 				createActionOptionsModel.ResourceGroup = core.StringPtr("testString")
 				createActionOptionsModel.Tags = []string{"testString"}
 				createActionOptionsModel.UserState = userStateModel
@@ -5652,11 +5652,11 @@ var _ = Describe(`SchematicsV1`, func() {
 				createActionOptionsModel.CommandParameter = core.StringPtr("testString")
 				createActionOptionsModel.Bastion = bastionResourceDefinitionModel
 				createActionOptionsModel.Inventory = core.StringPtr("testString")
+				createActionOptionsModel.BastionCredential = variableDataModel
 				createActionOptionsModel.Credentials = []schematicsv1.VariableData{*variableDataModel}
 				createActionOptionsModel.Inputs = []schematicsv1.VariableData{*variableDataModel}
 				createActionOptionsModel.Outputs = []schematicsv1.VariableData{*variableDataModel}
 				createActionOptionsModel.Settings = []schematicsv1.VariableData{*variableDataModel}
-				createActionOptionsModel.TriggerRecordID = core.StringPtr("testString")
 				createActionOptionsModel.State = actionStateModel
 				createActionOptionsModel.SysLock = systemLockModel
 				createActionOptionsModel.XGithubToken = core.StringPtr("testString")
@@ -5745,7 +5745,7 @@ var _ = Describe(`SchematicsV1`, func() {
 
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"total_count": 10, "limit": 5, "offset": 6, "actions": [{"name": "Stop Action", "description": "This Action can be used to Stop the VSIs", "id": "ID", "crn": "Crn", "location": "us_south", "resource_group": "ResourceGroup", "namespace": "Namespace", "tags": ["Tags"], "playbook_name": "PlaybookName", "user_state": {"state": "draft", "set_by": "SetBy", "set_at": "2019-01-01T12:00:00"}, "state": {"status_code": "normal", "status_message": "StatusMessage"}, "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}, "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy"}]}`)
+					fmt.Fprintf(res, "%s", `{"total_count": 10, "limit": 5, "offset": 6, "actions": [{"name": "Stop Action", "description": "This Action can be used to Stop the VSIs", "id": "ID", "crn": "Crn", "location": "us-south", "resource_group": "ResourceGroup", "namespace": "Namespace", "tags": ["Tags"], "playbook_name": "PlaybookName", "user_state": {"state": "draft", "set_by": "SetBy", "set_at": "2019-01-01T12:00:00"}, "state": {"status_code": "normal", "status_message": "StatusMessage"}, "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}, "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy"}]}`)
 				}))
 			})
 			It(`Invoke ListActions successfully`, func() {
@@ -5861,7 +5861,7 @@ var _ = Describe(`SchematicsV1`, func() {
 
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"name": "Stop Action", "description": "This Action can be used to Stop the VSIs", "location": "us_south", "resource_group": "ResourceGroup", "tags": ["Tags"], "user_state": {"state": "draft", "set_by": "SetBy", "set_at": "2019-01-01T12:00:00"}, "source_readme_url": "SourceReadmeURL", "source": {"source_type": "local", "git": {"git_repo_url": "GitRepoURL", "git_token": "GitToken", "git_repo_folder": "GitRepoFolder", "git_release": "GitRelease", "git_branch": "GitBranch"}}, "source_type": "local", "command_parameter": "CommandParameter", "bastion": {"name": "Name", "host": "Host"}, "inventory": "Inventory", "credentials": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "outputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "trigger_record_id": "TriggerRecordID", "id": "ID", "crn": "Crn", "account": "Account", "source_created_at": "2019-01-01T12:00:00", "source_created_by": "SourceCreatedBy", "source_updated_at": "2019-01-01T12:00:00", "source_updated_by": "SourceUpdatedBy", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "namespace": "Namespace", "state": {"status_code": "normal", "status_job_id": "StatusJobID", "status_message": "StatusMessage"}, "playbook_names": ["PlaybookNames"], "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}}`)
+					fmt.Fprintf(res, "%s", `{"name": "Stop Action", "description": "This Action can be used to Stop the VSIs", "location": "us-south", "resource_group": "ResourceGroup", "tags": ["Tags"], "user_state": {"state": "draft", "set_by": "SetBy", "set_at": "2019-01-01T12:00:00"}, "source_readme_url": "SourceReadmeURL", "source": {"source_type": "local", "git": {"git_repo_url": "GitRepoURL", "git_token": "GitToken", "git_repo_folder": "GitRepoFolder", "git_release": "GitRelease", "git_branch": "GitBranch"}}, "source_type": "local", "command_parameter": "CommandParameter", "bastion": {"name": "Name", "host": "Host"}, "inventory": "Inventory", "bastion_credential": {"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}, "credentials": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "outputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "id": "ID", "crn": "Crn", "account": "Account", "source_created_at": "2019-01-01T12:00:00", "source_created_by": "SourceCreatedBy", "source_updated_at": "2019-01-01T12:00:00", "source_updated_by": "SourceUpdatedBy", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "state": {"status_code": "normal", "status_job_id": "StatusJobID", "status_message": "StatusMessage"}, "playbook_names": ["PlaybookNames"], "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}}`)
 				}))
 			})
 			It(`Invoke GetAction successfully`, func() {
@@ -6091,7 +6091,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				updateActionOptionsModel.ActionID = core.StringPtr("testString")
 				updateActionOptionsModel.Name = core.StringPtr("Stop Action")
 				updateActionOptionsModel.Description = core.StringPtr("This Action can be used to Stop the VSIs")
-				updateActionOptionsModel.Location = core.StringPtr("us_south")
+				updateActionOptionsModel.Location = core.StringPtr("us-south")
 				updateActionOptionsModel.ResourceGroup = core.StringPtr("testString")
 				updateActionOptionsModel.Tags = []string{"testString"}
 				updateActionOptionsModel.UserState = userStateModel
@@ -6101,11 +6101,11 @@ var _ = Describe(`SchematicsV1`, func() {
 				updateActionOptionsModel.CommandParameter = core.StringPtr("testString")
 				updateActionOptionsModel.Bastion = bastionResourceDefinitionModel
 				updateActionOptionsModel.Inventory = core.StringPtr("testString")
+				updateActionOptionsModel.BastionCredential = variableDataModel
 				updateActionOptionsModel.Credentials = []schematicsv1.VariableData{*variableDataModel}
 				updateActionOptionsModel.Inputs = []schematicsv1.VariableData{*variableDataModel}
 				updateActionOptionsModel.Outputs = []schematicsv1.VariableData{*variableDataModel}
 				updateActionOptionsModel.Settings = []schematicsv1.VariableData{*variableDataModel}
-				updateActionOptionsModel.TriggerRecordID = core.StringPtr("testString")
 				updateActionOptionsModel.State = actionStateModel
 				updateActionOptionsModel.SysLock = systemLockModel
 				updateActionOptionsModel.XGithubToken = core.StringPtr("testString")
@@ -6136,7 +6136,7 @@ var _ = Describe(`SchematicsV1`, func() {
 					Expect(req.Header["X-Github-Token"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"name": "Stop Action", "description": "This Action can be used to Stop the VSIs", "location": "us_south", "resource_group": "ResourceGroup", "tags": ["Tags"], "user_state": {"state": "draft", "set_by": "SetBy", "set_at": "2019-01-01T12:00:00"}, "source_readme_url": "SourceReadmeURL", "source": {"source_type": "local", "git": {"git_repo_url": "GitRepoURL", "git_token": "GitToken", "git_repo_folder": "GitRepoFolder", "git_release": "GitRelease", "git_branch": "GitBranch"}}, "source_type": "local", "command_parameter": "CommandParameter", "bastion": {"name": "Name", "host": "Host"}, "inventory": "Inventory", "credentials": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "outputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "trigger_record_id": "TriggerRecordID", "id": "ID", "crn": "Crn", "account": "Account", "source_created_at": "2019-01-01T12:00:00", "source_created_by": "SourceCreatedBy", "source_updated_at": "2019-01-01T12:00:00", "source_updated_by": "SourceUpdatedBy", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "namespace": "Namespace", "state": {"status_code": "normal", "status_job_id": "StatusJobID", "status_message": "StatusMessage"}, "playbook_names": ["PlaybookNames"], "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}}`)
+					fmt.Fprintf(res, "%s", `{"name": "Stop Action", "description": "This Action can be used to Stop the VSIs", "location": "us-south", "resource_group": "ResourceGroup", "tags": ["Tags"], "user_state": {"state": "draft", "set_by": "SetBy", "set_at": "2019-01-01T12:00:00"}, "source_readme_url": "SourceReadmeURL", "source": {"source_type": "local", "git": {"git_repo_url": "GitRepoURL", "git_token": "GitToken", "git_repo_folder": "GitRepoFolder", "git_release": "GitRelease", "git_branch": "GitBranch"}}, "source_type": "local", "command_parameter": "CommandParameter", "bastion": {"name": "Name", "host": "Host"}, "inventory": "Inventory", "bastion_credential": {"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}, "credentials": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "outputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "id": "ID", "crn": "Crn", "account": "Account", "source_created_at": "2019-01-01T12:00:00", "source_created_by": "SourceCreatedBy", "source_updated_at": "2019-01-01T12:00:00", "source_updated_by": "SourceUpdatedBy", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "state": {"status_code": "normal", "status_job_id": "StatusJobID", "status_message": "StatusMessage"}, "playbook_names": ["PlaybookNames"], "sys_lock": {"sys_locked": false, "sys_locked_by": "SysLockedBy", "sys_locked_at": "2019-01-01T12:00:00"}}`)
 				}))
 			})
 			It(`Invoke UpdateAction successfully`, func() {
@@ -6219,7 +6219,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				updateActionOptionsModel.ActionID = core.StringPtr("testString")
 				updateActionOptionsModel.Name = core.StringPtr("Stop Action")
 				updateActionOptionsModel.Description = core.StringPtr("This Action can be used to Stop the VSIs")
-				updateActionOptionsModel.Location = core.StringPtr("us_south")
+				updateActionOptionsModel.Location = core.StringPtr("us-south")
 				updateActionOptionsModel.ResourceGroup = core.StringPtr("testString")
 				updateActionOptionsModel.Tags = []string{"testString"}
 				updateActionOptionsModel.UserState = userStateModel
@@ -6229,11 +6229,11 @@ var _ = Describe(`SchematicsV1`, func() {
 				updateActionOptionsModel.CommandParameter = core.StringPtr("testString")
 				updateActionOptionsModel.Bastion = bastionResourceDefinitionModel
 				updateActionOptionsModel.Inventory = core.StringPtr("testString")
+				updateActionOptionsModel.BastionCredential = variableDataModel
 				updateActionOptionsModel.Credentials = []schematicsv1.VariableData{*variableDataModel}
 				updateActionOptionsModel.Inputs = []schematicsv1.VariableData{*variableDataModel}
 				updateActionOptionsModel.Outputs = []schematicsv1.VariableData{*variableDataModel}
 				updateActionOptionsModel.Settings = []schematicsv1.VariableData{*variableDataModel}
-				updateActionOptionsModel.TriggerRecordID = core.StringPtr("testString")
 				updateActionOptionsModel.State = actionStateModel
 				updateActionOptionsModel.SysLock = systemLockModel
 				updateActionOptionsModel.XGithubToken = core.StringPtr("testString")
@@ -6319,7 +6319,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				updateActionOptionsModel.ActionID = core.StringPtr("testString")
 				updateActionOptionsModel.Name = core.StringPtr("Stop Action")
 				updateActionOptionsModel.Description = core.StringPtr("This Action can be used to Stop the VSIs")
-				updateActionOptionsModel.Location = core.StringPtr("us_south")
+				updateActionOptionsModel.Location = core.StringPtr("us-south")
 				updateActionOptionsModel.ResourceGroup = core.StringPtr("testString")
 				updateActionOptionsModel.Tags = []string{"testString"}
 				updateActionOptionsModel.UserState = userStateModel
@@ -6329,11 +6329,11 @@ var _ = Describe(`SchematicsV1`, func() {
 				updateActionOptionsModel.CommandParameter = core.StringPtr("testString")
 				updateActionOptionsModel.Bastion = bastionResourceDefinitionModel
 				updateActionOptionsModel.Inventory = core.StringPtr("testString")
+				updateActionOptionsModel.BastionCredential = variableDataModel
 				updateActionOptionsModel.Credentials = []schematicsv1.VariableData{*variableDataModel}
 				updateActionOptionsModel.Inputs = []schematicsv1.VariableData{*variableDataModel}
 				updateActionOptionsModel.Outputs = []schematicsv1.VariableData{*variableDataModel}
 				updateActionOptionsModel.Settings = []schematicsv1.VariableData{*variableDataModel}
-				updateActionOptionsModel.TriggerRecordID = core.StringPtr("testString")
 				updateActionOptionsModel.State = actionStateModel
 				updateActionOptionsModel.SysLock = systemLockModel
 				updateActionOptionsModel.XGithubToken = core.StringPtr("testString")
@@ -6661,7 +6661,8 @@ var _ = Describe(`SchematicsV1`, func() {
 				// Construct an instance of the InventoryResourceRecord model
 				inventoryResourceRecordModel := new(schematicsv1.InventoryResourceRecord)
 				inventoryResourceRecordModel.Name = core.StringPtr("testString")
-				inventoryResourceRecordModel.Location = core.StringPtr("us_south")
+				inventoryResourceRecordModel.Description = core.StringPtr("testString")
+				inventoryResourceRecordModel.Location = core.StringPtr("us-south")
 				inventoryResourceRecordModel.ResourceGroup = core.StringPtr("testString")
 				inventoryResourceRecordModel.InventoriesIni = core.StringPtr("testString")
 				inventoryResourceRecordModel.ResourceQueries = []string{"testString"}
@@ -6713,13 +6714,13 @@ var _ = Describe(`SchematicsV1`, func() {
 				createJobOptionsModel.RefreshToken = core.StringPtr("testString")
 				createJobOptionsModel.CommandObject = core.StringPtr("workspace")
 				createJobOptionsModel.CommandObjectID = core.StringPtr("testString")
-				createJobOptionsModel.CommandName = core.StringPtr("workspace_init_flow")
+				createJobOptionsModel.CommandName = core.StringPtr("ansible_playbook_run")
 				createJobOptionsModel.CommandParameter = core.StringPtr("testString")
 				createJobOptionsModel.CommandOptions = []string{"testString"}
 				createJobOptionsModel.Inputs = []schematicsv1.VariableData{*variableDataModel}
 				createJobOptionsModel.Settings = []schematicsv1.VariableData{*variableDataModel}
 				createJobOptionsModel.Tags = []string{"testString"}
-				createJobOptionsModel.Location = core.StringPtr("us_south")
+				createJobOptionsModel.Location = core.StringPtr("us-south")
 				createJobOptionsModel.Status = jobStatusModel
 				createJobOptionsModel.Data = jobDataModel
 				createJobOptionsModel.Bastion = bastionResourceDefinitionModel
@@ -6751,7 +6752,7 @@ var _ = Describe(`SchematicsV1`, func() {
 					Expect(req.Header["Refresh_token"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(202)
-					fmt.Fprintf(res, "%s", `{"command_object": "workspace", "command_object_id": "CommandObjectID", "command_name": "workspace_init_flow", "command_parameter": "CommandParameter", "command_options": ["CommandOptions"], "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "tags": ["Tags"], "id": "ID", "name": "Name", "description": "Description", "location": "us_south", "resource_group": "ResourceGroup", "submitted_at": "2019-01-01T12:00:00", "submitted_by": "SubmittedBy", "start_at": "2019-01-01T12:00:00", "end_at": "2019-01-01T12:00:00", "duration": "Duration", "status": {"action_job_status": {"action_name": "ActionName", "status_code": "job_pending", "status_message": "StatusMessage", "bastion_status_code": "none", "bastion_status_message": "BastionStatusMessage", "inventory_status_code": "none", "inventory_status_message": "InventoryStatusMessage", "updated_at": "2019-01-01T12:00:00"}}, "data": {"job_type": "repo_download_job", "action_job_data": {"action_name": "ActionName", "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "outputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "updated_at": "2019-01-01T12:00:00", "inventory_record": {"name": "Name", "id": "ID", "location": "us_south", "resource_group": "ResourceGroup", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "inventories_ini": "InventoriesIni", "resource_queries": ["ResourceQueries"]}, "materialized_inventory": "MaterializedInventory"}}, "bastion": {"name": "Name", "host": "Host"}, "log_summary": {"job_id": "JobID", "job_type": "repo_download_job", "log_start_at": "2019-01-01T12:00:00", "log_analyzed_till": "2019-01-01T12:00:00", "elapsed_time": 11, "log_errors": [{"error_code": "ErrorCode", "error_msg": "ErrorMsg", "error_count": 10}], "repo_download_job": {"scanned_file_count": 16, "quarantined_file_count": 20, "detected_filetype": "DetectedFiletype", "inputs_count": "InputsCount", "outputs_count": "OutputsCount"}, "action_job": {"host_count": 9, "task_count": 9, "play_count": 9, "recap": {"hosts": ["Hosts"], "ok": 2, "changed": 7, "failed": 6, "skipped": 7, "unreachable": 11}}}, "log_store_url": "LogStoreURL", "state_store_url": "StateStoreURL", "results_url": "ResultsURL", "updated_at": "2019-01-01T12:00:00"}`)
+					fmt.Fprintf(res, "%s", `{"command_object": "workspace", "command_object_id": "CommandObjectID", "command_name": "ansible_playbook_run", "command_parameter": "CommandParameter", "command_options": ["CommandOptions"], "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "tags": ["Tags"], "id": "ID", "name": "Name", "description": "Description", "location": "us-south", "resource_group": "ResourceGroup", "submitted_at": "2019-01-01T12:00:00", "submitted_by": "SubmittedBy", "start_at": "2019-01-01T12:00:00", "end_at": "2019-01-01T12:00:00", "duration": "Duration", "status": {"action_job_status": {"action_name": "ActionName", "status_code": "job_pending", "status_message": "StatusMessage", "bastion_status_code": "none", "bastion_status_message": "BastionStatusMessage", "inventory_status_code": "none", "inventory_status_message": "InventoryStatusMessage", "updated_at": "2019-01-01T12:00:00"}}, "data": {"job_type": "repo_download_job", "action_job_data": {"action_name": "ActionName", "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "outputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "updated_at": "2019-01-01T12:00:00", "inventory_record": {"name": "Name", "id": "ID", "description": "Description", "location": "us-south", "resource_group": "ResourceGroup", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "inventories_ini": "InventoriesIni", "resource_queries": ["ResourceQueries"]}, "materialized_inventory": "MaterializedInventory"}}, "bastion": {"name": "Name", "host": "Host"}, "log_summary": {"job_id": "JobID", "job_type": "repo_download_job", "log_start_at": "2019-01-01T12:00:00", "log_analyzed_till": "2019-01-01T12:00:00", "elapsed_time": 11, "log_errors": [{"error_code": "ErrorCode", "error_msg": "ErrorMsg", "error_count": 10}], "repo_download_job": {"scanned_file_count": 16, "quarantined_file_count": 20, "detected_filetype": "DetectedFiletype", "inputs_count": "InputsCount", "outputs_count": "OutputsCount"}, "action_job": {"host_count": 9, "task_count": 9, "play_count": 9, "recap": {"hosts": ["Hosts"], "ok": 2, "changed": 7, "failed": 6, "skipped": 7, "unreachable": 11}}}, "log_store_url": "LogStoreURL", "state_store_url": "StateStoreURL", "results_url": "ResultsURL", "updated_at": "2019-01-01T12:00:00"}`)
 				}))
 			})
 			It(`Invoke CreateJob successfully`, func() {
@@ -6811,7 +6812,8 @@ var _ = Describe(`SchematicsV1`, func() {
 				// Construct an instance of the InventoryResourceRecord model
 				inventoryResourceRecordModel := new(schematicsv1.InventoryResourceRecord)
 				inventoryResourceRecordModel.Name = core.StringPtr("testString")
-				inventoryResourceRecordModel.Location = core.StringPtr("us_south")
+				inventoryResourceRecordModel.Description = core.StringPtr("testString")
+				inventoryResourceRecordModel.Location = core.StringPtr("us-south")
 				inventoryResourceRecordModel.ResourceGroup = core.StringPtr("testString")
 				inventoryResourceRecordModel.InventoriesIni = core.StringPtr("testString")
 				inventoryResourceRecordModel.ResourceQueries = []string{"testString"}
@@ -6863,13 +6865,13 @@ var _ = Describe(`SchematicsV1`, func() {
 				createJobOptionsModel.RefreshToken = core.StringPtr("testString")
 				createJobOptionsModel.CommandObject = core.StringPtr("workspace")
 				createJobOptionsModel.CommandObjectID = core.StringPtr("testString")
-				createJobOptionsModel.CommandName = core.StringPtr("workspace_init_flow")
+				createJobOptionsModel.CommandName = core.StringPtr("ansible_playbook_run")
 				createJobOptionsModel.CommandParameter = core.StringPtr("testString")
 				createJobOptionsModel.CommandOptions = []string{"testString"}
 				createJobOptionsModel.Inputs = []schematicsv1.VariableData{*variableDataModel}
 				createJobOptionsModel.Settings = []schematicsv1.VariableData{*variableDataModel}
 				createJobOptionsModel.Tags = []string{"testString"}
-				createJobOptionsModel.Location = core.StringPtr("us_south")
+				createJobOptionsModel.Location = core.StringPtr("us-south")
 				createJobOptionsModel.Status = jobStatusModel
 				createJobOptionsModel.Data = jobDataModel
 				createJobOptionsModel.Bastion = bastionResourceDefinitionModel
@@ -6933,7 +6935,8 @@ var _ = Describe(`SchematicsV1`, func() {
 				// Construct an instance of the InventoryResourceRecord model
 				inventoryResourceRecordModel := new(schematicsv1.InventoryResourceRecord)
 				inventoryResourceRecordModel.Name = core.StringPtr("testString")
-				inventoryResourceRecordModel.Location = core.StringPtr("us_south")
+				inventoryResourceRecordModel.Description = core.StringPtr("testString")
+				inventoryResourceRecordModel.Location = core.StringPtr("us-south")
 				inventoryResourceRecordModel.ResourceGroup = core.StringPtr("testString")
 				inventoryResourceRecordModel.InventoriesIni = core.StringPtr("testString")
 				inventoryResourceRecordModel.ResourceQueries = []string{"testString"}
@@ -6985,13 +6988,13 @@ var _ = Describe(`SchematicsV1`, func() {
 				createJobOptionsModel.RefreshToken = core.StringPtr("testString")
 				createJobOptionsModel.CommandObject = core.StringPtr("workspace")
 				createJobOptionsModel.CommandObjectID = core.StringPtr("testString")
-				createJobOptionsModel.CommandName = core.StringPtr("workspace_init_flow")
+				createJobOptionsModel.CommandName = core.StringPtr("ansible_playbook_run")
 				createJobOptionsModel.CommandParameter = core.StringPtr("testString")
 				createJobOptionsModel.CommandOptions = []string{"testString"}
 				createJobOptionsModel.Inputs = []schematicsv1.VariableData{*variableDataModel}
 				createJobOptionsModel.Settings = []schematicsv1.VariableData{*variableDataModel}
 				createJobOptionsModel.Tags = []string{"testString"}
-				createJobOptionsModel.Location = core.StringPtr("us_south")
+				createJobOptionsModel.Location = core.StringPtr("us-south")
 				createJobOptionsModel.Status = jobStatusModel
 				createJobOptionsModel.Data = jobDataModel
 				createJobOptionsModel.Bastion = bastionResourceDefinitionModel
@@ -7103,7 +7106,7 @@ var _ = Describe(`SchematicsV1`, func() {
 
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"total_count": 10, "limit": 5, "offset": 6, "jobs": [{"id": "ID", "name": "Name", "description": "Description", "command_object": "workspace", "command_object_id": "CommandObjectID", "command_name": "workspace_init_flow", "tags": ["Tags"], "location": "us_south", "resource_group": "ResourceGroup", "submitted_at": "2019-01-01T12:00:00", "submitted_by": "SubmittedBy", "duration": "Duration", "start_at": "2019-01-01T12:00:00", "end_at": "2019-01-01T12:00:00", "status": {"action_job_status": {"action_name": "ActionName", "status_code": "job_pending", "status_message": "StatusMessage", "bastion_status_code": "none", "bastion_status_message": "BastionStatusMessage", "inventory_status_code": "none", "inventory_status_message": "InventoryStatusMessage", "updated_at": "2019-01-01T12:00:00"}}, "log_summary": {"job_id": "JobID", "job_type": "repo_download_job", "log_start_at": "2019-01-01T12:00:00", "log_analyzed_till": "2019-01-01T12:00:00", "elapsed_time": 11, "log_errors": [{"error_code": "ErrorCode", "error_msg": "ErrorMsg", "error_count": 10}], "repo_download_job": {"scanned_file_count": 16, "quarantined_file_count": 20, "detected_filetype": "DetectedFiletype", "inputs_count": "InputsCount", "outputs_count": "OutputsCount"}, "action_job": {"host_count": 9, "task_count": 9, "play_count": 9, "recap": {"hosts": ["Hosts"], "ok": 2, "changed": 7, "failed": 6, "skipped": 7, "unreachable": 11}}}, "updated_at": "2019-01-01T12:00:00"}]}`)
+					fmt.Fprintf(res, "%s", `{"total_count": 10, "limit": 5, "offset": 6, "jobs": [{"id": "ID", "name": "Name", "description": "Description", "command_object": "workspace", "command_object_id": "CommandObjectID", "command_name": "ansible_playbook_run", "tags": ["Tags"], "location": "us-south", "resource_group": "ResourceGroup", "submitted_at": "2019-01-01T12:00:00", "submitted_by": "SubmittedBy", "duration": "Duration", "start_at": "2019-01-01T12:00:00", "end_at": "2019-01-01T12:00:00", "status": {"action_job_status": {"action_name": "ActionName", "status_code": "job_pending", "status_message": "StatusMessage", "bastion_status_code": "none", "bastion_status_message": "BastionStatusMessage", "inventory_status_code": "none", "inventory_status_message": "InventoryStatusMessage", "updated_at": "2019-01-01T12:00:00"}}, "log_summary": {"job_id": "JobID", "job_type": "repo_download_job", "log_start_at": "2019-01-01T12:00:00", "log_analyzed_till": "2019-01-01T12:00:00", "elapsed_time": 11, "log_errors": [{"error_code": "ErrorCode", "error_msg": "ErrorMsg", "error_count": 10}], "repo_download_job": {"scanned_file_count": 16, "quarantined_file_count": 20, "detected_filetype": "DetectedFiletype", "inputs_count": "InputsCount", "outputs_count": "OutputsCount"}, "action_job": {"host_count": 9, "task_count": 9, "play_count": 9, "recap": {"hosts": ["Hosts"], "ok": 2, "changed": 7, "failed": 6, "skipped": 7, "unreachable": 11}}}, "updated_at": "2019-01-01T12:00:00"}]}`)
 				}))
 			})
 			It(`Invoke ListJobs successfully`, func() {
@@ -7237,7 +7240,8 @@ var _ = Describe(`SchematicsV1`, func() {
 				// Construct an instance of the InventoryResourceRecord model
 				inventoryResourceRecordModel := new(schematicsv1.InventoryResourceRecord)
 				inventoryResourceRecordModel.Name = core.StringPtr("testString")
-				inventoryResourceRecordModel.Location = core.StringPtr("us_south")
+				inventoryResourceRecordModel.Description = core.StringPtr("testString")
+				inventoryResourceRecordModel.Location = core.StringPtr("us-south")
 				inventoryResourceRecordModel.ResourceGroup = core.StringPtr("testString")
 				inventoryResourceRecordModel.InventoriesIni = core.StringPtr("testString")
 				inventoryResourceRecordModel.ResourceQueries = []string{"testString"}
@@ -7290,13 +7294,13 @@ var _ = Describe(`SchematicsV1`, func() {
 				replaceJobOptionsModel.RefreshToken = core.StringPtr("testString")
 				replaceJobOptionsModel.CommandObject = core.StringPtr("workspace")
 				replaceJobOptionsModel.CommandObjectID = core.StringPtr("testString")
-				replaceJobOptionsModel.CommandName = core.StringPtr("workspace_init_flow")
+				replaceJobOptionsModel.CommandName = core.StringPtr("ansible_playbook_run")
 				replaceJobOptionsModel.CommandParameter = core.StringPtr("testString")
 				replaceJobOptionsModel.CommandOptions = []string{"testString"}
 				replaceJobOptionsModel.Inputs = []schematicsv1.VariableData{*variableDataModel}
 				replaceJobOptionsModel.Settings = []schematicsv1.VariableData{*variableDataModel}
 				replaceJobOptionsModel.Tags = []string{"testString"}
-				replaceJobOptionsModel.Location = core.StringPtr("us_south")
+				replaceJobOptionsModel.Location = core.StringPtr("us-south")
 				replaceJobOptionsModel.Status = jobStatusModel
 				replaceJobOptionsModel.Data = jobDataModel
 				replaceJobOptionsModel.Bastion = bastionResourceDefinitionModel
@@ -7328,7 +7332,7 @@ var _ = Describe(`SchematicsV1`, func() {
 					Expect(req.Header["Refresh_token"][0]).To(Equal(fmt.Sprintf("%v", "testString")))
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(202)
-					fmt.Fprintf(res, "%s", `{"command_object": "workspace", "command_object_id": "CommandObjectID", "command_name": "workspace_init_flow", "command_parameter": "CommandParameter", "command_options": ["CommandOptions"], "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "tags": ["Tags"], "id": "ID", "name": "Name", "description": "Description", "location": "us_south", "resource_group": "ResourceGroup", "submitted_at": "2019-01-01T12:00:00", "submitted_by": "SubmittedBy", "start_at": "2019-01-01T12:00:00", "end_at": "2019-01-01T12:00:00", "duration": "Duration", "status": {"action_job_status": {"action_name": "ActionName", "status_code": "job_pending", "status_message": "StatusMessage", "bastion_status_code": "none", "bastion_status_message": "BastionStatusMessage", "inventory_status_code": "none", "inventory_status_message": "InventoryStatusMessage", "updated_at": "2019-01-01T12:00:00"}}, "data": {"job_type": "repo_download_job", "action_job_data": {"action_name": "ActionName", "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "outputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "updated_at": "2019-01-01T12:00:00", "inventory_record": {"name": "Name", "id": "ID", "location": "us_south", "resource_group": "ResourceGroup", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "inventories_ini": "InventoriesIni", "resource_queries": ["ResourceQueries"]}, "materialized_inventory": "MaterializedInventory"}}, "bastion": {"name": "Name", "host": "Host"}, "log_summary": {"job_id": "JobID", "job_type": "repo_download_job", "log_start_at": "2019-01-01T12:00:00", "log_analyzed_till": "2019-01-01T12:00:00", "elapsed_time": 11, "log_errors": [{"error_code": "ErrorCode", "error_msg": "ErrorMsg", "error_count": 10}], "repo_download_job": {"scanned_file_count": 16, "quarantined_file_count": 20, "detected_filetype": "DetectedFiletype", "inputs_count": "InputsCount", "outputs_count": "OutputsCount"}, "action_job": {"host_count": 9, "task_count": 9, "play_count": 9, "recap": {"hosts": ["Hosts"], "ok": 2, "changed": 7, "failed": 6, "skipped": 7, "unreachable": 11}}}, "log_store_url": "LogStoreURL", "state_store_url": "StateStoreURL", "results_url": "ResultsURL", "updated_at": "2019-01-01T12:00:00"}`)
+					fmt.Fprintf(res, "%s", `{"command_object": "workspace", "command_object_id": "CommandObjectID", "command_name": "ansible_playbook_run", "command_parameter": "CommandParameter", "command_options": ["CommandOptions"], "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "tags": ["Tags"], "id": "ID", "name": "Name", "description": "Description", "location": "us-south", "resource_group": "ResourceGroup", "submitted_at": "2019-01-01T12:00:00", "submitted_by": "SubmittedBy", "start_at": "2019-01-01T12:00:00", "end_at": "2019-01-01T12:00:00", "duration": "Duration", "status": {"action_job_status": {"action_name": "ActionName", "status_code": "job_pending", "status_message": "StatusMessage", "bastion_status_code": "none", "bastion_status_message": "BastionStatusMessage", "inventory_status_code": "none", "inventory_status_message": "InventoryStatusMessage", "updated_at": "2019-01-01T12:00:00"}}, "data": {"job_type": "repo_download_job", "action_job_data": {"action_name": "ActionName", "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "outputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "updated_at": "2019-01-01T12:00:00", "inventory_record": {"name": "Name", "id": "ID", "description": "Description", "location": "us-south", "resource_group": "ResourceGroup", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "inventories_ini": "InventoriesIni", "resource_queries": ["ResourceQueries"]}, "materialized_inventory": "MaterializedInventory"}}, "bastion": {"name": "Name", "host": "Host"}, "log_summary": {"job_id": "JobID", "job_type": "repo_download_job", "log_start_at": "2019-01-01T12:00:00", "log_analyzed_till": "2019-01-01T12:00:00", "elapsed_time": 11, "log_errors": [{"error_code": "ErrorCode", "error_msg": "ErrorMsg", "error_count": 10}], "repo_download_job": {"scanned_file_count": 16, "quarantined_file_count": 20, "detected_filetype": "DetectedFiletype", "inputs_count": "InputsCount", "outputs_count": "OutputsCount"}, "action_job": {"host_count": 9, "task_count": 9, "play_count": 9, "recap": {"hosts": ["Hosts"], "ok": 2, "changed": 7, "failed": 6, "skipped": 7, "unreachable": 11}}}, "log_store_url": "LogStoreURL", "state_store_url": "StateStoreURL", "results_url": "ResultsURL", "updated_at": "2019-01-01T12:00:00"}`)
 				}))
 			})
 			It(`Invoke ReplaceJob successfully`, func() {
@@ -7388,7 +7392,8 @@ var _ = Describe(`SchematicsV1`, func() {
 				// Construct an instance of the InventoryResourceRecord model
 				inventoryResourceRecordModel := new(schematicsv1.InventoryResourceRecord)
 				inventoryResourceRecordModel.Name = core.StringPtr("testString")
-				inventoryResourceRecordModel.Location = core.StringPtr("us_south")
+				inventoryResourceRecordModel.Description = core.StringPtr("testString")
+				inventoryResourceRecordModel.Location = core.StringPtr("us-south")
 				inventoryResourceRecordModel.ResourceGroup = core.StringPtr("testString")
 				inventoryResourceRecordModel.InventoriesIni = core.StringPtr("testString")
 				inventoryResourceRecordModel.ResourceQueries = []string{"testString"}
@@ -7441,13 +7446,13 @@ var _ = Describe(`SchematicsV1`, func() {
 				replaceJobOptionsModel.RefreshToken = core.StringPtr("testString")
 				replaceJobOptionsModel.CommandObject = core.StringPtr("workspace")
 				replaceJobOptionsModel.CommandObjectID = core.StringPtr("testString")
-				replaceJobOptionsModel.CommandName = core.StringPtr("workspace_init_flow")
+				replaceJobOptionsModel.CommandName = core.StringPtr("ansible_playbook_run")
 				replaceJobOptionsModel.CommandParameter = core.StringPtr("testString")
 				replaceJobOptionsModel.CommandOptions = []string{"testString"}
 				replaceJobOptionsModel.Inputs = []schematicsv1.VariableData{*variableDataModel}
 				replaceJobOptionsModel.Settings = []schematicsv1.VariableData{*variableDataModel}
 				replaceJobOptionsModel.Tags = []string{"testString"}
-				replaceJobOptionsModel.Location = core.StringPtr("us_south")
+				replaceJobOptionsModel.Location = core.StringPtr("us-south")
 				replaceJobOptionsModel.Status = jobStatusModel
 				replaceJobOptionsModel.Data = jobDataModel
 				replaceJobOptionsModel.Bastion = bastionResourceDefinitionModel
@@ -7511,7 +7516,8 @@ var _ = Describe(`SchematicsV1`, func() {
 				// Construct an instance of the InventoryResourceRecord model
 				inventoryResourceRecordModel := new(schematicsv1.InventoryResourceRecord)
 				inventoryResourceRecordModel.Name = core.StringPtr("testString")
-				inventoryResourceRecordModel.Location = core.StringPtr("us_south")
+				inventoryResourceRecordModel.Description = core.StringPtr("testString")
+				inventoryResourceRecordModel.Location = core.StringPtr("us-south")
 				inventoryResourceRecordModel.ResourceGroup = core.StringPtr("testString")
 				inventoryResourceRecordModel.InventoriesIni = core.StringPtr("testString")
 				inventoryResourceRecordModel.ResourceQueries = []string{"testString"}
@@ -7564,13 +7570,13 @@ var _ = Describe(`SchematicsV1`, func() {
 				replaceJobOptionsModel.RefreshToken = core.StringPtr("testString")
 				replaceJobOptionsModel.CommandObject = core.StringPtr("workspace")
 				replaceJobOptionsModel.CommandObjectID = core.StringPtr("testString")
-				replaceJobOptionsModel.CommandName = core.StringPtr("workspace_init_flow")
+				replaceJobOptionsModel.CommandName = core.StringPtr("ansible_playbook_run")
 				replaceJobOptionsModel.CommandParameter = core.StringPtr("testString")
 				replaceJobOptionsModel.CommandOptions = []string{"testString"}
 				replaceJobOptionsModel.Inputs = []schematicsv1.VariableData{*variableDataModel}
 				replaceJobOptionsModel.Settings = []schematicsv1.VariableData{*variableDataModel}
 				replaceJobOptionsModel.Tags = []string{"testString"}
-				replaceJobOptionsModel.Location = core.StringPtr("us_south")
+				replaceJobOptionsModel.Location = core.StringPtr("us-south")
 				replaceJobOptionsModel.Status = jobStatusModel
 				replaceJobOptionsModel.Data = jobDataModel
 				replaceJobOptionsModel.Bastion = bastionResourceDefinitionModel
@@ -7733,7 +7739,7 @@ var _ = Describe(`SchematicsV1`, func() {
 
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"command_object": "workspace", "command_object_id": "CommandObjectID", "command_name": "workspace_init_flow", "command_parameter": "CommandParameter", "command_options": ["CommandOptions"], "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "tags": ["Tags"], "id": "ID", "name": "Name", "description": "Description", "location": "us_south", "resource_group": "ResourceGroup", "submitted_at": "2019-01-01T12:00:00", "submitted_by": "SubmittedBy", "start_at": "2019-01-01T12:00:00", "end_at": "2019-01-01T12:00:00", "duration": "Duration", "status": {"action_job_status": {"action_name": "ActionName", "status_code": "job_pending", "status_message": "StatusMessage", "bastion_status_code": "none", "bastion_status_message": "BastionStatusMessage", "inventory_status_code": "none", "inventory_status_message": "InventoryStatusMessage", "updated_at": "2019-01-01T12:00:00"}}, "data": {"job_type": "repo_download_job", "action_job_data": {"action_name": "ActionName", "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "outputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "updated_at": "2019-01-01T12:00:00", "inventory_record": {"name": "Name", "id": "ID", "location": "us_south", "resource_group": "ResourceGroup", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "inventories_ini": "InventoriesIni", "resource_queries": ["ResourceQueries"]}, "materialized_inventory": "MaterializedInventory"}}, "bastion": {"name": "Name", "host": "Host"}, "log_summary": {"job_id": "JobID", "job_type": "repo_download_job", "log_start_at": "2019-01-01T12:00:00", "log_analyzed_till": "2019-01-01T12:00:00", "elapsed_time": 11, "log_errors": [{"error_code": "ErrorCode", "error_msg": "ErrorMsg", "error_count": 10}], "repo_download_job": {"scanned_file_count": 16, "quarantined_file_count": 20, "detected_filetype": "DetectedFiletype", "inputs_count": "InputsCount", "outputs_count": "OutputsCount"}, "action_job": {"host_count": 9, "task_count": 9, "play_count": 9, "recap": {"hosts": ["Hosts"], "ok": 2, "changed": 7, "failed": 6, "skipped": 7, "unreachable": 11}}}, "log_store_url": "LogStoreURL", "state_store_url": "StateStoreURL", "results_url": "ResultsURL", "updated_at": "2019-01-01T12:00:00"}`)
+					fmt.Fprintf(res, "%s", `{"command_object": "workspace", "command_object_id": "CommandObjectID", "command_name": "ansible_playbook_run", "command_parameter": "CommandParameter", "command_options": ["CommandOptions"], "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "tags": ["Tags"], "id": "ID", "name": "Name", "description": "Description", "location": "us-south", "resource_group": "ResourceGroup", "submitted_at": "2019-01-01T12:00:00", "submitted_by": "SubmittedBy", "start_at": "2019-01-01T12:00:00", "end_at": "2019-01-01T12:00:00", "duration": "Duration", "status": {"action_job_status": {"action_name": "ActionName", "status_code": "job_pending", "status_message": "StatusMessage", "bastion_status_code": "none", "bastion_status_message": "BastionStatusMessage", "inventory_status_code": "none", "inventory_status_message": "InventoryStatusMessage", "updated_at": "2019-01-01T12:00:00"}}, "data": {"job_type": "repo_download_job", "action_job_data": {"action_name": "ActionName", "inputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "outputs": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "settings": [{"name": "Name", "value": "Value", "metadata": {"type": "boolean", "aliases": ["Aliases"], "description": "Description", "default_value": "DefaultValue", "secure": true, "immutable": false, "hidden": true, "options": ["Options"], "min_value": 8, "max_value": 8, "min_length": 9, "max_length": 9, "matches": "Matches", "position": 8, "group_by": "GroupBy", "source": "Source"}, "link": "Link"}], "updated_at": "2019-01-01T12:00:00", "inventory_record": {"name": "Name", "id": "ID", "description": "Description", "location": "us-south", "resource_group": "ResourceGroup", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "inventories_ini": "InventoriesIni", "resource_queries": ["ResourceQueries"]}, "materialized_inventory": "MaterializedInventory"}}, "bastion": {"name": "Name", "host": "Host"}, "log_summary": {"job_id": "JobID", "job_type": "repo_download_job", "log_start_at": "2019-01-01T12:00:00", "log_analyzed_till": "2019-01-01T12:00:00", "elapsed_time": 11, "log_errors": [{"error_code": "ErrorCode", "error_msg": "ErrorMsg", "error_count": 10}], "repo_download_job": {"scanned_file_count": 16, "quarantined_file_count": 20, "detected_filetype": "DetectedFiletype", "inputs_count": "InputsCount", "outputs_count": "OutputsCount"}, "action_job": {"host_count": 9, "task_count": 9, "play_count": 9, "recap": {"hosts": ["Hosts"], "ok": 2, "changed": 7, "failed": 6, "skipped": 7, "unreachable": 11}}}, "log_store_url": "LogStoreURL", "state_store_url": "StateStoreURL", "results_url": "ResultsURL", "updated_at": "2019-01-01T12:00:00"}`)
 				}))
 			})
 			It(`Invoke GetJob successfully`, func() {
@@ -9474,7 +9480,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				createInventoryOptionsModel := new(schematicsv1.CreateInventoryOptions)
 				createInventoryOptionsModel.Name = core.StringPtr("testString")
 				createInventoryOptionsModel.Description = core.StringPtr("testString")
-				createInventoryOptionsModel.Location = core.StringPtr("us_south")
+				createInventoryOptionsModel.Location = core.StringPtr("us-south")
 				createInventoryOptionsModel.ResourceGroup = core.StringPtr("testString")
 				createInventoryOptionsModel.InventoriesIni = core.StringPtr("testString")
 				createInventoryOptionsModel.ResourceQueries = []string{"testString"}
@@ -9503,7 +9509,7 @@ var _ = Describe(`SchematicsV1`, func() {
 					Expect(req.Method).To(Equal("POST"))
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"name": "Name", "id": "ID", "location": "us_south", "resource_group": "ResourceGroup", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "inventories_ini": "InventoriesIni", "resource_queries": ["ResourceQueries"]}`)
+					fmt.Fprintf(res, "%s", `{"name": "Name", "id": "ID", "description": "Description", "location": "us-south", "resource_group": "ResourceGroup", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "inventories_ini": "InventoriesIni", "resource_queries": ["ResourceQueries"]}`)
 				}))
 			})
 			It(`Invoke CreateInventory successfully`, func() {
@@ -9524,7 +9530,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				createInventoryOptionsModel := new(schematicsv1.CreateInventoryOptions)
 				createInventoryOptionsModel.Name = core.StringPtr("testString")
 				createInventoryOptionsModel.Description = core.StringPtr("testString")
-				createInventoryOptionsModel.Location = core.StringPtr("us_south")
+				createInventoryOptionsModel.Location = core.StringPtr("us-south")
 				createInventoryOptionsModel.ResourceGroup = core.StringPtr("testString")
 				createInventoryOptionsModel.InventoriesIni = core.StringPtr("testString")
 				createInventoryOptionsModel.ResourceQueries = []string{"testString"}
@@ -9548,7 +9554,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				createInventoryOptionsModel := new(schematicsv1.CreateInventoryOptions)
 				createInventoryOptionsModel.Name = core.StringPtr("testString")
 				createInventoryOptionsModel.Description = core.StringPtr("testString")
-				createInventoryOptionsModel.Location = core.StringPtr("us_south")
+				createInventoryOptionsModel.Location = core.StringPtr("us-south")
 				createInventoryOptionsModel.ResourceGroup = core.StringPtr("testString")
 				createInventoryOptionsModel.InventoriesIni = core.StringPtr("testString")
 				createInventoryOptionsModel.ResourceQueries = []string{"testString"}
@@ -9637,7 +9643,7 @@ var _ = Describe(`SchematicsV1`, func() {
 
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"total_count": 10, "limit": 5, "offset": 6, "inventories": [{"name": "Name", "id": "ID", "location": "us_south", "resource_group": "ResourceGroup", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "inventories_ini": "InventoriesIni", "resource_queries": ["ResourceQueries"]}]}`)
+					fmt.Fprintf(res, "%s", `{"total_count": 10, "limit": 5, "offset": 6, "inventories": [{"name": "Name", "id": "ID", "description": "Description", "location": "us-south", "resource_group": "ResourceGroup", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "inventories_ini": "InventoriesIni", "resource_queries": ["ResourceQueries"]}]}`)
 				}))
 			})
 			It(`Invoke ListInventories successfully`, func() {
@@ -9725,7 +9731,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				replaceInventoryOptionsModel.InventoryID = core.StringPtr("testString")
 				replaceInventoryOptionsModel.Name = core.StringPtr("testString")
 				replaceInventoryOptionsModel.Description = core.StringPtr("testString")
-				replaceInventoryOptionsModel.Location = core.StringPtr("us_south")
+				replaceInventoryOptionsModel.Location = core.StringPtr("us-south")
 				replaceInventoryOptionsModel.ResourceGroup = core.StringPtr("testString")
 				replaceInventoryOptionsModel.InventoriesIni = core.StringPtr("testString")
 				replaceInventoryOptionsModel.ResourceQueries = []string{"testString"}
@@ -9754,7 +9760,7 @@ var _ = Describe(`SchematicsV1`, func() {
 					Expect(req.Method).To(Equal("PUT"))
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"name": "Name", "id": "ID", "location": "us_south", "resource_group": "ResourceGroup", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "inventories_ini": "InventoriesIni", "resource_queries": ["ResourceQueries"]}`)
+					fmt.Fprintf(res, "%s", `{"name": "Name", "id": "ID", "description": "Description", "location": "us-south", "resource_group": "ResourceGroup", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "inventories_ini": "InventoriesIni", "resource_queries": ["ResourceQueries"]}`)
 				}))
 			})
 			It(`Invoke ReplaceInventory successfully`, func() {
@@ -9776,7 +9782,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				replaceInventoryOptionsModel.InventoryID = core.StringPtr("testString")
 				replaceInventoryOptionsModel.Name = core.StringPtr("testString")
 				replaceInventoryOptionsModel.Description = core.StringPtr("testString")
-				replaceInventoryOptionsModel.Location = core.StringPtr("us_south")
+				replaceInventoryOptionsModel.Location = core.StringPtr("us-south")
 				replaceInventoryOptionsModel.ResourceGroup = core.StringPtr("testString")
 				replaceInventoryOptionsModel.InventoriesIni = core.StringPtr("testString")
 				replaceInventoryOptionsModel.ResourceQueries = []string{"testString"}
@@ -9801,7 +9807,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				replaceInventoryOptionsModel.InventoryID = core.StringPtr("testString")
 				replaceInventoryOptionsModel.Name = core.StringPtr("testString")
 				replaceInventoryOptionsModel.Description = core.StringPtr("testString")
-				replaceInventoryOptionsModel.Location = core.StringPtr("us_south")
+				replaceInventoryOptionsModel.Location = core.StringPtr("us-south")
 				replaceInventoryOptionsModel.ResourceGroup = core.StringPtr("testString")
 				replaceInventoryOptionsModel.InventoriesIni = core.StringPtr("testString")
 				replaceInventoryOptionsModel.ResourceQueries = []string{"testString"}
@@ -9855,7 +9861,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				updateInventoryOptionsModel.InventoryID = core.StringPtr("testString")
 				updateInventoryOptionsModel.Name = core.StringPtr("testString")
 				updateInventoryOptionsModel.Description = core.StringPtr("testString")
-				updateInventoryOptionsModel.Location = core.StringPtr("us_south")
+				updateInventoryOptionsModel.Location = core.StringPtr("us-south")
 				updateInventoryOptionsModel.ResourceGroup = core.StringPtr("testString")
 				updateInventoryOptionsModel.InventoriesIni = core.StringPtr("testString")
 				updateInventoryOptionsModel.ResourceQueries = []string{"testString"}
@@ -9884,7 +9890,7 @@ var _ = Describe(`SchematicsV1`, func() {
 					Expect(req.Method).To(Equal("PATCH"))
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"name": "Name", "id": "ID", "location": "us_south", "resource_group": "ResourceGroup", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "inventories_ini": "InventoriesIni", "resource_queries": ["ResourceQueries"]}`)
+					fmt.Fprintf(res, "%s", `{"name": "Name", "id": "ID", "description": "Description", "location": "us-south", "resource_group": "ResourceGroup", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "inventories_ini": "InventoriesIni", "resource_queries": ["ResourceQueries"]}`)
 				}))
 			})
 			It(`Invoke UpdateInventory successfully`, func() {
@@ -9906,7 +9912,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				updateInventoryOptionsModel.InventoryID = core.StringPtr("testString")
 				updateInventoryOptionsModel.Name = core.StringPtr("testString")
 				updateInventoryOptionsModel.Description = core.StringPtr("testString")
-				updateInventoryOptionsModel.Location = core.StringPtr("us_south")
+				updateInventoryOptionsModel.Location = core.StringPtr("us-south")
 				updateInventoryOptionsModel.ResourceGroup = core.StringPtr("testString")
 				updateInventoryOptionsModel.InventoriesIni = core.StringPtr("testString")
 				updateInventoryOptionsModel.ResourceQueries = []string{"testString"}
@@ -9931,7 +9937,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				updateInventoryOptionsModel.InventoryID = core.StringPtr("testString")
 				updateInventoryOptionsModel.Name = core.StringPtr("testString")
 				updateInventoryOptionsModel.Description = core.StringPtr("testString")
-				updateInventoryOptionsModel.Location = core.StringPtr("us_south")
+				updateInventoryOptionsModel.Location = core.StringPtr("us-south")
 				updateInventoryOptionsModel.ResourceGroup = core.StringPtr("testString")
 				updateInventoryOptionsModel.InventoriesIni = core.StringPtr("testString")
 				updateInventoryOptionsModel.ResourceQueries = []string{"testString"}
@@ -10084,7 +10090,7 @@ var _ = Describe(`SchematicsV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"name": "Name", "id": "ID", "location": "us_south", "resource_group": "ResourceGroup", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "inventories_ini": "InventoriesIni", "resource_queries": ["ResourceQueries"]}`)
+					fmt.Fprintf(res, "%s", `{"name": "Name", "id": "ID", "description": "Description", "location": "us-south", "resource_group": "ResourceGroup", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "inventories_ini": "InventoriesIni", "resource_queries": ["ResourceQueries"]}`)
 				}))
 			})
 			It(`Invoke GetInventory successfully`, func() {
@@ -10196,7 +10202,7 @@ var _ = Describe(`SchematicsV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"total_count": 10, "limit": 5, "offset": 6, "inventories": [{"name": "Name", "id": "ID", "location": "us_south", "resource_group": "ResourceGroup", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "inventories_ini": "InventoriesIni", "resource_queries": ["ResourceQueries"]}]}`)
+					fmt.Fprintf(res, "%s", `{"total_count": 10, "limit": 5, "offset": 6, "inventories": [{"name": "Name", "id": "ID", "description": "Description", "location": "us-south", "resource_group": "ResourceGroup", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "inventories_ini": "InventoriesIni", "resource_queries": ["ResourceQueries"]}]}`)
 				}))
 			})
 			It(`Invoke ListInventoryValues successfully`, func() {
@@ -10309,7 +10315,7 @@ var _ = Describe(`SchematicsV1`, func() {
 					Expect(req.Method).To(Equal("GET"))
 					res.Header().Set("Content-type", "application/json")
 					res.WriteHeader(200)
-					fmt.Fprintf(res, "%s", `{"name": "Name", "id": "ID", "location": "us_south", "resource_group": "ResourceGroup", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "inventories_ini": "InventoriesIni", "resource_queries": ["ResourceQueries"]}`)
+					fmt.Fprintf(res, "%s", `{"name": "Name", "id": "ID", "description": "Description", "location": "us-south", "resource_group": "ResourceGroup", "created_at": "2019-01-01T12:00:00", "created_by": "CreatedBy", "updated_at": "2019-01-01T12:00:00", "updated_by": "UpdatedBy", "inventories_ini": "InventoriesIni", "resource_queries": ["ResourceQueries"]}`)
 				}))
 			})
 			It(`Invoke GetInventoryValue successfully`, func() {
@@ -11346,7 +11352,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				createActionOptionsModel := schematicsService.NewCreateActionOptions()
 				createActionOptionsModel.SetName("Stop Action")
 				createActionOptionsModel.SetDescription("This Action can be used to Stop the VSIs")
-				createActionOptionsModel.SetLocation("us_south")
+				createActionOptionsModel.SetLocation("us-south")
 				createActionOptionsModel.SetResourceGroup("testString")
 				createActionOptionsModel.SetTags([]string{"testString"})
 				createActionOptionsModel.SetUserState(userStateModel)
@@ -11356,11 +11362,11 @@ var _ = Describe(`SchematicsV1`, func() {
 				createActionOptionsModel.SetCommandParameter("testString")
 				createActionOptionsModel.SetBastion(bastionResourceDefinitionModel)
 				createActionOptionsModel.SetInventory("testString")
+				createActionOptionsModel.SetBastionCredential(variableDataModel)
 				createActionOptionsModel.SetCredentials([]schematicsv1.VariableData{*variableDataModel})
 				createActionOptionsModel.SetInputs([]schematicsv1.VariableData{*variableDataModel})
 				createActionOptionsModel.SetOutputs([]schematicsv1.VariableData{*variableDataModel})
 				createActionOptionsModel.SetSettings([]schematicsv1.VariableData{*variableDataModel})
-				createActionOptionsModel.SetTriggerRecordID("testString")
 				createActionOptionsModel.SetState(actionStateModel)
 				createActionOptionsModel.SetSysLock(systemLockModel)
 				createActionOptionsModel.SetXGithubToken("testString")
@@ -11368,7 +11374,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(createActionOptionsModel).ToNot(BeNil())
 				Expect(createActionOptionsModel.Name).To(Equal(core.StringPtr("Stop Action")))
 				Expect(createActionOptionsModel.Description).To(Equal(core.StringPtr("This Action can be used to Stop the VSIs")))
-				Expect(createActionOptionsModel.Location).To(Equal(core.StringPtr("us_south")))
+				Expect(createActionOptionsModel.Location).To(Equal(core.StringPtr("us-south")))
 				Expect(createActionOptionsModel.ResourceGroup).To(Equal(core.StringPtr("testString")))
 				Expect(createActionOptionsModel.Tags).To(Equal([]string{"testString"}))
 				Expect(createActionOptionsModel.UserState).To(Equal(userStateModel))
@@ -11378,11 +11384,11 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(createActionOptionsModel.CommandParameter).To(Equal(core.StringPtr("testString")))
 				Expect(createActionOptionsModel.Bastion).To(Equal(bastionResourceDefinitionModel))
 				Expect(createActionOptionsModel.Inventory).To(Equal(core.StringPtr("testString")))
+				Expect(createActionOptionsModel.BastionCredential).To(Equal(variableDataModel))
 				Expect(createActionOptionsModel.Credentials).To(Equal([]schematicsv1.VariableData{*variableDataModel}))
 				Expect(createActionOptionsModel.Inputs).To(Equal([]schematicsv1.VariableData{*variableDataModel}))
 				Expect(createActionOptionsModel.Outputs).To(Equal([]schematicsv1.VariableData{*variableDataModel}))
 				Expect(createActionOptionsModel.Settings).To(Equal([]schematicsv1.VariableData{*variableDataModel}))
-				Expect(createActionOptionsModel.TriggerRecordID).To(Equal(core.StringPtr("testString")))
 				Expect(createActionOptionsModel.State).To(Equal(actionStateModel))
 				Expect(createActionOptionsModel.SysLock).To(Equal(systemLockModel))
 				Expect(createActionOptionsModel.XGithubToken).To(Equal(core.StringPtr("testString")))
@@ -11393,7 +11399,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				createInventoryOptionsModel := schematicsService.NewCreateInventoryOptions()
 				createInventoryOptionsModel.SetName("testString")
 				createInventoryOptionsModel.SetDescription("testString")
-				createInventoryOptionsModel.SetLocation("us_south")
+				createInventoryOptionsModel.SetLocation("us-south")
 				createInventoryOptionsModel.SetResourceGroup("testString")
 				createInventoryOptionsModel.SetInventoriesIni("testString")
 				createInventoryOptionsModel.SetResourceQueries([]string{"testString"})
@@ -11401,7 +11407,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(createInventoryOptionsModel).ToNot(BeNil())
 				Expect(createInventoryOptionsModel.Name).To(Equal(core.StringPtr("testString")))
 				Expect(createInventoryOptionsModel.Description).To(Equal(core.StringPtr("testString")))
-				Expect(createInventoryOptionsModel.Location).To(Equal(core.StringPtr("us_south")))
+				Expect(createInventoryOptionsModel.Location).To(Equal(core.StringPtr("us-south")))
 				Expect(createInventoryOptionsModel.ResourceGroup).To(Equal(core.StringPtr("testString")))
 				Expect(createInventoryOptionsModel.InventoriesIni).To(Equal(core.StringPtr("testString")))
 				Expect(createInventoryOptionsModel.ResourceQueries).To(Equal([]string{"testString"}))
@@ -11484,12 +11490,14 @@ var _ = Describe(`SchematicsV1`, func() {
 				inventoryResourceRecordModel := new(schematicsv1.InventoryResourceRecord)
 				Expect(inventoryResourceRecordModel).ToNot(BeNil())
 				inventoryResourceRecordModel.Name = core.StringPtr("testString")
-				inventoryResourceRecordModel.Location = core.StringPtr("us_south")
+				inventoryResourceRecordModel.Description = core.StringPtr("testString")
+				inventoryResourceRecordModel.Location = core.StringPtr("us-south")
 				inventoryResourceRecordModel.ResourceGroup = core.StringPtr("testString")
 				inventoryResourceRecordModel.InventoriesIni = core.StringPtr("testString")
 				inventoryResourceRecordModel.ResourceQueries = []string{"testString"}
 				Expect(inventoryResourceRecordModel.Name).To(Equal(core.StringPtr("testString")))
-				Expect(inventoryResourceRecordModel.Location).To(Equal(core.StringPtr("us_south")))
+				Expect(inventoryResourceRecordModel.Description).To(Equal(core.StringPtr("testString")))
+				Expect(inventoryResourceRecordModel.Location).To(Equal(core.StringPtr("us-south")))
 				Expect(inventoryResourceRecordModel.ResourceGroup).To(Equal(core.StringPtr("testString")))
 				Expect(inventoryResourceRecordModel.InventoriesIni).To(Equal(core.StringPtr("testString")))
 				Expect(inventoryResourceRecordModel.ResourceQueries).To(Equal([]string{"testString"}))
@@ -11570,13 +11578,13 @@ var _ = Describe(`SchematicsV1`, func() {
 				createJobOptionsModel.SetRefreshToken("testString")
 				createJobOptionsModel.SetCommandObject("workspace")
 				createJobOptionsModel.SetCommandObjectID("testString")
-				createJobOptionsModel.SetCommandName("workspace_init_flow")
+				createJobOptionsModel.SetCommandName("ansible_playbook_run")
 				createJobOptionsModel.SetCommandParameter("testString")
 				createJobOptionsModel.SetCommandOptions([]string{"testString"})
 				createJobOptionsModel.SetInputs([]schematicsv1.VariableData{*variableDataModel})
 				createJobOptionsModel.SetSettings([]schematicsv1.VariableData{*variableDataModel})
 				createJobOptionsModel.SetTags([]string{"testString"})
-				createJobOptionsModel.SetLocation("us_south")
+				createJobOptionsModel.SetLocation("us-south")
 				createJobOptionsModel.SetStatus(jobStatusModel)
 				createJobOptionsModel.SetData(jobDataModel)
 				createJobOptionsModel.SetBastion(bastionResourceDefinitionModel)
@@ -11586,13 +11594,13 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(createJobOptionsModel.RefreshToken).To(Equal(core.StringPtr("testString")))
 				Expect(createJobOptionsModel.CommandObject).To(Equal(core.StringPtr("workspace")))
 				Expect(createJobOptionsModel.CommandObjectID).To(Equal(core.StringPtr("testString")))
-				Expect(createJobOptionsModel.CommandName).To(Equal(core.StringPtr("workspace_init_flow")))
+				Expect(createJobOptionsModel.CommandName).To(Equal(core.StringPtr("ansible_playbook_run")))
 				Expect(createJobOptionsModel.CommandParameter).To(Equal(core.StringPtr("testString")))
 				Expect(createJobOptionsModel.CommandOptions).To(Equal([]string{"testString"}))
 				Expect(createJobOptionsModel.Inputs).To(Equal([]schematicsv1.VariableData{*variableDataModel}))
 				Expect(createJobOptionsModel.Settings).To(Equal([]schematicsv1.VariableData{*variableDataModel}))
 				Expect(createJobOptionsModel.Tags).To(Equal([]string{"testString"}))
-				Expect(createJobOptionsModel.Location).To(Equal(core.StringPtr("us_south")))
+				Expect(createJobOptionsModel.Location).To(Equal(core.StringPtr("us-south")))
 				Expect(createJobOptionsModel.Status).To(Equal(jobStatusModel))
 				Expect(createJobOptionsModel.Data).To(Equal(jobDataModel))
 				Expect(createJobOptionsModel.Bastion).To(Equal(bastionResourceDefinitionModel))
@@ -12476,7 +12484,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				replaceInventoryOptionsModel.SetInventoryID("testString")
 				replaceInventoryOptionsModel.SetName("testString")
 				replaceInventoryOptionsModel.SetDescription("testString")
-				replaceInventoryOptionsModel.SetLocation("us_south")
+				replaceInventoryOptionsModel.SetLocation("us-south")
 				replaceInventoryOptionsModel.SetResourceGroup("testString")
 				replaceInventoryOptionsModel.SetInventoriesIni("testString")
 				replaceInventoryOptionsModel.SetResourceQueries([]string{"testString"})
@@ -12485,7 +12493,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(replaceInventoryOptionsModel.InventoryID).To(Equal(core.StringPtr("testString")))
 				Expect(replaceInventoryOptionsModel.Name).To(Equal(core.StringPtr("testString")))
 				Expect(replaceInventoryOptionsModel.Description).To(Equal(core.StringPtr("testString")))
-				Expect(replaceInventoryOptionsModel.Location).To(Equal(core.StringPtr("us_south")))
+				Expect(replaceInventoryOptionsModel.Location).To(Equal(core.StringPtr("us-south")))
 				Expect(replaceInventoryOptionsModel.ResourceGroup).To(Equal(core.StringPtr("testString")))
 				Expect(replaceInventoryOptionsModel.InventoriesIni).To(Equal(core.StringPtr("testString")))
 				Expect(replaceInventoryOptionsModel.ResourceQueries).To(Equal([]string{"testString"}))
@@ -12568,12 +12576,14 @@ var _ = Describe(`SchematicsV1`, func() {
 				inventoryResourceRecordModel := new(schematicsv1.InventoryResourceRecord)
 				Expect(inventoryResourceRecordModel).ToNot(BeNil())
 				inventoryResourceRecordModel.Name = core.StringPtr("testString")
-				inventoryResourceRecordModel.Location = core.StringPtr("us_south")
+				inventoryResourceRecordModel.Description = core.StringPtr("testString")
+				inventoryResourceRecordModel.Location = core.StringPtr("us-south")
 				inventoryResourceRecordModel.ResourceGroup = core.StringPtr("testString")
 				inventoryResourceRecordModel.InventoriesIni = core.StringPtr("testString")
 				inventoryResourceRecordModel.ResourceQueries = []string{"testString"}
 				Expect(inventoryResourceRecordModel.Name).To(Equal(core.StringPtr("testString")))
-				Expect(inventoryResourceRecordModel.Location).To(Equal(core.StringPtr("us_south")))
+				Expect(inventoryResourceRecordModel.Description).To(Equal(core.StringPtr("testString")))
+				Expect(inventoryResourceRecordModel.Location).To(Equal(core.StringPtr("us-south")))
 				Expect(inventoryResourceRecordModel.ResourceGroup).To(Equal(core.StringPtr("testString")))
 				Expect(inventoryResourceRecordModel.InventoriesIni).To(Equal(core.StringPtr("testString")))
 				Expect(inventoryResourceRecordModel.ResourceQueries).To(Equal([]string{"testString"}))
@@ -12656,13 +12666,13 @@ var _ = Describe(`SchematicsV1`, func() {
 				replaceJobOptionsModel.SetRefreshToken("testString")
 				replaceJobOptionsModel.SetCommandObject("workspace")
 				replaceJobOptionsModel.SetCommandObjectID("testString")
-				replaceJobOptionsModel.SetCommandName("workspace_init_flow")
+				replaceJobOptionsModel.SetCommandName("ansible_playbook_run")
 				replaceJobOptionsModel.SetCommandParameter("testString")
 				replaceJobOptionsModel.SetCommandOptions([]string{"testString"})
 				replaceJobOptionsModel.SetInputs([]schematicsv1.VariableData{*variableDataModel})
 				replaceJobOptionsModel.SetSettings([]schematicsv1.VariableData{*variableDataModel})
 				replaceJobOptionsModel.SetTags([]string{"testString"})
-				replaceJobOptionsModel.SetLocation("us_south")
+				replaceJobOptionsModel.SetLocation("us-south")
 				replaceJobOptionsModel.SetStatus(jobStatusModel)
 				replaceJobOptionsModel.SetData(jobDataModel)
 				replaceJobOptionsModel.SetBastion(bastionResourceDefinitionModel)
@@ -12673,13 +12683,13 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(replaceJobOptionsModel.RefreshToken).To(Equal(core.StringPtr("testString")))
 				Expect(replaceJobOptionsModel.CommandObject).To(Equal(core.StringPtr("workspace")))
 				Expect(replaceJobOptionsModel.CommandObjectID).To(Equal(core.StringPtr("testString")))
-				Expect(replaceJobOptionsModel.CommandName).To(Equal(core.StringPtr("workspace_init_flow")))
+				Expect(replaceJobOptionsModel.CommandName).To(Equal(core.StringPtr("ansible_playbook_run")))
 				Expect(replaceJobOptionsModel.CommandParameter).To(Equal(core.StringPtr("testString")))
 				Expect(replaceJobOptionsModel.CommandOptions).To(Equal([]string{"testString"}))
 				Expect(replaceJobOptionsModel.Inputs).To(Equal([]schematicsv1.VariableData{*variableDataModel}))
 				Expect(replaceJobOptionsModel.Settings).To(Equal([]schematicsv1.VariableData{*variableDataModel}))
 				Expect(replaceJobOptionsModel.Tags).To(Equal([]string{"testString"}))
-				Expect(replaceJobOptionsModel.Location).To(Equal(core.StringPtr("us_south")))
+				Expect(replaceJobOptionsModel.Location).To(Equal(core.StringPtr("us-south")))
 				Expect(replaceJobOptionsModel.Status).To(Equal(jobStatusModel))
 				Expect(replaceJobOptionsModel.Data).To(Equal(jobDataModel))
 				Expect(replaceJobOptionsModel.Bastion).To(Equal(bastionResourceDefinitionModel))
@@ -13158,7 +13168,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				updateActionOptionsModel.SetActionID("testString")
 				updateActionOptionsModel.SetName("Stop Action")
 				updateActionOptionsModel.SetDescription("This Action can be used to Stop the VSIs")
-				updateActionOptionsModel.SetLocation("us_south")
+				updateActionOptionsModel.SetLocation("us-south")
 				updateActionOptionsModel.SetResourceGroup("testString")
 				updateActionOptionsModel.SetTags([]string{"testString"})
 				updateActionOptionsModel.SetUserState(userStateModel)
@@ -13168,11 +13178,11 @@ var _ = Describe(`SchematicsV1`, func() {
 				updateActionOptionsModel.SetCommandParameter("testString")
 				updateActionOptionsModel.SetBastion(bastionResourceDefinitionModel)
 				updateActionOptionsModel.SetInventory("testString")
+				updateActionOptionsModel.SetBastionCredential(variableDataModel)
 				updateActionOptionsModel.SetCredentials([]schematicsv1.VariableData{*variableDataModel})
 				updateActionOptionsModel.SetInputs([]schematicsv1.VariableData{*variableDataModel})
 				updateActionOptionsModel.SetOutputs([]schematicsv1.VariableData{*variableDataModel})
 				updateActionOptionsModel.SetSettings([]schematicsv1.VariableData{*variableDataModel})
-				updateActionOptionsModel.SetTriggerRecordID("testString")
 				updateActionOptionsModel.SetState(actionStateModel)
 				updateActionOptionsModel.SetSysLock(systemLockModel)
 				updateActionOptionsModel.SetXGithubToken("testString")
@@ -13181,7 +13191,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(updateActionOptionsModel.ActionID).To(Equal(core.StringPtr("testString")))
 				Expect(updateActionOptionsModel.Name).To(Equal(core.StringPtr("Stop Action")))
 				Expect(updateActionOptionsModel.Description).To(Equal(core.StringPtr("This Action can be used to Stop the VSIs")))
-				Expect(updateActionOptionsModel.Location).To(Equal(core.StringPtr("us_south")))
+				Expect(updateActionOptionsModel.Location).To(Equal(core.StringPtr("us-south")))
 				Expect(updateActionOptionsModel.ResourceGroup).To(Equal(core.StringPtr("testString")))
 				Expect(updateActionOptionsModel.Tags).To(Equal([]string{"testString"}))
 				Expect(updateActionOptionsModel.UserState).To(Equal(userStateModel))
@@ -13191,11 +13201,11 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(updateActionOptionsModel.CommandParameter).To(Equal(core.StringPtr("testString")))
 				Expect(updateActionOptionsModel.Bastion).To(Equal(bastionResourceDefinitionModel))
 				Expect(updateActionOptionsModel.Inventory).To(Equal(core.StringPtr("testString")))
+				Expect(updateActionOptionsModel.BastionCredential).To(Equal(variableDataModel))
 				Expect(updateActionOptionsModel.Credentials).To(Equal([]schematicsv1.VariableData{*variableDataModel}))
 				Expect(updateActionOptionsModel.Inputs).To(Equal([]schematicsv1.VariableData{*variableDataModel}))
 				Expect(updateActionOptionsModel.Outputs).To(Equal([]schematicsv1.VariableData{*variableDataModel}))
 				Expect(updateActionOptionsModel.Settings).To(Equal([]schematicsv1.VariableData{*variableDataModel}))
-				Expect(updateActionOptionsModel.TriggerRecordID).To(Equal(core.StringPtr("testString")))
 				Expect(updateActionOptionsModel.State).To(Equal(actionStateModel))
 				Expect(updateActionOptionsModel.SysLock).To(Equal(systemLockModel))
 				Expect(updateActionOptionsModel.XGithubToken).To(Equal(core.StringPtr("testString")))
@@ -13208,7 +13218,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				updateInventoryOptionsModel.SetInventoryID("testString")
 				updateInventoryOptionsModel.SetName("testString")
 				updateInventoryOptionsModel.SetDescription("testString")
-				updateInventoryOptionsModel.SetLocation("us_south")
+				updateInventoryOptionsModel.SetLocation("us-south")
 				updateInventoryOptionsModel.SetResourceGroup("testString")
 				updateInventoryOptionsModel.SetInventoriesIni("testString")
 				updateInventoryOptionsModel.SetResourceQueries([]string{"testString"})
@@ -13217,7 +13227,7 @@ var _ = Describe(`SchematicsV1`, func() {
 				Expect(updateInventoryOptionsModel.InventoryID).To(Equal(core.StringPtr("testString")))
 				Expect(updateInventoryOptionsModel.Name).To(Equal(core.StringPtr("testString")))
 				Expect(updateInventoryOptionsModel.Description).To(Equal(core.StringPtr("testString")))
-				Expect(updateInventoryOptionsModel.Location).To(Equal(core.StringPtr("us_south")))
+				Expect(updateInventoryOptionsModel.Location).To(Equal(core.StringPtr("us-south")))
 				Expect(updateInventoryOptionsModel.ResourceGroup).To(Equal(core.StringPtr("testString")))
 				Expect(updateInventoryOptionsModel.InventoriesIni).To(Equal(core.StringPtr("testString")))
 				Expect(updateInventoryOptionsModel.ResourceQueries).To(Equal([]string{"testString"}))
